@@ -1,7 +1,7 @@
 {
-  "name": "@talisik-ai/claude-skills",
+  "name": "@talisikai/claude-skills",
   "version": "1.0.0",
-  "description": "CLI to install and manage talisik-ai Claude skills",
+  "description": "CLI to install and manage talisikai Claude skills",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
@@ -38,7 +38,7 @@
     "claude",
     "skills",
     "ai",
-    "talisik-ai"
+    "talisikai"
   ],
   "license": "MIT"
 }

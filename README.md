@@ -1,12 +1,12 @@
 # ⚡ Talisik AI Claude Skills
 
-[![npm version](https://img.shields.io/npm/v/@talisik-ai/claude-skills)](https://www.npmjs.com/package/@talisik-ai/claude-skills)
+[![npm version](https://img.shields.io/npm/v/@talisikai/claude-skills)](https://www.npmjs.com/package/@talisikai/claude-skills)
 [![license](https://img.shields.io/github/license/talisik-ai/claude-skills)](./LICENSE)
 
 > Specialized Claude skills for software teams — installable in one command.
 
 ```bash
-npx @talisik-ai/claude-skills add prd-assessment
+npx @talisikai/claude-skills add prd-assessment
 ```
 
 ---
@@ -46,31 +46,31 @@ Skills are specialized instruction sets for Claude that extend its behavior for 
 ### Install a skill
 
 ```bash
-npx @talisik-ai/claude-skills add prd-assessment
+npx @talisikai/claude-skills add prd-assessment
 ```
 
 ### List all available skills
 
 ```bash
-npx @talisik-ai/claude-skills list
+npx @talisikai/claude-skills list
 ```
 
 ### Search skills
 
 ```bash
-npx @talisik-ai/claude-skills search "testing"
+npx @talisikai/claude-skills search "testing"
 ```
 
 ### Update all skills
 
 ```bash
-npx @talisik-ai/claude-skills update
+npx @talisikai/claude-skills update
 ```
 
 ### Remove a skill
 
 ```bash
-npx @talisik-ai/claude-skills remove prd-assessment
+npx @talisikai/claude-skills remove prd-assessment
 ```
 
 ---
@@ -88,7 +88,7 @@ By default, skills are installed to:
 Use `--dir` to override:
 
 ```bash
-npx @talisik-ai/claude-skills add prd-assessment --dir ./my-skills
+npx @talisikai/claude-skills add prd-assessment --dir ./my-skills
 ```
 
 ---
