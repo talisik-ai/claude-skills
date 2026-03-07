@@ -45,6 +45,11 @@ export async function installSkill(
   for (const entry of entries) {
     const relativePath = entry.entryName.slice(prefix.length);
     const destPath = path.join(targetDir, relativePath);
+    const resolvedTarget = path.resolve(targetDir);
+    const resolvedDest = path.resolve(destPath);
+    if (!resolvedDest.startsWith(resolvedTarget + path.sep)) {
+      throw new Error(`Path traversal detected in zip entry: ${entry.entryName}`);
+    }
     fs.mkdirSync(path.dirname(destPath), { recursive: true });
     fs.writeFileSync(destPath, entry.getData());
   }
