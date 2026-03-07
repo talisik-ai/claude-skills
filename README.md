@@ -1,4 +1,4 @@
-# ⚡ Talisk AI Claude Skills
+# ⚡ Talisik AI Claude Skills
 
 [![npm version](https://img.shields.io/npm/v/@talisik-ai/claude-skills)](https://www.npmjs.com/package/@talisik-ai/claude-skills)
 [![license](https://img.shields.io/github/license/talisik-ai/claude-skills)](./LICENSE)
