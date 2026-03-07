@@ -44,8 +44,9 @@ If none found, stop: "Context MD not found. Please provide the exact file path."
 Before running the audit:
 
 1. **Confirm context MD exists** — if not found after resolution, stop and ask.
-2. **Confirm module directory exists** — warn if it can't be determined from "Key Files" paths.
+2. **Confirm module directory exists** — infer from the "Key Files" directory prefixes. If the directory cannot be determined, warn and mark Check 2 as unable to run (treat as FAIL with note "Module directory could not be determined — Check 2 skipped"). Continue with remaining checks.
 3. **Check for `CONTEXT-HEALTH.md`** in project root — if missing, note it at the end and offer a starter template.
+4. **Check for "Key Files" section** — if the context MD has no "## Key Files" section, mark Check 1 and Check 2 as unable to run: flag them as FAIL with note "Key Files section not found in context MD."
 
 ---
 
@@ -85,7 +86,9 @@ Examples:
 - Pattern says "use Zod for validation" → look for `z.` or `import { z }`
 - Pattern says "repository layer only" → look for direct Prisma calls in route files
 
-Flag patterns that are listed as required but show no evidence of use in the actual code. Note this is best-effort — add "limited scan" disclaimer if the module is large (10+ files).
+Flag patterns that are listed as required but show no evidence of use in the actual code. Note this is best-effort — add a ⚠️ Limited scan note below any PASS or FAIL result if the module is large (10+ files).
+
+If the context MD has no "## Required Patterns" section: report "Required Patterns section not found — Check 4 skipped" and treat as PASS.
 
 ### Check 5 — Staleness
 
@@ -95,6 +98,8 @@ Compare to the current sprint (ask the user for the current sprint if not provid
 - Same sprint → PASS
 - 1 sprint old → PASS with note
 - 2+ sprints old → FAIL — flag exact gap
+
+If `last_verified_sprint` is absent entirely: FAIL — note "last_verified_sprint field not found — add it before next sprint."
 
 ---
 
@@ -125,14 +130,16 @@ Sprint: [current sprint, or "unknown — please specify"]
   - `[package-name]` — imported in [file.ts] but not listed in Dependencies
 
 ### Check 4 — Pattern Drift
-[PASS ✅ / FAIL ❌ / LIMITED ⚠️]
+[PASS ✅ / FAIL ❌]
 [If FAIL:]
   - "[pattern name]" — listed as required, no evidence found in module files
-[If LIMITED:]
-  - Scan was limited (large module). Manual verification recommended.
+[Add this line if the module has 10+ files:]
+  ⚠️ Limited scan (large module — [N] files). Manual verification recommended for patterns above.
 
 ### Check 5 — Staleness
-[PASS ✅ / FAIL ❌]
+[PASS ✅ / PASS with note ⚠️ / FAIL ❌]
+[If PASS with note:]
+  - last_verified_sprint: Sprint-XX (1 sprint ago) — update recommended before next session
 [If FAIL:]
   - last_verified_sprint: Sprint-XX ([N] sprints ago) — update required
 
@@ -170,7 +177,8 @@ Sprint: [current sprint, or "unknown — please specify"]
 - **Never report CLEAN if any check fails** — even one failure is STALE minimum
 - **Never guess the module path** — if resolution fails, stop and ask
 - **Always provide the CONTEXT-HEALTH.md row** — copy-paste ready, even on CLEAN audits
-- **Check 4 is best-effort** — if the module has 10+ files, add "(limited scan)" to the check result
+- **Check 4 is best-effort** — if the module has 10+ files, add a ⚠️ Limited scan note below any PASS or FAIL result
+- **Owner field source** — look for `owner:` in the context MD frontmatter, or a line like `**Owner:** [name]` in the header. If not found, use `[unknown]` and add to Required Actions: "Add owner field to context MD header."
 - **One module per audit run** — do not batch across modules in a single session
 - **If `CONTEXT-HEALTH.md` is missing**, output a starter template at the end:
 
