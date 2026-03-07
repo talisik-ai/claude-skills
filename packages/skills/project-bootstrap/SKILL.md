@@ -37,8 +37,8 @@ Read the conversation context and apply the first matching rule:
 
 | Signal | Mode |
 |--------|------|
-| Source code found in `src/`, `app/`, `lib/`, `server/`, `api/`, `backend/`, `frontend/` | **ONBOARD** |
 | User says "existing project", "legacy", "onboard", provides a repo path | **ONBOARD** |
+| Non-empty source files found in `src/`, `app/`, `lib/`, `server/`, `api/`, `backend/`, `frontend/` (and user has not stated "new project") | **ONBOARD** |
 | No code found, user says "new project", "from scratch", "starting fresh" | **BOOTSTRAP** |
 | Ambiguous | Ask ONE question: "Do you have an existing codebase I should scan, or are we starting from scratch?" |
 
@@ -93,7 +93,9 @@ Read 2-3 key files per module (entry points, largest files, router/controller fi
 Look for: import patterns, validation libraries, ORM usage, naming conventions, folder organization rules.
 
 **Step 4 — Check existing context MDs**
-Look for `*.context.md` files anywhere in the project. Note which modules already have them — do not overwrite existing context MDs unless explicitly asked.
+Look for `*.context.md` files anywhere in the project. Note which modules already have them.
+- **Modules with existing context MDs:** Do not regenerate the file. In `CONTEXT-HEALTH.md`, list them with status `⚠️ Pre-existing — Lead should verify` and their current owner if readable.
+- **Modules without context MDs:** Generate new stubs using the output templates below.
 
 ### Interview to fill gaps
 
@@ -228,11 +230,12 @@ Until last_verified_sprint is signed, no cards should be created against these m
 
 ## Behavior Rules
 
-- **Never generate context MDs without module name and owner** — ask if missing before generating
+- **Never generate context MDs without module name** — ask if missing before generating. If the Lead cannot provide an owner yet, use `[TO FILL]` and note that owner must be assigned before `last_verified_sprint` can be signed
 - **ONBOARD: always state what was inferred vs what the Lead provided** — never mix them silently
 - **`[TO FILL]` markers are required** on every field that couldn't be determined — never guess
 - **Never overwrite existing context MDs** in ONBOARD mode unless explicitly asked
 - **Do not mark `last_verified_sprint` as a real sprint** — always use `UNVERIFIED` until the Lead explicitly signs off
+- **When the Lead signs off `last_verified_sprint`**, record the value in the format `Sprint-NN` (e.g., `Sprint-01`, `Sprint-02`) — accept only this format to ensure consistency across context MDs
 - **Context MDs go in `docs/context/`** by default — ask Lead if they prefer a different location
 - **ARCHITECTURE.md goes in the project root** — always
 - **One module per context MD** — never combine two modules in one file
