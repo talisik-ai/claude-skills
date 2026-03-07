@@ -3,7 +3,7 @@ name: coding-standards
 description: >
   Template skill that enforces team coding patterns in every dev session.
   Ships with [FILL IN] placeholders — a Lead populates it once per project.
-  Covers Frontend, Backend, ML/DC, and QA role sections with required patterns,
+  Covers Frontend, Backend, ML/Data, and QA role sections with required patterns,
   anti-patterns, file structure rules, and do-not-do lists.
   Triggers on: coding standards, pattern questions, dev session start.
 triggers:
