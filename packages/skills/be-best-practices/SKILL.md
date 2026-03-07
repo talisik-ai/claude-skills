@@ -182,7 +182,11 @@ async findById(id: string): Promise<User | null> {
 
 // Invalidate on write
 async update(id: string, data: UpdateUserInput): Promise<User> {
-  const user = await this.prisma.user.update({ where: { id }, data });
+  const user = await this.prisma.user.update({
+    where: { id },
+    data,
+    select: { id: true, email: true, name: true },
+  });
   await redis.del(`user:${id}:profile`); // clear cache on update
   return user;
 }
