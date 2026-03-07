@@ -197,6 +197,19 @@
       "installSize": "2kb",
       "requiresTools": [],
       "readme": "https://github.com/talisik-ai/claude-skills/tree/main/packages/skills/web-design-guidelines"
+    },
+    {
+      "name": "project-bootstrap",
+      "displayName": "Project Bootstrap",
+      "version": "1.0.0",
+      "description": "Two-mode Lead skill for project initialization. BOOTSTRAP: interview-driven setup for new projects — generates ARCHITECTURE.md, stub context MDs, and CONTEXT-HEALTH.md. ONBOARD: scans an existing codebase, infers stack and modules, interviews Lead to fill gaps, then produces the same three output files. Run once per new project or legacy onboarding.",
+      "author": "talisik-ai",
+      "category": "product",
+      "tags": ["bootstrap", "architecture", "context-md", "new-project", "onboarding", "lead", "workflow"],
+      "path": "packages/skills/project-bootstrap",
+      "installSize": "8kb",
+      "requiresTools": [],
+      "readme": "https://github.com/talisik-ai/claude-skills/tree/main/packages/skills/project-bootstrap"
     }
   ]
 }
