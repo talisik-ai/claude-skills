@@ -6,13 +6,13 @@
     {
       "name": "prd-assessment",
       "displayName": "PRD Assessment",
-      "version": "1.0.0",
-      "description": "Conducts a structured interview and generates a complete Product Requirements Document as a Markdown file. Triggers on: PRD, product spec, feature doc, requirements document.",
+      "version": "2.0.0",
+      "description": "Three-mode PRD skill: CREATE (interview → new PRD for greenfield projects), ASSESS (existing PRD + architecture → IMPACT-ASSESSMENT.md), PIVOT (direction change → impact assessment with skills to disable, invalidated context MDs, and affected in-flight cards).",
       "author": "talisik-ai",
       "category": "product",
-      "tags": ["prd", "product", "documentation", "planning", "requirements"],
+      "tags": ["prd", "product", "impact-assessment", "pivot", "planning", "requirements"],
       "path": "packages/skills/prd-assessment",
-      "installSize": "12kb",
+      "installSize": "14kb",
       "requiresTools": [],
       "readme": "https://github.com/talisik-ai/claude-skills/tree/main/packages/skills/prd-assessment"
     },
