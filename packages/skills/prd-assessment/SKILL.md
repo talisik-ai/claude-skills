@@ -25,6 +25,8 @@ Detect the mode automatically — never ask the user to pick a mode unless the c
 
 Read the conversation context and apply the first matching rule:
 
+> Rules are evaluated top-to-bottom — apply the **first matching rule** only.
+
 | Signal | Mode |
 |--------|------|
 | PRD file path provided + words like "pivot", "change direction", "we're changing course" | **PIVOT** |
@@ -72,7 +74,7 @@ After completing the interview, generate the full PRD in one response:
 
 **PRD Number:** PRD-[XXX]
 **Status:** Draft
-**Author:** [from context]
+**Author:** [from context, or omit if unknown]
 **Date:** [today]
 **Version:** 1.0
 
@@ -161,7 +163,8 @@ Before running the assessment:
 1. **Read the PRD file.** If it does not exist, stop and ask for the correct path.
 2. **Check for `ARCHITECTURE.md`** in the project root. If missing, warn:
    > "⚠️ ARCHITECTURE.md not found. Assessment will be incomplete — module ownership and dependency analysis will be limited."
-3. **Check for context MDs** (files matching `*.context.md` or in a `docs/context/` directory).
+3. **Check for context MDs** — search for files matching `*.context.md` in any directory. Common locations: `docs/context/`, `.claude/`, `context/`, `memory/`. Coverage is best-effort if none are found.
+   - Check each context MD for a `last_verified_sprint` field. Determine current sprint from `ARCHITECTURE.md`, a sprint tracking file, or the conversation. If current sprint cannot be determined, note this and skip the staleness check. Flag any context MD whose `last_verified_sprint` is more than 1 sprint old.
 4. **Validate the PRD** has: objective, scope, and at least one acceptance criterion. If any are missing, flag them before proceeding.
 
 ### Output
@@ -172,7 +175,7 @@ Save as `IMPACT-ASSESSMENT-PRD-XXX.md` (use the PRD number from the file):
 # Impact Assessment — [PRD Number]: [Feature Title]
 
 **Date:** [today]
-**Lead:** [from context if available]
+**Lead:** [from context, or omit if unknown]
 **PRD Type:** New Feature | Hotfix | Cross-Project
 **PRD File:** [path/to/prd.md]
 
@@ -235,6 +238,7 @@ Save as `IMPACT-ASSESSMENT-PRD-XXX.md` (use the PRD number from the file):
 Same as ASSESS mode, plus:
 - Read the **existing** PRD (what was planned)
 - Understand the **new direction** (from the user's message or a new direction document)
+- If the new direction is not stated, ask: "What is the new direction or goal replacing the original PRD?"
 
 ### Output
 
