@@ -1,0 +1,2219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code Workflow v3 — AI-First Engineering</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07090F;
+  --surface: #0D1117;
+  --surface-2: #161B27;
+  --surface-3: #1C2333;
+  --border: rgba(255,255,255,0.07);
+  --border-light: rgba(255,255,255,0.13);
+  --teal: #00C9A7;
+  --teal-dim: rgba(0,201,167,0.12);
+  --teal-border: rgba(0,201,167,0.28);
+  --purple: #9B87FF;
+  --purple-dim: rgba(155,135,255,0.12);
+  --purple-border: rgba(155,135,255,0.28);
+  --orange: #FF6B35;
+  --orange-dim: rgba(255,107,53,0.1);
+  --orange-border: rgba(255,107,53,0.28);
+  --amber: #F59E0B;
+  --amber-dim: rgba(245,158,11,0.1);
+  --amber-border: rgba(245,158,11,0.28);
+  --blue: #60A5FA;
+  --blue-dim: rgba(96,165,250,0.1);
+  --blue-border: rgba(96,165,250,0.28);
+  --green: #34D399;
+  --green-dim: rgba(52,211,153,0.1);
+  --green-border: rgba(52,211,153,0.28);
+  --red: #F87171;
+  --red-dim: rgba(248,113,113,0.08);
+  --text: #E8EDF7;
+  --text-2: #8892A8;
+  --text-3: #4A5568;
+  --sidebar-w: 264px;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width: var(--sidebar-w);
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  z-index: 100;
+  padding: 0 0 32px;
+}
+
+.sidebar-logo {
+  padding: 24px 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+
+.logo-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--teal-dim);
+  border: 1px solid var(--teal-border);
+  border-radius: 100px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--teal);
+  margin-bottom: 10px;
+  letter-spacing: 0.04em;
+}
+
+.sidebar-logo h2 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.sidebar-logo p {
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 2px;
+}
+
+.nav-group { padding: 4px 12px; margin-bottom: 2px; }
+
+.nav-group-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+  padding: 8px 8px 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-2);
+  text-decoration: none;
+  transition: all 0.15s;
+  cursor: pointer;
+  user-select: none;
+}
+
+.nav-item:hover { background: var(--surface-2); color: var(--text); }
+.nav-item.active { background: var(--teal-dim); color: var(--teal); }
+
+.nav-step-num {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--surface-3);
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-3);
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.nav-item.active .nav-step-num { background: var(--teal); color: #000; }
+
+.nav-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.4;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+}
+.nav-item.active .nav-dot { opacity: 1; }
+
+/* ─── MAIN ─── */
+.main { margin-left: var(--sidebar-w); flex: 1; min-width: 0; }
+
+/* ─── HERO ─── */
+.hero {
+  padding: 88px 72px 80px;
+  background: radial-gradient(ellipse at 80% 0%, rgba(0,201,167,0.06) 0%, transparent 60%),
+              radial-gradient(ellipse at 10% 100%, rgba(155,135,255,0.05) 0%, transparent 60%),
+              var(--bg);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at 50% 0%, black 0%, transparent 80%);
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--teal-dim);
+  border: 1px solid var(--teal-border);
+  border-radius: 100px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--teal);
+  margin-bottom: 28px;
+}
+
+.hero-eyebrow::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulse 2s infinite; }
+
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.8)} }
+
+.hero h1 {
+  font-size: 56px;
+  font-weight: 800;
+  line-height: 1.08;
+  color: var(--text);
+  margin-bottom: 18px;
+  max-width: 720px;
+}
+
+.hero h1 .gradient {
+  background: linear-gradient(135deg, var(--teal) 0%, var(--purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 17px;
+  color: var(--text-2);
+  max-width: 560px;
+  margin-bottom: 52px;
+  line-height: 1.7;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 20px 28px;
+  min-width: 160px;
+}
+
+.stat-val {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--teal);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stat-label { font-size: 12px; color: var(--text-2); font-weight: 500; }
+
+/* ─── SECTIONS ─── */
+.section {
+  padding: 72px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section:last-child { border-bottom: none; }
+
+.section-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--teal);
+  margin-bottom: 8px;
+}
+
+.section-title {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+
+.section-desc {
+  font-size: 15px;
+  color: var(--text-2);
+  max-width: 620px;
+  margin-bottom: 40px;
+  line-height: 1.75;
+}
+
+/* ─── COMPARISON ─── */
+.comparison-wrap {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.comparison-header-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  border-bottom: 1px solid var(--border);
+}
+
+.comparison-header-row .ch {
+  padding: 14px 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.ch.task-col { color: var(--text-3); background: var(--surface-2); border-right: 1px solid var(--border); }
+.ch.without-col { color: var(--red); background: var(--red-dim); border-right: 1px solid var(--border); }
+.ch.with-col { color: var(--teal); background: var(--teal-dim); }
+
+.comparison-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+
+.comparison-row:last-child { border-bottom: none; }
+.comparison-row:hover { background: rgba(255,255,255,0.015); }
+
+.comparison-cell {
+  padding: 16px 20px;
+  font-size: 13.5px;
+  border-right: 1px solid var(--border);
+}
+
+.comparison-cell:last-child { border-right: none; }
+
+.cell-task { color: var(--text); font-weight: 600; }
+.cell-without { color: var(--text-2); }
+.cell-without .time { color: var(--red); font-weight: 600; font-size: 12px; display: block; margin-top: 3px; }
+.cell-with { color: var(--teal); font-weight: 500; }
+.cell-with .time { color: var(--teal); font-weight: 700; font-size: 12px; display: block; margin-top: 3px; }
+
+/* ─── SUBSCRIPTIONS ─── */
+.sub-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.sub-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.sub-card:hover { transform: translateY(-2px); border-color: var(--border-light); }
+.sub-card.featured { border-color: var(--purple-border); background: var(--purple-dim); }
+
+.sub-role { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-3); margin-bottom: 6px; }
+.sub-card.featured .sub-role { color: var(--purple); }
+.sub-plan { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.sub-cost { font-size: 32px; font-weight: 800; color: var(--text); margin-bottom: 14px; line-height: 1; }
+.sub-cost .per { font-size: 14px; font-weight: 500; color: var(--text-2); }
+.sub-why { font-size: 13px; color: var(--text-2); line-height: 1.65; }
+
+/* ─── STEP 0 ─── */
+.step-zero-card {
+  background: linear-gradient(135deg, rgba(0,201,167,0.04) 0%, rgba(155,135,255,0.04) 100%);
+  border: 1px solid var(--teal-border);
+  border-radius: var(--radius-lg);
+  padding: 36px;
+}
+
+.sz-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.sz-badge {
+  background: var(--teal);
+  color: #000;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 5px 14px;
+  border-radius: 100px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+.sz-title { font-size: 24px; font-weight: 800; color: var(--text); }
+
+.sz-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.sz-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+.sz-meta-item strong { color: var(--text); }
+
+.code-pill {
+  display: inline-block;
+  background: rgba(0,0,0,0.5);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 10px 18px;
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+  color: var(--teal);
+  margin-bottom: 24px;
+}
+
+.prereq-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  margin-bottom: 12px;
+}
+
+.prereq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.prereq-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+}
+
+.prereq-item code {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--teal);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.prereq-item span { font-size: 13px; color: var(--text-2); }
+
+.modes-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.mode-card {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 18px;
+}
+
+.mode-card.bootstrap { border-color: var(--blue-border); }
+.mode-card.onboard { border-color: var(--purple-border); }
+
+.mode-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+
+.mode-card.bootstrap .mode-label { color: var(--blue); }
+.mode-card.onboard .mode-label { color: var(--purple); }
+
+.mode-card p { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+
+.gate-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--amber-dim);
+  border: 1px solid var(--amber-border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+}
+
+.gate-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.gate-box p { font-size: 13px; color: var(--amber); line-height: 1.6; }
+.gate-box strong { font-weight: 700; }
+
+/* ─── PIPELINE ─── */
+.pipeline { position: relative; }
+
+.pipeline-track {
+  position: absolute;
+  left: 21px;
+  top: 42px;
+  bottom: 20px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--teal) 0%, var(--purple) 100%);
+  opacity: 0.2;
+}
+
+.p-step { display: flex; gap: 24px; margin-bottom: 12px; }
+
+.p-step-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.p-num {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 2px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-3);
+  flex-shrink: 0;
+  transition: all 0.25s;
+}
+
+.p-step:hover .p-num,
+.p-step.open .p-num {
+  background: var(--teal-dim);
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.p-line {
+  width: 2px;
+  flex: 1;
+  background: var(--border);
+  margin: 4px auto;
+  min-height: 12px;
+}
+
+.p-card {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color 0.2s;
+  cursor: pointer;
+  margin-bottom: 4px;
+  min-width: 0;
+}
+
+.p-card:hover { border-color: var(--border-light); }
+.p-step.open .p-card { border-color: var(--teal-border); }
+
+.p-card-head {
+  padding: 18px 22px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  user-select: none;
+}
+
+.p-head-left { display: flex; flex-direction: column; gap: 7px; }
+
+.p-head-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.p-title { font-size: 17px; font-weight: 700; color: var(--text); }
+
+.role-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
+.role-lead { background: var(--purple-dim); color: var(--purple); border: 1px solid var(--purple-border); }
+.role-dev { background: var(--blue-dim); color: var(--blue); border: 1px solid var(--blue-border); }
+.role-qa { background: var(--green-dim); color: var(--green); border: 1px solid var(--green-border); }
+.role-devops { background: var(--orange-dim); color: var(--orange); border: 1px solid var(--orange-border); }
+.role-buddy { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-border); }
+.role-pm { background: var(--surface-3); color: var(--text-2); border: 1px solid var(--border); }
+
+.p-subtitle { font-size: 13px; color: var(--text-2); }
+
+.p-chevron {
+  width: 20px; height: 20px;
+  color: var(--text-3);
+  flex-shrink: 0;
+  transition: transform 0.22s, color 0.2s;
+  margin-top: 2px;
+}
+
+.p-step.open .p-chevron { transform: rotate(180deg); color: var(--teal); }
+
+.p-body {
+  display: none;
+  padding: 0 22px 22px;
+  border-top: 1px solid var(--border);
+}
+
+.p-step.open .p-body { display: block; }
+
+.p-body-inner { padding-top: 20px; display: flex; flex-direction: column; gap: 16px; }
+
+.p-tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 7px 14px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12.5px;
+  color: var(--teal);
+}
+
+.p-body h4 {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  margin-bottom: 8px;
+}
+
+.p-body p { font-size: 13.5px; color: var(--text-2); line-height: 1.7; }
+
+.p-body ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.p-body ul li {
+  font-size: 13.5px;
+  color: var(--text-2);
+  line-height: 1.6;
+  display: flex;
+  gap: 8px;
+}
+
+.p-body ul li::before { content: '→'; color: var(--teal); flex-shrink: 0; opacity: 0.7; }
+
+.p-body .prompt-block {
+  background: rgba(0,0,0,0.5);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.p-gate {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--amber-dim);
+  border: 1px solid var(--amber-border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+}
+
+.p-gate-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.p-gate p { font-size: 13px; color: var(--amber); line-height: 1.6; }
+.p-gate strong { font-weight: 700; }
+
+.output-tag {
+  display: inline-block;
+  background: var(--teal-dim);
+  border: 1px solid var(--teal-border);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--teal);
+}
+
+/* ─── TRIGGERS ─── */
+.triggers-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  font-size: 13.5px;
+}
+
+.triggers-table th {
+  background: var(--surface-2);
+  padding: 12px 20px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.triggers-table td {
+  padding: 13px 20px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.triggers-table tr:last-child td { border-bottom: none; }
+.triggers-table tr:hover td { background: rgba(255,255,255,0.018); }
+.triggers-table td:not(:last-child) { border-right: 1px solid var(--border); }
+.triggers-table th:not(:last-child) { border-right: 1px solid var(--border); }
+
+.t-event { color: var(--text); font-weight: 600; }
+.t-action { color: var(--text-2); }
+.t-action code { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--teal); }
+
+/* ─── METRICS ─── */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 36px;
+}
+
+.metric-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: border-color 0.15s;
+}
+
+.metric-card:hover { border-color: var(--border-light); }
+
+.metric-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-3);
+  margin-bottom: 8px;
+}
+
+.metric-val {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--teal);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.metric-desc { font-size: 12px; color: var(--text-2); line-height: 1.5; }
+
+.log-fields {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.log-fields h4 {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  margin-bottom: 16px;
+}
+
+.log-field-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.log-field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.log-field-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--teal);
+  min-width: 160px;
+}
+
+.log-field-desc { font-size: 13px; color: var(--text-2); }
+
+/* ─── CONTEXT HEALTH ─── */
+.health-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  font-size: 13px;
+}
+
+.health-table th {
+  background: var(--surface-2);
+  padding: 11px 18px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.health-table th:not(:last-child), .health-table td:not(:last-child) { border-right: 1px solid var(--border); }
+
+.health-table td {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-2);
+}
+
+.health-table tr:last-child td { border-bottom: none; }
+.health-table tr:hover td { background: rgba(255,255,255,0.018); }
+
+.module-name { color: var(--text); font-weight: 600; }
+.status-fresh { color: var(--teal); font-weight: 600; }
+.status-stale { color: var(--amber); font-weight: 600; }
+
+/* ─── SKILLS ─── */
+.skills-block { margin-bottom: 32px; }
+
+.skills-block-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 14px;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.skill-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.skill-card:hover { border-color: var(--border-light); transform: translateY(-1px); }
+
+.skill-name { font-family: 'DM Mono', monospace; font-size: 12.5px; color: var(--teal); margin-bottom: 5px; }
+
+.skill-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 5px;
+}
+
+.skill-role {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+
+.skill-purpose { font-size: 12px; color: var(--text-2); line-height: 1.5; }
+
+/* ─── PHASES ─── */
+.phases-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.phase-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 26px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+.phase-card:hover { border-color: var(--border-light); }
+
+.phase-watermark {
+  position: absolute;
+  bottom: -16px;
+  right: 12px;
+  font-size: 100px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.03);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+.phase-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--teal);
+  margin-bottom: 6px;
+}
+
+.phase-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 18px;
+}
+
+.phase-items { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+
+.phase-item {
+  font-size: 13px;
+  color: var(--text-2);
+  display: flex;
+  gap: 8px;
+  line-height: 1.55;
+}
+
+.phase-item::before { content: '→'; color: var(--teal); flex-shrink: 0; opacity: 0.6; }
+
+.phase-measure {
+  padding: 10px 14px;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+.phase-measure strong {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--amber);
+  margin-bottom: 4px;
+}
+
+/* ─── TIERS ─── */
+.tiers-list { display: flex; flex-direction: column; gap: 12px; }
+
+.tier-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  transition: border-color 0.15s;
+}
+
+.tier-card:hover { border-color: var(--border-light); }
+
+.tier-letter {
+  font-size: 28px;
+  font-weight: 800;
+  flex-shrink: 0;
+  width: 32px;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.tier-a { color: var(--teal); }
+.tier-b { color: var(--blue); }
+.tier-c { color: var(--text-3); }
+
+.tier-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  margin-bottom: 3px;
+}
+
+.tier-projects { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.tier-priority { font-size: 13px; color: var(--text-2); }
+
+/* ─── RULES ─── */
+.rules-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.rule-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 18px;
+  display: flex;
+  gap: 14px;
+  transition: border-color 0.15s;
+}
+
+.rule-card:hover { border-color: var(--border-light); }
+
+.rule-num {
+  font-size: 32px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.05);
+  line-height: 1;
+  flex-shrink: 0;
+  width: 36px;
+  text-align: right;
+  margin-top: -2px;
+}
+
+.rule-body { flex: 1; }
+
+.rule-body strong {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.rule-body span { font-size: 12.5px; color: var(--text-2); line-height: 1.6; }
+
+/* ─── TEAM FILTER ─── */
+.team-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.ts-col.using { border-right: 1px solid var(--border); }
+
+.ts-head {
+  padding: 20px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ts-col.using .ts-head { background: var(--teal-dim); }
+.ts-col.not .ts-head { background: var(--red-dim); }
+
+.ts-head-icon {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+
+.ts-col.using .ts-head-icon { background: rgba(0,201,167,0.2); }
+.ts-col.not .ts-head-icon { background: rgba(248,113,113,0.15); }
+
+.ts-head h3 { font-size: 14px; font-weight: 700; }
+.ts-col.using .ts-head h3 { color: var(--teal); }
+.ts-col.not .ts-head h3 { color: var(--red); }
+
+.ts-items { padding: 22px 28px; display: flex; flex-direction: column; gap: 14px; }
+
+.ts-item {
+  display: flex;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+
+.ts-icon { flex-shrink: 0; margin-top: 2px; font-size: 14px; }
+
+.ts-footer {
+  padding: 16px 28px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.ts-col.using .ts-footer { color: var(--teal); background: var(--teal-dim); }
+.ts-col.not .ts-footer { color: var(--amber); background: var(--amber-dim); }
+
+/* ─── REVIEW BUDDY ─── */
+.buddy-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.buddy-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+}
+
+.buddy-role { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-3); margin-bottom: 6px; }
+.buddy-resp { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+
+/* ─── UTILS ─── */
+.divider { height: 1px; background: var(--border); margin: 24px 0; }
+.mt-6 { margin-top: 24px; }
+.mb-4 { margin-bottom: 16px; }
+.mb-5 { margin-bottom: 20px; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-light); }
+
+.sidebar::-webkit-scrollbar { width: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ─── SIDEBAR ─── -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-pill">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" fill="currentColor"/></svg>
+      v3 · AI-First
+    </div>
+    <h2>Claude Code<br>Workflow</h2>
+    <p>Meeting Deck · 2026</p>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Overview</div>
+    <a class="nav-item active" href="#hero"><span class="nav-dot"></span>Introduction</a>
+    <a class="nav-item" href="#what-it-does"><span class="nav-dot"></span>What Claude Does</a>
+    <a class="nav-item" href="#subscriptions"><span class="nav-dot"></span>Subscriptions</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Setup</div>
+    <a class="nav-item" href="#step-zero"><span class="nav-dot"></span>Step 0 · Bootstrap</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">The Pipeline</div>
+    <a class="nav-item" href="#step1"><span class="nav-step-num">1</span>PRD Received</a>
+    <a class="nav-item" href="#step2"><span class="nav-step-num">2</span>Impact Assessment</a>
+    <a class="nav-item" href="#step3"><span class="nav-step-num">3</span>Context MDs</a>
+    <a class="nav-item" href="#step4"><span class="nav-step-num">4</span>Jira Cards</a>
+    <a class="nav-item" href="#step5"><span class="nav-step-num">5</span>Implementation</a>
+    <a class="nav-item" href="#step6"><span class="nav-step-num">6</span>Review + QA</a>
+    <a class="nav-item" href="#step7"><span class="nav-step-num">7</span>Lead Review</a>
+    <a class="nav-item" href="#step8"><span class="nav-step-num">8</span>Deploy + Docs</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Reference</div>
+    <a class="nav-item" href="#triggers"><span class="nav-dot"></span>Sprint Triggers</a>
+    <a class="nav-item" href="#measurement"><span class="nav-dot"></span>Measurement</a>
+    <a class="nav-item" href="#context-health"><span class="nav-dot"></span>Context Health</a>
+    <a class="nav-item" href="#skills"><span class="nav-dot"></span>Skills Reference</a>
+    <a class="nav-item" href="#phases"><span class="nav-dot"></span>Transition Phases</a>
+    <a class="nav-item" href="#tiers"><span class="nav-dot"></span>Project Tiers</a>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-group-label">Culture</div>
+    <a class="nav-item" href="#rules"><span class="nav-dot"></span>11 Non-Negotiables</a>
+    <a class="nav-item" href="#team-filter"><span class="nav-dot"></span>The Team Filter</a>
+  </div>
+</nav>
+
+<!-- ─── MAIN ─── -->
+<main class="main">
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-eyebrow">Claude Code Workflow — Version 3</div>
+  <h1>Ship faster.<br>Release quality.<br><span class="gradient">Build with AI.</span></h1>
+  <p class="hero-sub">A complete AI-assisted engineering workflow. Claude Code handles scoping, implementation, review, and documentation — developers focus on decisions, not boilerplate.</p>
+  <div class="hero-stats">
+    <div class="stat-card">
+      <div class="stat-val">5×</div>
+      <div class="stat-label">Faster PRD-to-card breakdown</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">85%+</div>
+      <div class="stat-label">Target 1-session card completion</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">&lt;10%</div>
+      <div class="stat-label">AI-related rework rate target</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">&lt;30%</div>
+      <div class="stat-label">PRs requiring Lead review</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT CLAUDE DOES -->
+<section class="section" id="what-it-does">
+  <div class="section-eyebrow">The Shift</div>
+  <h2 class="section-title">What Claude Code Changes</h2>
+  <p class="section-desc">Every high-friction task in the dev loop gets a Skills-powered replacement. The developer's job shifts from writing boilerplate to making good decisions inside a well-scoped boundary.</p>
+  <div class="comparison-wrap">
+    <div class="comparison-header-row">
+      <div class="ch task-col">Task</div>
+      <div class="ch without-col">Without Claude Code</div>
+      <div class="ch with-col">With Claude Code</div>
+    </div>
+    <div class="comparison-row">
+      <div class="comparison-cell cell-task">PRD → card breakdown</div>
+      <div class="comparison-cell cell-without">Lead writes manually<span class="time">2–4 hrs</span></div>
+      <div class="comparison-cell cell-with"><code>/prd-assess</code> outputs full impact assessment<span class="time">20 min</span></div>
+    </div>
+    <div class="comparison-row">
+      <div class="comparison-cell cell-task">Session context setup</div>
+      <div class="comparison-cell cell-without">Dev reads docs, copies code snippets<span class="time">30–45 min</span></div>
+      <div class="comparison-cell cell-with">Skills auto-load, prompt template structures session<span class="time">5 min</span></div>
+    </div>
+    <div class="comparison-row">
+      <div class="comparison-cell cell-task">Implementation</div>
+      <div class="comparison-cell cell-without">Dev writes from scratch</div>
+      <div class="comparison-cell cell-with">Dev reviews and steers AI output</div>
+    </div>
+    <div class="comparison-row">
+      <div class="comparison-cell cell-task">PR pre-review</div>
+      <div class="comparison-cell cell-without">Manual checklist<span class="time">30–60 min</span></div>
+      <div class="comparison-cell cell-with">Review Buddy Skill runs checklist<span class="time">10 min</span></div>
+    </div>
+    <div class="comparison-row">
+      <div class="comparison-cell cell-task">Test generation</div>
+      <div class="comparison-cell cell-without">QA writes manually<span class="time">1–2 hrs</span></div>
+      <div class="comparison-cell cell-with">Claude generates from acceptance criteria<span class="time">20 min</span></div>
+    </div>
+    <div class="comparison-row">
+      <div class="comparison-cell cell-task">Context MD updates</div>
+      <div class="comparison-cell cell-without">Lead writes manually</div>
+      <div class="comparison-cell cell-with">Claude Code drafts, Lead verifies</div>
+    </div>
+  </div>
+</section>
+
+<!-- SUBSCRIPTIONS -->
+<section class="section" id="subscriptions">
+  <div class="section-eyebrow">Team Setup</div>
+  <h2 class="section-title">Subscriptions by Role</h2>
+  <p class="section-desc">Leads need Max tier for codebase scanning and PRD assessment. Developers use Claude Pro — it replaces Cursor and every other AI tool.</p>
+  <div class="sub-grid">
+    <div class="sub-card featured">
+      <div class="sub-role">Team Leads</div>
+      <div class="sub-plan">Claude Max 5×</div>
+      <div class="sub-cost">$100<span class="per">/mo</span></div>
+      <div class="sub-why">Claude Code access for codebase scanning, PRD assessment, Skill building, and Impact Assessments. Max tier is required for long-context analysis.</div>
+    </div>
+    <div class="sub-card">
+      <div class="sub-role">All Developers</div>
+      <div class="sub-plan">Claude Pro</div>
+      <div class="sub-cost">$20<span class="per">/mo</span></div>
+      <div class="sub-why">Full Claude access, Agent Skills, implementation sessions. Replaces Cursor entirely. Every developer on the team needs this.</div>
+    </div>
+    <div class="sub-card">
+      <div class="sub-role">Team Standard (reference)</div>
+      <div class="sub-plan">Team Plan</div>
+      <div class="sub-cost">$20<span class="per">/mo annual</span></div>
+      <div class="sub-why">Centralized team plan option. Relevant when moving away from per-seat management at scale.</div>
+    </div>
+    <div class="sub-card">
+      <div class="sub-role">Team Premium (reference)</div>
+      <div class="sub-plan">Team Premium</div>
+      <div class="sub-cost">$100<span class="per">/mo annual</span></div>
+      <div class="sub-why">Adds Claude Code centrally. Option at 25+ developers when individual Max subscriptions become harder to manage.</div>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 0 -->
+<section class="section" id="step-zero">
+  <div class="section-eyebrow">Before the Pipeline</div>
+  <h2 class="section-title">Step 0 — Project Bootstrap</h2>
+  <p class="section-desc">The 8-step pipeline depends on three files existing. Nothing in the workflow runs correctly without them. Run this once per new project or legacy onboarding.</p>
+
+  <div class="step-zero-card">
+    <div class="sz-head">
+      <div class="sz-badge">Step 0</div>
+      <div class="sz-title">Project Bootstrap</div>
+    </div>
+    <div class="sz-meta">
+      <div class="sz-meta-item"><strong>Owner:</strong> Lead</div>
+      <div class="sz-meta-item"><strong>When:</strong> Once per new project / legacy onboarding</div>
+      <div class="sz-meta-item"><strong>Tool:</strong> Claude Code (Max) + <code style="font-family:'DM Mono',monospace;font-size:12px;color:var(--teal)">/project-bootstrap</code></div>
+    </div>
+    <div class="code-pill">/project-bootstrap</div>
+    <div class="prereq-title">Three files must exist before Sprint 1</div>
+    <div class="prereq-list">
+      <div class="prereq-item">
+        <code>ARCHITECTURE.md</code>
+        <span>Module map, stack overview, key boundaries, external integrations</span>
+      </div>
+      <div class="prereq-item">
+        <code>docs/context/[module].context.md</code>
+        <span>One per module — key files, dependencies, do-not-touch list, gotchas, patterns</span>
+      </div>
+      <div class="prereq-item">
+        <code>CONTEXT-HEALTH.md</code>
+        <span>Staleness tracker — module list, last verified sprint, owner, status per module</span>
+      </div>
+    </div>
+    <div class="modes-grid">
+      <div class="mode-card bootstrap">
+        <div class="mode-label">BOOTSTRAP Mode · New Project</div>
+        <p>Claude interviews the Lead in 3 structured rounds (9 questions) about modules, stack, team, and constraints. Generates all three files from the interview output.</p>
+      </div>
+      <div class="mode-card onboard">
+        <div class="mode-label">ONBOARD Mode · Existing Codebase</div>
+        <p>Claude scans the codebase, infers stack and modules, then interviews the Lead to fill gaps — owners, do-not-touch lists, gotchas. Generates all three files without overwriting existing context MDs.</p>
+      </div>
+    </div>
+    <div class="gate-box">
+      <div class="gate-icon">⚠</div>
+      <p><strong>Gate:</strong> No Sprint 1 cards are created until the Lead has signed <code style="font-family:'DM Mono',monospace;font-size:12px">last_verified_sprint</code> on every context MD. <code style="font-family:'DM Mono',monospace;font-size:12px">UNVERIFIED</code> context MDs are not valid session sources.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PIPELINE -->
+<section class="section" id="step1">
+  <div class="section-eyebrow">The Core Workflow</div>
+  <h2 class="section-title">The 8-Step Pipeline</h2>
+  <p class="section-desc">Every feature, every MVP, every hotfix follows this sequence. Click each step to expand details. No step is skippable.</p>
+
+  <div class="pipeline" id="pipeline">
+    <div class="pipeline-track"></div>
+
+    <!-- Step 1 -->
+    <div class="p-step" id="step1-card">
+      <div class="p-step-left">
+        <div class="p-num">1</div>
+        <div class="p-line"></div>
+      </div>
+      <div class="p-card" onclick="toggleStep(this)">
+        <div class="p-card-head">
+          <div class="p-head-left">
+            <div class="p-head-top">
+              <div class="p-title">PRD Received</div>
+              <span class="role-badge role-pm">PM / Stakeholder</span>
+              <span class="role-badge role-lead">Lead</span>
+            </div>
+            <div class="p-subtitle">The only valid trigger for development. No PRD = no card = no session.</div>
+          </div>
+          <svg class="p-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8l5 5 5-5"/></svg>
+        </div>
+        <div class="p-body">
+          <div class="p-body-inner">
+            <div>
+              <h4>A valid PRD must include</h4>
+              <ul>
+                <li>Clear objective</li>
+                <li>Scope — what's IN and what's explicitly OUT</li>
+                <li>At least one verifiable acceptance criterion</li>
+                <li>PRD number (e.g. PRD-042)</li>
+              </ul>
+            </div>
+            <div class="p-gate">
+              <div class="p-gate-icon">⚠</div>
+              <p><strong>Gate:</strong> If the PRD is incomplete, Lead returns it. Work does not start on a partial PRD. No exceptions.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="p-step" id="step2-card">
+      <div class="p-step-left">
+        <div class="p-num">2</div>
+        <div class="p-line"></div>
+      </div>
+      <div class="p-card" onclick="toggleStep(this)">
+        <div class="p-card-head">
+          <div class="p-head-left">
+            <div class="p-head-top">
+              <div class="p-title">Impact Assessment</div>
+              <span class="role-badge role-lead">Lead</span>
+            </div>
+            <div class="p-subtitle">Claude reads ARCHITECTURE.md, the PRD, and all active context MDs to produce a full impact analysis.</div>
+          </div>
+          <svg class="p-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8l5 5 5-5"/></svg>
+        </div>
+        <div class="p-body">
+          <div class="p-body-inner">
+            <div class="p-tool">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M4 7h6M4 4.5h4M4 9.5h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              /prd-assess docs/prd/PRD-042.md
+            </div>
+            <div>
+              <h4>Output: IMPACT-ASSESSMENT.md contains</h4>
+              <ul>
+                <li>PRD type — New Feature / New Project / Pivot / Hotfix / Cross-Project</li>
+                <li>Affected modules and their role owners</li>
+                <li>Context MDs that need updating before work begins</li>
+                <li>Custom Skills that need rebuilding</li>
+                <li>Estimated Jira cards per role</li>
+                <li>Dependency and cross-project risks</li>
+              </ul>
+            </div>
+            <div class="p-gate">
+              <div class="p-gate-icon">⚠</div>
+              <p><strong>Gate:</strong> Nothing moves forward until the IMPACT-ASSESSMENT.md exists and the Lead has reviewed it.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="p-step" id="step3-card">
+      <div class="p-step-left">
+        <div class="p-num">3</div>
+        <div class="p-line"></div>
+      </div>
+      <div class="p-card" onclick="toggleStep(this)">
+        <div class="p-card-head">
+          <div class="p-head-left">
+            <div class="p-head-top">
+              <div class="p-title">Context MDs Updated</div>
+              <span class="role-badge role-lead">Lead</span>
+            </div>
+            <div class="p-subtitle">Every module listed in the Impact Assessment gets its context MD updated and signed.</div>
+          </div>
+          <svg class="p-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8l5 5 5-5"/></svg>
+        </div>
+        <div class="p-body">
+          <div class="p-body-inner">
+            <div>
+              <h4>Per affected module</h4>
+              <ul>
+                <li>Update context MD — key files, dependencies, do-not-touch list, gotchas, required patterns</li>
+                <li>Update <code style="font-family:'DM Mono',monospace;font-size:12px;color:var(--teal)">last_verified_sprint</code> to current sprint (Lead sign-off)</li>
+                <li>Update ARCHITECTURE.md if module structure changed</li>
+                <li>Rebuild the Custom Skill for that module</li>
+                <li>Update CONTEXT-HEALTH.md — staleness flags, ownership changes</li>
+              </ul>
+            </div>
+            <div class="p-gate">
+              <div class="p-gate-icon">⚠</div>
+              <p><strong>Warning:</strong> A stale context MD is worse than none. Developers working from stale context build confidently in the wrong direction.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="p-step" id="step4-card">
+      <div class="p-step-left">
+        <div class="p-num">4</div>
+        <div class="p-line"></div>
+      </div>
+      <div class="p-card" onclick="toggleStep(this)">
+        <div class="p-card-head">
+          <div class="p-head-left">
+            <div class="p-head-top">
+              <div class="p-title">Jira Cards Created</div>
+              <span class="role-badge role-lead">Lead</span>
+            </div>
+            <div class="p-subtitle">Claude generates the full card list from the impact assessment. Lead reviews before creating in Jira.</div>
+          </div>
+          <svg class="p-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8l5 5 5-5"/></svg>
+        </div>
+        <div class="p-body">
+          <div class="p-body-inner">
+            <div class="p-tool">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M4 7h6M4 4.5h4M4 9.5h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              /gen-cards docs/context/IMPACT-ASSESSMENT.md
+            </div>
+            <div>
+              <h4>Every card must have</h4>
+              <ul>
+                <li>PRD reference — mandatory, no card without this</li>
+                <li>Skill name or context MD path</li>
+                <li>Exact scope: files the developer MAY touch</li>
+                <li>Explicit do-not-touch list</li>
+                <li>Acceptance criteria (verifiable)</li>
+                <li>Size: XS, S, or M only — no L or XL cards</li>
+                <li>3 pre-set log fields: <code style="font-family:'DM Mono',monospace;font-size:11px;color:var(--teal)">AI-assisted (Y/N)</code> · <code style="font-family:'DM Mono',monospace;font-size:11px;color:var(--teal)">rework required (Y/N)</code> · <code style="font-family:'DM Mono',monospace;font-size:11px;color:var(--teal)">session count</code></li>
+              </ul>
+            </div>
+            <div class="p-gate">
+              <div class="p-gate-icon">⚠</div>
+              <p><strong>Rule:</strong> Cards larger than M are split before creation. A card that's too large will cause the developer to hit session limits mid-implementation.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="p-step" id="step5-card">
+      <div class="p-step-left">
+        <div class="p-num">5</div>
+        <div class="p-line"></div>
+      </div>
+      <div class="p-card" onclick="toggleStep(this)">
+        <div class="p-card-head">
+          <div class="p-head-left">
+            <div class="p-head-top">
+              <div class="p-title">Implementation</div>
+              <span class="role-badge role-dev">Developer</span>
+            </div>
+            <div class="p-subtitle">One session per card. Claude Pro + role Skill + project context Skill.</div>
+          </div>
+          <svg class="p-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8l5 5 5-5"/></svg>
+        </div>
+        <div class="p-body">
+          <div class="p-body-inner">
+            <div>
+              <h4>Session start sequence</h4>
+              <ul>
+                <li>Open Claude Pro — confirm role Skill is enabled (<code style="font-family:'DM Mono',monospace;font-size:11px;color:var(--teal)">fe-best-practices</code> / <code style="font-family:'DM Mono',monospace;font-size:11px;color:var(--teal)">be-best-practices</code> / etc.)</li>
+                <li>Check if a project Skill exists for the module — if yes, it auto-loads. If no, attach the context MD manually</li>
+                <li>Open session using the mandatory prompt template</li>
+              </ul>
+            </div>
+            <div>
+              <h4>Mandatory session prompt template</h4>
+              <div class="prompt-block">PRD: PRD-042 — [PRD title]
+TASK: [exact task from Jira card]
+SCOPE: Touch ONLY [files listed on card]
+DO NOT: [do-not-touch list from card]
+CONTEXT: [Skill name] loaded / [module.context.md] attached
+DONE WHEN: [acceptance criteria]</div>
+            </div>
+            <div>
+              <h4>Session rules</h4>
+              <ul>
+                <li>One session per card — close and start fresh for each card</li>
+                <li>When acceptance criteria are met, stop — do not keep going</li>
+                <li>Limit hit mid-session = card was scoped too large → flag and split, do not continue</li>
+                <li>Never paste raw source files into Claude — use Skills or attach context MDs only</li>
+                <li>On card close, developer fills the 3 log fields before moving to Done</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 6 -->
+    <div class="p-step" id="step6-card">
+      <div class="p-step-left">
+        <div class="p-num">6</div>
+        <div class="p-line"></div>
+      </div>
+      <div class="p-card" onclick="toggleStep(this)">
+        <div class="p-card-head">
+          <div class="p-head-left">
+            <div class="p-head-top">
+              <div class="p-title">Review Buddy + QA</div>
+              <span class="role-badge role-buddy">Review Buddy</span>
+              <span class="role-badge role-qa">QA</span>
+            </div>
+            <div class="p-subtitle">Two-gate system. Buddy runs first, QA runs after Buddy sign-off only.</div>
+          </div>
+          <svg class="p-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8l5 5 5-5"/></svg>
+        </div>
+        <div class="p-body">
+          <div class="p-body-inner">
+            <div>
+              <h4>Review Buddy checklist (pre-review Skill)</h4>
+              <ul>
+                <li>Did the PR only touch files listed on the card?</li>
+                <li>Is acceptance criteria verifiable from the code?</li>
+                <li>No untouched-file modifications</li>
+                <li>No schema changes outside scope</li>
+                <li>Patterns match the <code style="font-family:'DM Mono',monospace;font-size:11px;color:var(--teal)">coding-standards</code> Skill</li>
+              </ul>
+            </div>
+            <div>
+              <h4>QA (after Buddy sign-off)</h4>
+              <ul>
+                <li>Generate test cases from acceptance criteria</li>
+                <li>Generate edge cases — empty states, boundary values, error paths</li>
+                <li>Browser matrix — Chrome, Firefox, Safari</li>
+                <li>Regression check on files adjacent to scope boundary</li>
+              </ul>
+            </div>
+            <div class="p-gate">
+              <div class="p-gate-icon">⚠</div>
+              <p><strong>Rule:</strong> Review Buddy and QA must be different people. One person doing both defeats the two-gate system. Bug found by QA → returns to Step 5.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 7 -->
+    <div class="p-step" id="step7-card">
+      <div class="p-step-left">
+        <div class="p-num">7</div>
+        <div class="p-line"></div>
+      </div>
+      <div class="p-card" onclick="toggleStep(this)">
+        <div class="p-card-head">
+          <div class="p-head-left">
+            <div class="p-head-top">
+              <div class="p-title">Lead PR Review</div>
+              <span class="role-badge role-lead">Lead</span>
+            </div>
+            <div class="p-subtitle">Target: less than 30% of all PRs. Lead reviews only what requires architectural judgment.</div>
+          </div>
+          <svg class="p-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8l5 5 5-5"/></svg>
+        </div>
+        <div class="p-body">
+          <div class="p-body-inner">
+            <div>
+              <h4>Lead reviews only</h4>
+              <ul>
+                <li>PRs touching ARCHITECTURE.md, <code style="font-family:'DM Mono',monospace;font-size:11px;color:var(--teal)">/lib/auth/</code>, or cross-module dependencies</li>
+                <li>New patterns not in the <code style="font-family:'DM Mono',monospace;font-size:11px;color:var(--teal)">coding-standards</code> Skill</li>
+                <li>Pivot-adjacent code flagged high-risk in the Impact Assessment</li>
+                <li>Anything the Buddy escalates</li>
+              </ul>
+            </div>
+            <div>
+              <h4>After merge — Lead closes the loop</h4>
+              <ul>
+                <li>New pattern established → update <code style="font-family:'DM Mono',monospace;font-size:11px;color:var(--teal)">coding-standards</code> Skill immediately</li>
+                <li>Module structure changed → update context MD, re-sign <code style="font-family:'DM Mono',monospace;font-size:11px;color:var(--teal)">last_verified_sprint</code>, rebuild Skill</li>
+                <li>Module ownership changed → update CONTEXT-HEALTH.md</li>
+                <li>Version bump ARCHITECTURE.md if structural changes shipped</li>
+              </ul>
+            </div>
+            <div class="p-gate">
+              <div class="p-gate-icon">⚠</div>
+              <p><strong>Warning:</strong> If a Lead is reviewing every PR, they are not doing Impact Assessments. Impact Assessments are the higher-value use of Lead capacity.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 8 -->
+    <div class="p-step" id="step8-card">
+      <div class="p-step-left">
+        <div class="p-num">8</div>
+      </div>
+      <div class="p-card" onclick="toggleStep(this)">
+        <div class="p-card-head">
+          <div class="p-head-left">
+            <div class="p-head-top">
+              <div class="p-title">Deploy + Docs</div>
+              <span class="role-badge role-devops">DevOps</span>
+              <span class="role-badge role-lead">Lead</span>
+            </div>
+            <div class="p-subtitle">CI/CD deploy, 30-min Sentry watch, then Lead closes the docs loop.</div>
+          </div>
+          <svg class="p-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8l5 5 5-5"/></svg>
+        </div>
+        <div class="p-body">
+          <div class="p-body-inner">
+            <div>
+              <h4>DevOps</h4>
+              <ul>
+                <li>Deploy via CI/CD to self-hosted infrastructure</li>
+                <li>Smoke test on staging before promoting to production</li>
+                <li>Monitor Sentry for 30 min post-deploy</li>
+                <li>Log deployment against PRD number in <code style="font-family:'DM Mono',monospace;font-size:11px;color:var(--teal)">devops-infra</code> Skill changelog</li>
+              </ul>
+            </div>
+            <div>
+              <h4>Lead post-deploy</h4>
+              <ul>
+                <li>Version bump ARCHITECTURE.md</li>
+                <li>Confirm <code style="font-family:'DM Mono',monospace;font-size:11px;color:var(--teal)">last_verified_sprint</code> is current on all touched context MDs</li>
+                <li>Rebuild affected Skills</li>
+                <li>Update CONTEXT-HEALTH.md — all touched modules marked fresh</li>
+                <li>Run monthly metric review if end-of-sprint</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /pipeline -->
+</section>
+
+<!-- SPRINT TRIGGERS -->
+<section class="section" id="triggers">
+  <div class="section-eyebrow">Quick Reference</div>
+  <h2 class="section-title">Sprint Triggers</h2>
+  <p class="section-desc">Every event that should trigger a workflow action, mapped to owner and next step.</p>
+  <table class="triggers-table">
+    <thead>
+      <tr><th>Event</th><th>Owner</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="t-event">New project / legacy onboarding</td><td><span class="role-badge role-lead">Lead</span></td><td class="t-action">Run <code>/project-bootstrap</code> → ARCHITECTURE.md + context MDs + CONTEXT-HEALTH.md</td></tr>
+      <tr><td class="t-event">PRD received</td><td><span class="role-badge role-lead">Lead</span></td><td class="t-action">Run <code>/prd-assess</code> → Impact Assessment</td></tr>
+      <tr><td class="t-event">New module created</td><td><span class="role-badge role-lead">Lead</span></td><td class="t-action">New context MD + new Skill</td></tr>
+      <tr><td class="t-event">Module refactored</td><td><span class="role-badge role-lead">Lead</span></td><td class="t-action">Update context MD + rebuild Skill</td></tr>
+      <tr><td class="t-event">Pivot approved</td><td><span class="role-badge role-lead">Lead</span></td><td class="t-action">Disable stale Skills → rebuild from pivot PRD</td></tr>
+      <tr><td class="t-event">New pattern established</td><td><span class="role-badge role-lead">Lead</span></td><td class="t-action">Update <code>coding-standards</code> Skill immediately</td></tr>
+      <tr><td class="t-event">Sprint start</td><td><span class="role-badge role-lead">Lead</span></td><td class="t-action">Sign off all context MD headers + review CONTEXT-HEALTH.md</td></tr>
+      <tr><td class="t-event">Card closed</td><td><span class="role-badge role-dev">Developer</span></td><td class="t-action">Log: AI-assisted, rework required, session count</td></tr>
+      <tr><td class="t-event">PR opened</td><td><span class="role-badge role-buddy">Review Buddy</span></td><td class="t-action">Pre-review Skill checklist before Lead sees it</td></tr>
+      <tr><td class="t-event">Monthly review</td><td><span class="role-badge role-lead">Lead</span></td><td class="t-action">AI-assist rate, 1-session completion %, rework rate</td></tr>
+      <tr><td class="t-event">Context MD not updated 2+ sprints</td><td><span class="role-badge role-lead">Lead</span></td><td class="t-action">Flag in CONTEXT-HEALTH.md → verify or archive before next sprint</td></tr>
+      <tr><td class="t-event">Release</td><td><span class="role-badge role-lead">Lead</span></td><td class="t-action">ARCHITECTURE.md version bump + full Skills audit</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- MEASUREMENT -->
+<section class="section" id="measurement">
+  <div class="section-eyebrow">Non-Negotiable</div>
+  <h2 class="section-title">Measurement</h2>
+  <p class="section-desc">Without measurement there is no proof the workflow works and no basis for deciding who stays. Every developer fills the log fields on every card close.</p>
+
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-label">1-Session Completion Rate</div>
+      <div class="metric-val">85%+</div>
+      <div class="metric-desc">Target cards completed in a single Claude session</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">AI-Related Rework</div>
+      <div class="metric-val">&lt;10%</div>
+      <div class="metric-desc">Cards requiring rework caused by AI output issues</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Lead PR Review %</div>
+      <div class="metric-val">&lt;30%</div>
+      <div class="metric-desc">Portion of PRs requiring Lead-level review</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Limit Events / Sprint</div>
+      <div class="metric-val">≈ 0</div>
+      <div class="metric-desc">Target by Month 3 — indicates well-scoped cards</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Stale Context MDs Used</div>
+      <div class="metric-val">0</div>
+      <div class="metric-desc">Non-negotiable — stale context is not a valid source</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">AI-Assist Rate</div>
+      <div class="metric-val">Track</div>
+      <div class="metric-desc">Establish baseline, improve sprint-on-sprint</div>
+    </div>
+  </div>
+
+  <div class="log-fields">
+    <h4>3 Log Fields — Filled on Every Card Close</h4>
+    <div class="log-field-list">
+      <div class="log-field">
+        <div class="log-field-name">AI-assisted</div>
+        <div class="log-field-desc">Y/N — was Claude Code used to implement this card?</div>
+      </div>
+      <div class="log-field">
+        <div class="log-field-name">Rework required</div>
+        <div class="log-field-desc">Y/N — did the card require a redo after initial submission?</div>
+      </div>
+      <div class="log-field">
+        <div class="log-field-name">Session count</div>
+        <div class="log-field-desc">How many Claude sessions this card took to complete</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTEXT HEALTH -->
+<section class="section" id="context-health">
+  <div class="section-eyebrow">Maintenance System</div>
+  <h2 class="section-title">Context Health</h2>
+  <p class="section-desc"><code style="font-family:'DM Mono',monospace;font-size:13px;color:var(--teal)">CONTEXT-HEALTH.md</code> lives in the project root. Lead maintains it every sprint. Any module not signed off this sprint is not a valid Skill source.</p>
+
+  <table class="health-table">
+    <thead>
+      <tr><th>Module</th><th>Context MD</th><th>Last Verified</th><th>Owner</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="module-name">auth</td>
+        <td><code style="font-family:'DM Mono',monospace;font-size:12px;color:var(--teal)">auth.context.md</code></td>
+        <td>Sprint-24</td>
+        <td>Lead</td>
+        <td class="status-fresh">✓ Fresh</td>
+      </tr>
+      <tr>
+        <td class="module-name">settings</td>
+        <td><code style="font-family:'DM Mono',monospace;font-size:12px;color:var(--teal)">settings.context.md</code></td>
+        <td>Sprint-23</td>
+        <td>Lead</td>
+        <td class="status-fresh">✓ Fresh</td>
+      </tr>
+      <tr>
+        <td class="module-name">billing</td>
+        <td><code style="font-family:'DM Mono',monospace;font-size:12px;color:var(--teal)">billing.context.md</code></td>
+        <td>Sprint-21</td>
+        <td>Lead</td>
+        <td class="status-stale">⚠ Stale — 2+ sprints</td>
+      </tr>
+      <tr>
+        <td class="module-name">dashboard</td>
+        <td><code style="font-family:'DM Mono',monospace;font-size:12px;color:var(--teal)">dashboard.context.md</code></td>
+        <td>Sprint-22</td>
+        <td>Dev</td>
+        <td class="status-stale">⚠ Stale — verify before use</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:16px;padding:14px 18px;background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:var(--radius-sm);font-size:13px;color:var(--amber);">
+    <strong style="display:block;margin-bottom:4px;font-size:11px;text-transform:uppercase;letter-spacing:.07em;">Rule</strong>
+    Stale = not updated in 2+ sprints. Lead must verify or archive before next sprint touches it. Run <code style="font-family:'DM Mono',monospace;font-size:11px">/context-audit [module]</code> to compare context MD vs actual module files and flag divergences.
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="section" id="skills">
+  <div class="section-eyebrow">Enabling Technology</div>
+  <h2 class="section-title">Skills Reference</h2>
+  <p class="section-desc">Skills are instruction sets installed into Claude. They enforce patterns, automate checklists, and carry context across every session. Install via <code style="font-family:'DM Mono',monospace;font-size:13px;color:var(--teal)">npx @talisikai/claude-skills add [skill-name]</code>.</p>
+
+  <div class="skills-block">
+    <div class="skills-block-title">Product Skills</div>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <div class="skill-name">/project-bootstrap</div>
+        <div class="skill-meta"><span class="skill-role role-lead role-badge">Lead</span></div>
+        <div class="skill-purpose">Generates ARCHITECTURE.md, context MDs, and CONTEXT-HEALTH.md for new or onboarded projects. BOOTSTRAP + ONBOARD modes.</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">/prd-assess</div>
+        <div class="skill-meta"><span class="skill-role role-lead role-badge">Lead</span></div>
+        <div class="skill-purpose">Three-mode PRD skill — CREATE (new PRD), ASSESS (impact assessment), PIVOT (direction change with invalidation).</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">/gen-cards</div>
+        <div class="skill-meta"><span class="skill-role role-lead role-badge">Lead</span></div>
+        <div class="skill-purpose">Reads an IMPACT-ASSESSMENT.md and generates a Jira-ready card list grouped by role. Auto-splits L/XL estimates.</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">/context-audit</div>
+        <div class="skill-meta"><span class="skill-role role-lead role-badge">Lead</span></div>
+        <div class="skill-purpose">Sprint-start context health check. Compares context MD vs actual module files — outputs CLEAN / STALE / OUTDATED.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="skills-block">
+    <div class="skills-block-title">Engineering Skills</div>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <div class="skill-name">coding-standards</div>
+        <div class="skill-meta"><span class="skill-role role-badge" style="background:var(--teal-dim);color:var(--teal);border:1px solid var(--teal-border)">All Roles</span></div>
+        <div class="skill-purpose">Team coding pattern template. Ships with placeholders — Lead populates once per project. Every session enforces patterns automatically.</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">fe-best-practices</div>
+        <div class="skill-meta"><span class="skill-role role-dev role-badge">Frontend</span></div>
+        <div class="skill-purpose">React + Tailwind + shadcn/ui + React Query best practices. State, forms, data fetching, error handling, TypeScript, file structure.</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">be-best-practices</div>
+        <div class="skill-meta"><span class="skill-role role-dev role-badge">Backend</span></div>
+        <div class="skill-purpose">Node.js + Zod + Prisma + PostgreSQL + MongoDB + Redis best practices. Validation, ORM patterns, caching, API design.</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">pre-review-checklist</div>
+        <div class="skill-meta"><span class="skill-role role-buddy role-badge">Review Buddy</span></div>
+        <div class="skill-purpose">Structured 5-check PR gate. Scope compliance, AC verifiability, do-not-touch violations, schema compliance, pattern compliance.</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">devops-infra</div>
+        <div class="skill-meta"><span class="skill-role role-devops role-badge">DevOps</span></div>
+        <div class="skill-purpose">Full deployment cycle — protocol, pre-deploy checklist, 30-min Sentry watch, changelog, CI/CD patterns, rollback protocol.</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">qa-engineer</div>
+        <div class="skill-meta"><span class="skill-role role-qa role-badge">QA</span></div>
+        <div class="skill-purpose">Test plans, test cases, bug reports, and QA estimation from acceptance criteria. Edge case generation included.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="skills-block">
+    <div class="skills-block-title">Design Skills</div>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <div class="skill-name">design-audit</div>
+        <div class="skill-meta"><span class="skill-role role-dev role-badge">Frontend</span></div>
+        <div class="skill-purpose">Premium UI/UX audit with Jobs/Ive philosophy. Reads actual code, outputs phased plan (Critical → Refinement → Polish) with exact file references.</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">frontend-design</div>
+        <div class="skill-meta"><span class="skill-role role-dev role-badge">Frontend</span></div>
+        <div class="skill-purpose">Build or improve frontends in Design System Mode (existing tokens) or Creative Mode (greenfield). React, Next.js, Vue, HTML/CSS.</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">ui-ux-pro-max</div>
+        <div class="skill-meta"><span class="skill-role role-dev role-badge">Frontend</span></div>
+        <div class="skill-purpose">50+ styles, 97 palettes, 57 font pairings, 9 stacks. Full design systems and page-specific overrides.</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">web-design-guidelines</div>
+        <div class="skill-meta"><span class="skill-role role-dev role-badge">Frontend</span></div>
+        <div class="skill-purpose">Reviews UI code against Vercel's Web Interface Guidelines — accessibility, semantic HTML, focus, keyboard navigation.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PHASES -->
+<section class="section" id="phases">
+  <div class="section-eyebrow">Rollout Plan</div>
+  <h2 class="section-title">Transition Phases</h2>
+  <p class="section-desc">Three months to full adoption. Each phase builds on the previous. Measurement starts in Month 1.</p>
+
+  <div class="phases-grid">
+    <div class="phase-card">
+      <div class="phase-watermark">1</div>
+      <div class="phase-eyebrow">Month 1</div>
+      <div class="phase-title">Foundation</div>
+      <div class="phase-items">
+        <div class="phase-item">All devs migrate from Cursor to Claude Pro</div>
+        <div class="phase-item">Leads on Claude Max 5×</div>
+        <div class="phase-item">Context MD system built for Tier A projects</div>
+        <div class="phase-item"><code style="font-family:'DM Mono',monospace;font-size:11px;color:var(--teal)">/prd-assess</code> Skill built first — highest ROI</div>
+        <div class="phase-item">Partner Skills enabled per role</div>
+        <div class="phase-item">Add 3 log fields to every Jira card close</div>
+        <div class="phase-item">Add <code style="font-family:'DM Mono',monospace;font-size:11px;color:var(--teal)">last_verified_sprint</code> to all context MD headers</div>
+      </div>
+      <div class="phase-measure">
+        <strong>Measure</strong>
+        Limit events/sprint · Sessions per card baseline
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-watermark">2</div>
+      <div class="phase-eyebrow">Month 2</div>
+      <div class="phase-title">Skills Scaling</div>
+      <div class="phase-items">
+        <div class="phase-item">Top 5 context MDs per role converted to Custom Skills</div>
+        <div class="phase-item">Role Skills deployed across all roles</div>
+        <div class="phase-item">Senior devs become co-owners of module Skills</div>
+        <div class="phase-item">Designate Review Buddy per role</div>
+        <div class="phase-item">Build pre-review checklist Skill</div>
+        <div class="phase-item">CONTEXT-HEALTH.md added to every Tier A project</div>
+      </div>
+      <div class="phase-measure">
+        <strong>Measure</strong>
+        PR cycle time baseline · 1-session completion rate · Lead review queue depth
+      </div>
+    </div>
+
+    <div class="phase-card">
+      <div class="phase-watermark">3</div>
+      <div class="phase-eyebrow">Month 3+</div>
+      <div class="phase-title">Lean Operations</div>
+      <div class="phase-items">
+        <div class="phase-item">Every project has a full Custom Skill</div>
+        <div class="phase-item">Shared Skills for cross-project modules (auth, design-system)</div>
+        <div class="phase-item"><code style="font-family:'DM Mono',monospace;font-size:11px;color:var(--teal)">/context-audit</code> Skill — Lead runs every sprint start</div>
+        <div class="phase-item">Cursor retired</div>
+        <div class="phase-item">Team sizing decision made from measurement data</div>
+      </div>
+      <div class="phase-measure">
+        <strong>Measure</strong>
+        AI-assist rate · Rework &lt;10% · Lead reviews &lt;30% of PRs
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIERS -->
+<section class="section" id="tiers">
+  <div class="section-eyebrow">Priority Order</div>
+  <h2 class="section-title">Project Tiers</h2>
+  <p class="section-desc">Not all projects are onboarded at once. Tier A gets Skills immediately. Tiers B and C follow after Tier A is proven.</p>
+
+  <div class="tiers-list">
+    <div class="tier-card">
+      <div class="tier-letter tier-a">A</div>
+      <div class="tier-content">
+        <div class="tier-label">Build First</div>
+        <div class="tier-projects">Salina Web · V4 Admin · V4 Client · V4 Mobile</div>
+        <div class="tier-priority">Impact Assessment + context Skills immediately. Full workflow from Month 1.</div>
+      </div>
+    </div>
+    <div class="tier-card">
+      <div class="tier-letter tier-b">B</div>
+      <div class="tier-content">
+        <div class="tier-label">Build by Sprint 2</div>
+        <div class="tier-projects">Salina Desktop · Salina CRX · Downlodr · Dividr · Dyaryo App · Schedulosa</div>
+        <div class="tier-priority">After Tier A Skills are proven and the team has 4+ weeks of workflow experience.</div>
+      </div>
+    </div>
+    <div class="tier-card">
+      <div class="tier-letter tier-c">C</div>
+      <div class="tier-content">
+        <div class="tier-label">Build On-Demand</div>
+        <div class="tier-projects">Putulero · Lexibean · Pallos · SearchSif · Scoup · Metawhale · AFDA</div>
+        <div class="tier-priority">Skills built only when a sprint actively touches these projects.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RULES -->
+<section class="section" id="rules">
+  <div class="section-eyebrow">Non-Negotiable</div>
+  <h2 class="section-title">11 Rules</h2>
+  <p class="section-desc">The workflow only works if the rules are followed. Every rule exists because a gap in it causes compounding failure downstream.</p>
+
+  <div class="rules-grid">
+    <div class="rule-card">
+      <div class="rule-num">01</div>
+      <div class="rule-body"><strong>PRD first, Jira second.</strong><span>No card without a completed Impact Assessment. Full stop.</span></div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-num">02</div>
+      <div class="rule-body"><strong>Skills support the workflow — they don't define it.</strong><span>The PRD → Impact Assessment → Context MD → Card → Session pipeline is immovable.</span></div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-num">03</div>
+      <div class="rule-body"><strong>No raw codebase dumping.</strong><span>Context MDs or Skills only. Never paste raw source files into Claude.</span></div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-num">04</div>
+      <div class="rule-body"><strong>One session per card.</strong><span>Close and restart for each card. No thread kept alive across multiple cards.</span></div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-num">05</div>
+      <div class="rule-body"><strong>Pivot = disable old Skills immediately.</strong><span>Notify all developers before Skills are re-enabled. Stale Skills on a pivot destroy sprint work.</span></div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-num">06</div>
+      <div class="rule-body"><strong>Leads handle "why", devs handle "how".</strong><span>Architectural decisions stay with Leads on Max tier. Devs do not make architectural calls in sessions.</span></div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-num">07</div>
+      <div class="rule-body"><strong>Prompt template is mandatory.</strong><span>PRD ref, task, scope, do-not-touch, done criteria — in every single session. No exceptions.</span></div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-num">08</div>
+      <div class="rule-body"><strong>Limit hits are planning signals.</strong><span>Card was too large. Split it. Track limit events as a sprint health metric — they indicate scoping failure.</span></div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-num">09</div>
+      <div class="rule-body"><strong>Measure every sprint.</strong><span>AI-assist rate, 1-session completion, rework rate. Without measurement, there is no improvement and no accountability.</span></div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-num">10</div>
+      <div class="rule-body"><strong>Review Buddies protect Lead capacity.</strong><span>Lead reviews &lt;30% of PRs. If Lead reviews everything, Impact Assessments don't get done.</span></div>
+    </div>
+    <div class="rule-card" style="grid-column: span 2;">
+      <div class="rule-num">11</div>
+      <div class="rule-body"><strong>Stale context MDs are worse than none.</strong><span>Every context MD carries a <code style="font-family:'DM Mono',monospace;font-size:12px;color:var(--teal)">last_verified_sprint</code>. If it's not signed off this sprint, it is not a valid source. Period.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM FILTER -->
+<section class="section" id="team-filter">
+  <div class="section-eyebrow">The Reality Check</div>
+  <h2 class="section-title">The Team Filter</h2>
+  <p class="section-desc">This workflow makes the gap between developers visible. The measurement system makes it objective, not subjective. After 2 sprints, the data tells the story.</p>
+
+  <div class="team-split">
+    <div class="ts-col using">
+      <div class="ts-head">
+        <div class="ts-head-icon">✓</div>
+        <h3>Developer Using the Workflow</h3>
+      </div>
+      <div class="ts-items">
+        <div class="ts-item"><span class="ts-icon" style="color:var(--teal)">→</span>Starts every session from a clean, scoped context</div>
+        <div class="ts-item"><span class="ts-icon" style="color:var(--teal)">→</span>Completes most cards in one session</div>
+        <div class="ts-item"><span class="ts-icon" style="color:var(--teal)">→</span>Fills log fields — contributing to sprint measurement data</div>
+        <div class="ts-item"><span class="ts-icon" style="color:var(--teal)">→</span>PRs pass Review Buddy on first submission</div>
+        <div class="ts-item"><span class="ts-icon" style="color:var(--teal)">→</span>Asks Claude the implementation questions, not the Lead</div>
+      </div>
+      <div class="ts-footer">Multiplier. Gets more done with less effort every sprint.</div>
+    </div>
+    <div class="ts-col not">
+      <div class="ts-head">
+        <div class="ts-head-icon">✕</div>
+        <h3>Developer Not Using the Workflow</h3>
+      </div>
+      <div class="ts-items">
+        <div class="ts-item"><span class="ts-icon" style="color:var(--red);opacity:.8">→</span>Starts sessions without loading context → asks Lead for direction</div>
+        <div class="ts-item"><span class="ts-icon" style="color:var(--red);opacity:.8">→</span>Needs multiple sessions per card → hits limits → blames card scope</div>
+        <div class="ts-item"><span class="ts-icon" style="color:var(--red);opacity:.8">→</span>Skips log fields → sprint measurement is incomplete</div>
+        <div class="ts-item"><span class="ts-icon" style="color:var(--red);opacity:.8">→</span>PRs fail Buddy review → rework → delay for everyone</div>
+        <div class="ts-item"><span class="ts-icon" style="color:var(--red);opacity:.8">→</span>Is the bottleneck the workflow was designed to eliminate</div>
+      </div>
+      <div class="ts-footer">The measurement system (Rule 09) makes this objective. After 2 sprints, the data decides.</div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+// ─── ACTIVE NAV on scroll ───
+const sections = document.querySelectorAll('[id]');
+const navItems = document.querySelectorAll('.nav-item');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navItems.forEach(item => {
+        item.classList.remove('active');
+        const href = item.getAttribute('href');
+        if (href === '#' + id ||
+            (id.startsWith('step') && href === '#' + id) ||
+            (id === 'step1' && href === '#step1') ||
+            (id === 'step2' && href === '#step2') ||
+            (id === 'step3' && href === '#step3') ||
+            (id === 'step4' && href === '#step4') ||
+            (id === 'step5' && href === '#step5') ||
+            (id === 'step6' && href === '#step6') ||
+            (id === 'step7' && href === '#step7') ||
+            (id === 'step8' && href === '#step8')) {
+          item.classList.add('active');
+        }
+      });
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+
+sections.forEach(s => observer.observe(s));
+
+// Map step card IDs to nav hrefs
+const stepIdMap = {
+  'step1-card': '#step1', 'step2-card': '#step2',
+  'step3-card': '#step3', 'step4-card': '#step4',
+  'step5-card': '#step5', 'step6-card': '#step6',
+  'step7-card': '#step7', 'step8-card': '#step8',
+};
+
+// ─── SMOOTH scroll for nav ───
+navItems.forEach(item => {
+  item.addEventListener('click', (e) => {
+    const href = item.getAttribute('href');
+    if (!href) return;
+    e.preventDefault();
+    const target = document.querySelector(href);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+// ─── PIPELINE step expand/collapse ───
+function toggleStep(card) {
+  const step = card.closest('.p-step');
+  const wasOpen = step.classList.contains('open');
+
+  // Close all
+  document.querySelectorAll('.p-step').forEach(s => s.classList.remove('open'));
+
+  // Open this one if it was closed
+  if (!wasOpen) {
+    step.classList.add('open');
+  }
+}
+
+// ─── KEYBOARD nav for steps ───
+document.querySelectorAll('.p-card').forEach((card, i) => {
+  card.setAttribute('tabindex', '0');
+  card.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleStep(card);
+    }
+  });
+});
+</script>
+</body>
+</html>
