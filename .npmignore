@@ -1,0 +1,9 @@
+src/
+docs/
+packages/
+tsconfig.json
+.gitignore
+CONTRIBUTING.md
+node_modules/
+*.ts
+!*.d.ts
