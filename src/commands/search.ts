@@ -15,10 +15,10 @@ export const searchCommand = new Command('search')
 
       const results = registry.skills.filter(
         (s) =>
-          s.name.includes(q) ||
+          s.name.toLowerCase().includes(q) ||
           s.description.toLowerCase().includes(q) ||
           s.tags.some((t) => t.includes(q)) ||
-          s.category.includes(q)
+          s.category.toLowerCase().includes(q)
       );
 
       spinner.stop();
