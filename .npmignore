@@ -1,6 +1,7 @@
 src/
 docs/
 packages/
+.claude/
 tsconfig.json
 .gitignore
 CONTRIBUTING.md
