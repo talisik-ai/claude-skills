@@ -1,7 +1,7 @@
 {
   "$schema": "https://talisik-ai/skills/registry.schema.json",
   "version": "1",
-  "updatedAt": "2026-03-06",
+  "updatedAt": "2026-03-07",
   "skills": [
     {
       "name": "prd-assessment",
@@ -106,6 +106,32 @@
       "installSize": "18kb",
       "requiresTools": [],
       "readme": "https://github.com/talisik-ai/claude-skills/tree/main/packages/skills/be-best-practices"
+    },
+    {
+      "name": "context-audit",
+      "displayName": "Context Audit",
+      "version": "1.0.0",
+      "description": "Lead sprint-start skill for context health checks. Compares a module's context MD against actual repo files and flags missing files, untracked new files, dependency drift, pattern drift, and staleness. Outputs CLEAN / STALE / OUTDATED status with a copy-paste ready CONTEXT-HEALTH.md row.",
+      "author": "talisik-ai",
+      "category": "engineering",
+      "tags": ["context-md", "audit", "sprint", "lead", "maintenance", "context-health"],
+      "path": "packages/skills/context-audit",
+      "installSize": "10kb",
+      "requiresTools": [],
+      "readme": "https://github.com/talisik-ai/claude-skills/tree/main/packages/skills/context-audit"
+    },
+    {
+      "name": "devops-infra",
+      "displayName": "DevOps Infrastructure",
+      "version": "1.0.0",
+      "description": "DevOps role skill covering the full deployment cycle: deployment protocol step sequence, pre-deploy checklist, 30-min post-deploy Sentry monitoring, deployment changelog per PRD number, CI/CD conventions for self-hosted infrastructure, and rollback protocol with decision criteria.",
+      "author": "talisik-ai",
+      "category": "engineering",
+      "tags": ["devops", "deployment", "ci-cd", "sentry", "infrastructure", "changelog", "rollback"],
+      "path": "packages/skills/devops-infra",
+      "installSize": "12kb",
+      "requiresTools": [],
+      "readme": "https://github.com/talisik-ai/claude-skills/tree/main/packages/skills/devops-infra"
     }
   ]
 }
