@@ -1,0 +1,46 @@
+{
+  "$schema": "https://talisik-ai/skills/registry.schema.json",
+  "version": "1",
+  "updatedAt": "2026-03-06",
+  "skills": [
+    {
+      "name": "prd-assessment",
+      "displayName": "PRD Assessment",
+      "version": "1.0.0",
+      "description": "Conducts a structured interview and generates a complete Product Requirements Document as a Markdown file. Triggers on: PRD, product spec, feature doc, requirements document.",
+      "author": "talisik-ai",
+      "category": "product",
+      "tags": ["prd", "product", "documentation", "planning", "requirements"],
+      "path": "packages/skills/prd-assessment",
+      "installSize": "12kb",
+      "requiresTools": [],
+      "readme": "https://github.com/talisik-ai/claude-skills/tree/main/packages/skills/prd-assessment"
+    },
+    {
+      "name": "qa-engineer",
+      "displayName": "QA Engineer",
+      "version": "1.0.0",
+      "description": "Helps define test strategies, write test cases, classify bugs, estimate story points, and generate QA documentation for software teams.",
+      "author": "talisik-ai",
+      "category": "engineering",
+      "tags": ["qa", "testing", "test-cases", "bugs", "quality"],
+      "path": "packages/skills/qa-engineer",
+      "installSize": "8kb",
+      "requiresTools": [],
+      "readme": "https://github.com/talisik-ai/claude-skills/tree/main/packages/skills/qa-engineer"
+    },
+    {
+      "name": "frontend-spec",
+      "displayName": "Frontend Spec Writer",
+      "version": "1.0.0",
+      "description": "Generates detailed frontend component specs, design tokens, and implementation guides optimized for AI-assisted development with React/TypeScript.",
+      "author": "talisik-ai",
+      "category": "engineering",
+      "tags": ["frontend", "react", "typescript", "components", "spec"],
+      "path": "packages/skills/frontend-spec",
+      "installSize": "6kb",
+      "requiresTools": [],
+      "readme": "https://github.com/talisik-ai/claude-skills/tree/main/packages/skills/frontend-spec"
+    }
+  ]
+}
