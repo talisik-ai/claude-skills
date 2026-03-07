@@ -26,6 +26,16 @@ Skills are specialized instruction sets for Claude that extend its behavior for 
 | `prd-assessment` | Lead | Three-mode PRD skill: CREATE (interview → new PRD), ASSESS (PRD → impact assessment), PIVOT (direction change → impact assessment with invalidation) |
 | `card-generator` | Lead | Reads an impact assessment and generates a Jira-ready card list grouped by role. Auto-splits L/XL estimates. |
 
+### Design
+
+| Skill | Role | Description |
+|-------|------|-------------|
+| `design-audit` | Frontend | Premium UI/UX audit — reads actual code, outputs phased plan (Critical → Refinement → Polish) with exact file references. Supports Figma gap analysis. |
+| `design-principles` | Frontend | Steve Jobs / Jony Ive design philosophy: The Jobs Filter, hierarchy, consistency, whitespace. Quick reference for any design decision. |
+| `frontend-design` | Frontend | Build or improve frontends in Design System Mode (existing tokens) or Creative Mode (greenfield). React, Next.js, Vue, HTML/CSS. |
+| `ui-ux-pro-max` | Frontend | Full design intelligence — 50+ styles, 97 palettes, 57 font pairings, 9 stacks. Generates complete design systems and page-specific overrides. Requires Python 3. |
+| `web-design-guidelines` | Frontend | Reviews UI code against Vercel's Web Interface Guidelines — accessibility, semantic HTML, focus, keyboard nav. |
+
 ### Engineering
 
 | Skill | Role | Description |
@@ -118,6 +128,11 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full guide.
 - [x] `devops-infra` — deployment protocol + Sentry + rollback
 - [x] `qa-engineer` skill
 - [x] `frontend-spec` skill
+- [x] `design-audit` skill
+- [x] `design-principles` skill
+- [x] `frontend-design` skill
+- [x] `ui-ux-pro-max` skill
+- [x] `web-design-guidelines` skill
 - [ ] `ml-workflow` skill (model pipeline, data handling, inference patterns)
 - [ ] `claude-skills init` — interactive skill scaffold generator
 - [ ] Web registry UI at `skills.talisik-ai`

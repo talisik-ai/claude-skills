@@ -132,6 +132,71 @@
       "installSize": "12kb",
       "requiresTools": [],
       "readme": "https://github.com/talisik-ai/claude-skills/tree/main/packages/skills/devops-infra"
+    },
+    {
+      "name": "design-audit",
+      "displayName": "Design Audit",
+      "version": "1.0.0",
+      "description": "Premium UI/UX design audit using Steve Jobs and Jony Ive philosophy. Reads actual code to identify hierarchy, spacing, and consistency issues. Outputs a phased improvement plan (Critical → Refinement → Polish) with exact file references. Supports Figma-to-code gap analysis.",
+      "author": "talisik-ai",
+      "category": "design",
+      "tags": ["design", "ui", "ux", "audit", "frontend", "figma", "visual-polish"],
+      "path": "packages/skills/design-audit",
+      "installSize": "12kb",
+      "requiresTools": [],
+      "readme": "https://github.com/talisik-ai/claude-skills/tree/main/packages/skills/design-audit"
+    },
+    {
+      "name": "design-principles",
+      "displayName": "Design Principles",
+      "version": "1.0.0",
+      "description": "Steve Jobs and Jony Ive design philosophy distilled into actionable rules: The Jobs Filter, hierarchy, consistency, whitespace, alignment, and responsive design. Quick reference for any design decision. Pairs with design-audit for the full workflow.",
+      "author": "talisik-ai",
+      "category": "design",
+      "tags": ["design", "ui", "ux", "principles", "philosophy", "frontend"],
+      "path": "packages/skills/design-principles",
+      "installSize": "4kb",
+      "requiresTools": [],
+      "readme": "https://github.com/talisik-ai/claude-skills/tree/main/packages/skills/design-principles"
+    },
+    {
+      "name": "frontend-design",
+      "displayName": "Frontend Design",
+      "version": "1.0.0",
+      "description": "Create or improve frontend interfaces with high design quality. Operates in two modes: Design System Mode (works within existing tokens and components) and Creative Mode (greenfield with full aesthetic latitude). Covers React, Next.js, Vue, and HTML/CSS.",
+      "author": "talisik-ai",
+      "category": "design",
+      "tags": ["design", "frontend", "react", "nextjs", "vue", "tailwind", "ui", "components"],
+      "path": "packages/skills/frontend-design",
+      "installSize": "6kb",
+      "requiresTools": [],
+      "readme": "https://github.com/talisik-ai/claude-skills/tree/main/packages/skills/frontend-design"
+    },
+    {
+      "name": "ui-ux-pro-max",
+      "displayName": "UI/UX Pro Max",
+      "version": "1.0.0",
+      "description": "Comprehensive UI/UX design intelligence with 50+ styles, 97 color palettes, 57 font pairings, and 99 UX guidelines across 9 stacks (React, Next.js, Vue, Svelte, SwiftUI, React Native, Flutter, Tailwind, shadcn/ui). Generates full design systems, page-specific overrides, and stack-specific best practices.",
+      "author": "talisik-ai",
+      "category": "design",
+      "tags": ["design", "ui", "ux", "design-system", "color", "typography", "frontend", "react", "tailwind", "shadcn"],
+      "path": "packages/skills/ui-ux-pro-max",
+      "installSize": "80kb",
+      "requiresTools": ["python3"],
+      "readme": "https://github.com/talisik-ai/claude-skills/tree/main/packages/skills/ui-ux-pro-max"
+    },
+    {
+      "name": "web-design-guidelines",
+      "displayName": "Web Design Guidelines",
+      "version": "1.0.0",
+      "description": "Reviews UI code against Vercel's Web Interface Guidelines. Fetches the latest rules from the official source and checks your files for compliance: accessibility, semantic HTML, focus management, keyboard navigation, and interaction patterns.",
+      "author": "talisik-ai",
+      "category": "design",
+      "tags": ["design", "ui", "accessibility", "guidelines", "vercel", "audit", "frontend"],
+      "path": "packages/skills/web-design-guidelines",
+      "installSize": "2kb",
+      "requiresTools": [],
+      "readme": "https://github.com/talisik-ai/claude-skills/tree/main/packages/skills/web-design-guidelines"
     }
   ]
 }
