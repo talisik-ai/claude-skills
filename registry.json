@@ -41,6 +41,45 @@
       "installSize": "6kb",
       "requiresTools": [],
       "readme": "https://github.com/talisik-ai/claude-skills/tree/main/packages/skills/frontend-spec"
+    },
+    {
+      "name": "card-generator",
+      "displayName": "Card Generator",
+      "version": "1.0.0",
+      "description": "Reads an IMPACT-ASSESSMENT-PRD-XXX.md and generates a Jira-ready card list grouped by role. Each card includes PRD reference, exact file scope, do-not-touch list, acceptance criteria, size (XS/S/M only), and 3 log fields. Auto-splits L/XL estimates.",
+      "author": "talisik-ai",
+      "category": "product",
+      "tags": ["jira", "cards", "planning", "impact-assessment", "workflow"],
+      "path": "packages/skills/card-generator",
+      "installSize": "8kb",
+      "requiresTools": [],
+      "readme": "https://github.com/talisik-ai/claude-skills/tree/main/packages/skills/card-generator"
+    },
+    {
+      "name": "coding-standards",
+      "displayName": "Coding Standards",
+      "version": "1.0.0",
+      "description": "Template skill for enforcing team coding patterns in every dev session. Ships with [FILL IN] placeholders for Frontend, Backend, ML/Data, and QA roles. Lead populates it once per project — developers get consistent pattern enforcement automatically.",
+      "author": "talisik-ai",
+      "category": "engineering",
+      "tags": ["standards", "patterns", "code-quality", "frontend", "backend", "qa", "ml"],
+      "path": "packages/skills/coding-standards",
+      "installSize": "10kb",
+      "requiresTools": [],
+      "readme": "https://github.com/talisik-ai/claude-skills/tree/main/packages/skills/coding-standards"
+    },
+    {
+      "name": "pre-review-checklist",
+      "displayName": "Pre-Review Checklist",
+      "version": "1.0.0",
+      "description": "Review Buddy skill that runs a structured 5-check gate on every PR before QA or Lead review. Checks scope compliance, AC verifiability, do-not-touch violations, schema compliance, and pattern compliance. Outputs PASS or FAIL with specific callouts. Role-aware.",
+      "author": "talisik-ai",
+      "category": "engineering",
+      "tags": ["code-review", "pr", "quality-gate", "review-buddy", "workflow"],
+      "path": "packages/skills/pre-review-checklist",
+      "installSize": "9kb",
+      "requiresTools": [],
+      "readme": "https://github.com/talisik-ai/claude-skills/tree/main/packages/skills/pre-review-checklist"
     }
   ]
 }
