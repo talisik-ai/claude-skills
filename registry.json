@@ -80,6 +80,32 @@
       "installSize": "9kb",
       "requiresTools": [],
       "readme": "https://github.com/talisik-ai/claude-skills/tree/main/packages/skills/pre-review-checklist"
+    },
+    {
+      "name": "fe-best-practices",
+      "displayName": "Frontend Best Practices",
+      "version": "1.0.0",
+      "description": "Frontend best practices for React + Tailwind + shadcn/ui + React Query. Organized by concern: state management, UI components, forms, data fetching, error handling, TypeScript, file structure, and performance. Auto-loads in every frontend dev session.",
+      "author": "talisik-ai",
+      "category": "engineering",
+      "tags": ["frontend", "react", "tailwind", "shadcn", "react-query", "typescript", "best-practices"],
+      "path": "packages/skills/fe-best-practices",
+      "installSize": "16kb",
+      "requiresTools": [],
+      "readme": "https://github.com/talisik-ai/claude-skills/tree/main/packages/skills/fe-best-practices"
+    },
+    {
+      "name": "be-best-practices",
+      "displayName": "Backend Best Practices",
+      "version": "1.0.0",
+      "description": "Backend best practices for Node.js + Zod + Prisma + PostgreSQL + MongoDB + Redis. Organized by concern: request validation, Prisma patterns, MongoDB patterns, Redis caching, error handling, API design, TypeScript, and file structure. Auto-loads in every backend dev session.",
+      "author": "talisik-ai",
+      "category": "engineering",
+      "tags": ["backend", "nodejs", "zod", "prisma", "postgresql", "mongodb", "redis", "typescript", "best-practices"],
+      "path": "packages/skills/be-best-practices",
+      "installSize": "18kb",
+      "requiresTools": [],
+      "readme": "https://github.com/talisik-ai/claude-skills/tree/main/packages/skills/be-best-practices"
     }
   ]
 }
