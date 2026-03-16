@@ -1,0 +1,2514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0c10">
+<title>Claude Code — Team Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0c10;
+  --surface: #111318;
+  --surface2: #181c23;
+  --surface3: #1e2330;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --accent: #d97706;
+  --accent2: #f59e0b;
+  --accent-glow: rgba(217,119,6,0.15);
+  --teal: #0d9488;
+  --teal2: #14b8a6;
+  --teal-glow: rgba(13,148,136,0.15);
+  --red: #dc2626;
+  --red2: #ef4444;
+  --red-glow: rgba(220,38,38,0.12);
+  --green: #16a34a;
+  --green2: #22c55e;
+  --text: #e8eaf0;
+  --text2: #9aa0b0;
+  --text3: #5c6275;
+  --mono: 'DM Mono', monospace;
+  --sans: 'DM Sans', sans-serif;
+  --display: 'Syne', sans-serif;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;color-scheme:dark;font-size:20px;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+
+/* ── HEADER ── */
+.site-header {
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,12,16,0.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  padding:0 2.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+  height:72px;
+}
+.logo {
+  font-family:var(--display);font-size:1.2rem;font-weight:800;
+  letter-spacing:0.04em;color:var(--text);
+  display:flex;align-items:center;gap:12px;
+}
+.logo-dot { width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);animation:logoPulse 3s ease-in-out infinite;}
+@keyframes logoPulse{0%,100%{box-shadow:0 0 10px var(--accent);}50%{box-shadow:0 0 18px var(--accent),0 0 28px var(--accent-glow);}}
+.logo span { color:var(--accent2); }
+.badge-live {
+  font-family:var(--mono);font-size:0.8rem;padding:4px 10px;
+  border-radius:20px;border:1px solid var(--accent);color:var(--accent2);
+  letter-spacing:0.08em;
+}
+
+/* ── TABS ── */
+.tab-nav {
+  display:flex;gap:0;
+  background:rgba(17,19,24,0.95);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  padding:0 2rem;
+  overflow-x:auto;
+  position:sticky;top:72px;z-index:99;
+}
+.tab-btn {
+  font-family:var(--display);font-size:1rem;font-weight:600;
+  letter-spacing:0.06em;text-transform:uppercase;
+  padding:1.1rem 1.8rem;
+  border:none;background:transparent;color:var(--text3);
+  cursor:pointer;border-bottom:2px solid transparent;
+  transition:color 0.2s,background-color 0.2s,border-color 0.2s;white-space:nowrap;
+  display:flex;align-items:center;gap:8px;
+}
+.tab-btn:hover{color:var(--text2);background:rgba(255,255,255,0.03);}
+.tab-btn.active{color:var(--accent2);border-bottom-color:var(--accent);background:rgba(217,119,6,0.06);}
+.tab-btn .tab-icon{font-size:1.15rem;}
+.tab-panel{display:none;animation:tabFadeIn 0.3s ease;}
+.tab-panel.active{display:block;}
+@keyframes tabFadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* ── HERO STRIPS ── */
+.hero-strip {
+  padding:4.5rem 3.5rem 4rem;
+  border-bottom:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.hero-strip::before {
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 20% 50%, var(--accent-glow) 0%, transparent 60%);
+  pointer-events:none;
+}
+.hero-strip.teal::before{background:radial-gradient(ellipse at 20% 50%, var(--teal-glow) 0%, transparent 60%);}
+.hero-strip.red::before{background:radial-gradient(ellipse at 20% 50%, var(--red-glow) 0%, transparent 60%);}
+.hero-eyebrow {
+  font-family:var(--mono);font-size:0.9rem;letter-spacing:0.15em;
+  color:var(--accent);text-transform:uppercase;margin-bottom:0.85rem;
+}
+.hero-strip.teal .hero-eyebrow{color:var(--teal2);}
+.hero-strip.red .hero-eyebrow{color:var(--red2);}
+.hero-title {
+  font-family:var(--display);font-size:clamp(2.2rem,5vw,3.5rem);
+  font-weight:800;line-height:1.1;margin-bottom:0.85rem;
+  max-width:800px;text-wrap:balance;
+  letter-spacing:-0.02em;
+}
+.hero-sub {
+  font-size:1.1rem;color:var(--text2);line-height:1.7;max-width:700px;
+}
+.hero-stats {
+  display:flex;gap:3.5rem;margin-top:2.5rem;flex-wrap:wrap;
+}
+.stat { }
+.stat-val {
+  font-family:var(--display);font-size:2.4rem;font-weight:800;
+  color:var(--accent2);line-height:1;
+  transition:transform 0.2s ease;
+  font-variant-numeric:tabular-nums;
+}
+.hero-strip.teal .stat-val{color:var(--teal2);}
+.hero-strip.red .stat-val{color:var(--red2);}
+.stat:hover .stat-val{transform:scale(1.08);}
+.stat-label{font-size:0.85rem;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-top:6px;}
+
+/* ── LAYOUT ── */
+.content { padding:2.5rem;max-width:1440px;margin:0 auto; }
+.section { margin-bottom:3rem;scroll-margin-top:6rem; }
+.section-title {
+  font-family:var(--display);font-size:1.3rem;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--text2);margin-bottom:1.75rem;
+  display:flex;align-items:center;gap:12px;
+  text-wrap:balance;
+}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.section-title .st-icon{color:var(--accent);}
+
+/* ── CARDS GRID ── */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:1.25rem;overflow:hidden;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:1.25rem;overflow:hidden;}
+
+/* ── CARD ── */
+.card {
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:1.5rem;
+  transition:border-color 0.25s ease,background 0.25s ease,box-shadow 0.25s ease;
+}
+.card:hover{border-color:var(--border2);background:var(--surface2);box-shadow:0 4px 24px rgba(0,0,0,0.15);}
+.card-head {
+  display:flex;align-items:center;gap:14px;margin-bottom:0.85rem;
+}
+.card-icon {
+  width:44px;height:44px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;flex-shrink:0;
+  background:var(--accent-glow);border:1px solid rgba(217,119,6,0.25);
+}
+.card-icon.teal{background:var(--teal-glow);border-color:rgba(13,148,136,0.25);}
+.card-icon.red{background:var(--red-glow);border-color:rgba(220,38,38,0.25);}
+.card-icon.green{background:rgba(22,163,74,0.12);border-color:rgba(22,163,74,0.25);}
+.card-icon.blue{background:rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.25);}
+.card-title {
+  font-family:var(--display);font-size:1.1rem;font-weight:700;
+}
+.card p{font-size:1rem;color:var(--text2);line-height:1.65;}
+.card ul{list-style:none;margin-top:0.6rem;}
+.card ul li{font-size:0.95rem;color:var(--text2);line-height:1.6;
+  padding:4px 0;display:flex;gap:10px;align-items:flex-start;}
+.card ul li::before{content:'›';color:var(--accent);flex-shrink:0;margin-top:1px;}
+.card ul.teal li::before{color:var(--teal2);}
+.card ul.red li::before{color:var(--red2);}
+
+/* ── PIPELINE STEPS ── */
+.pipeline-step {
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;margin-bottom:0.75rem;
+  overflow:hidden;cursor:pointer;
+  transition:border-color 0.25s ease,box-shadow 0.25s ease,background 0.25s ease;
+}
+.pipeline-step:hover{border-color:var(--border2);box-shadow:0 2px 12px rgba(0,0,0,0.12);}
+.pipeline-step.open{border-color:rgba(217,119,6,0.35);background:var(--surface2);}
+.step-header {
+  display:flex;align-items:center;gap:14px;padding:1.2rem 1.5rem;
+}
+.step-num {
+  font-family:var(--mono);font-size:0.82rem;font-weight:500;
+  width:34px;height:34px;border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--accent-glow);border:1px solid rgba(217,119,6,0.3);
+  color:var(--accent2);flex-shrink:0;
+}
+.step-title{font-family:var(--display);font-size:1.1rem;font-weight:700;flex:1;}
+.step-owner{font-family:var(--mono);font-size:0.82rem;color:var(--text3);flex-shrink:0;}
+.step-arrow{color:var(--text3);font-size:0.85rem;transition:transform 0.25s;flex-shrink:0;}
+.pipeline-step.open .step-arrow{transform:rotate(180deg);}
+.step-body {
+  display:none;padding:0 1.5rem 1.5rem;
+  border-top:1px solid var(--border);
+  animation:fadeSlide 0.2s ease;
+}
+.pipeline-step.open .step-body{display:block;}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+.step-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem;margin-top:1.25rem;}
+.step-col-title{font-family:var(--mono);font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:0.6rem;}
+.step-col ul{list-style:none;}
+.step-col li{font-size:0.95rem;color:var(--text2);line-height:1.65;padding:3px 0;display:flex;gap:8px;}
+.step-col li::before{content:'·';color:var(--accent2);flex-shrink:0;}
+.step-tag {
+  font-family:var(--mono);font-size:0.78rem;padding:3px 10px;
+  border-radius:20px;letter-spacing:0.06em;
+}
+.tag-amber{background:rgba(217,119,6,0.15);border:1px solid rgba(217,119,6,0.3);color:var(--accent2);}
+.tag-teal{background:var(--teal-glow);border:1px solid rgba(13,148,136,0.3);color:var(--teal2);}
+.tag-red{background:var(--red-glow);border:1px solid rgba(220,38,38,0.3);color:var(--red2);}
+.tag-green{background:rgba(22,163,74,0.12);border:1px solid rgba(22,163,74,0.3);color:var(--green2);}
+.tag-blue{background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.3);color:#93c5fd;}
+
+/* ── CODE BLOCK ── */
+.code-block {
+  background:#0d1117;border:1px solid var(--border);border-radius:10px;
+  padding:1.15rem 1.25rem;margin-top:0.75rem;overflow-x:auto;max-width:100%;
+}
+.code-block pre{font-family:var(--mono);font-size:0.92rem;color:#e6edf3;line-height:1.75;white-space:pre-wrap;word-break:break-word;}
+.cb-label{font-family:var(--mono);font-size:0.8rem;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;}
+
+/* ── TABLE ── */
+.data-table{width:100%;border-collapse:collapse;font-size:1rem;}
+.data-table th{font-family:var(--mono);font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);text-align:left;padding:0.75rem 1rem;border-bottom:1px solid var(--border);background:var(--surface2);}
+.data-table td{padding:0.85rem 1.1rem;border-bottom:1px solid var(--border);color:var(--text2);line-height:1.5;vertical-align:top;font-variant-numeric:tabular-nums;}
+.data-table tr:hover td{background:rgba(255,255,255,0.02);}
+.data-table td:first-child{color:var(--text);font-weight:500;}
+.data-table code{font-family:var(--mono);font-size:0.88rem;background:rgba(255,255,255,0.07);padding:2px 6px;border-radius:4px;color:var(--accent2);}
+
+/* ── RULE CARDS ── */
+.rule-card {
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:1.3rem 1.5rem;
+  display:flex;gap:1.25rem;align-items:flex-start;
+  margin-bottom:0.75rem;
+  transition:border-color 0.2s;
+}
+.rule-card:hover{border-color:var(--border2);}
+.rule-num {
+  font-family:var(--mono);font-size:0.82rem;font-weight:500;
+  min-width:34px;height:34px;border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--accent-glow);border:1px solid rgba(217,119,6,0.3);
+  color:var(--accent2);flex-shrink:0;
+}
+.rule-num.red{background:var(--red-glow);border-color:rgba(220,38,38,0.3);color:var(--red2);}
+.rule-body{}
+.rule-title{font-family:var(--display);font-size:1.05rem;font-weight:700;margin-bottom:4px;}
+.rule-desc{font-size:0.95rem;color:var(--text2);line-height:1.6;}
+
+/* ── SECURITY RULES ── */
+.sec-rule {
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;margin-bottom:0.75rem;
+  overflow:hidden;cursor:pointer;
+}
+.sec-rule:hover{border-color:var(--border2);box-shadow:0 2px 12px rgba(0,0,0,0.12);}
+.sec-rule.open{border-color:rgba(220,38,38,0.3);background:var(--surface2);}
+.sec-rule-header {
+  display:flex;align-items:center;gap:14px;padding:1.2rem 1.5rem;
+}
+.sec-num{
+  font-family:var(--mono);font-size:0.82rem;
+  width:34px;height:34px;border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--red-glow);border:1px solid rgba(220,38,38,0.3);
+  color:var(--red2);flex-shrink:0;
+}
+.sec-title{font-family:var(--display);font-size:1.1rem;font-weight:700;flex:1;}
+.sec-badge{font-family:var(--mono);font-size:0.78rem;flex-shrink:0;}
+.sec-body{display:none;padding:0 1.5rem 1.5rem;border-top:1px solid var(--border);}
+.sec-rule.open .sec-body{display:block;animation:fadeSlide 0.2s ease;}
+.sec-rule .step-arrow{color:var(--text3);font-size:0.85rem;transition:transform 0.25s;}
+.sec-rule.open .step-arrow{transform:rotate(180deg);}
+
+/* ── CHECKLIST ── */
+.checklist {
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:1.5rem;
+}
+.checklist-section{margin-bottom:1.25rem;}
+.checklist-section:last-child{margin-bottom:0;}
+.cl-head{font-family:var(--mono);font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--red2);margin-bottom:0.75rem;}
+.cl-item {
+  display:flex;align-items:center;gap:10px;
+  padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);
+  cursor:pointer;user-select:none;
+}
+.cl-item:last-child{border-bottom:none;}
+.cl-box {
+  width:20px;height:20px;border-radius:5px;
+  border:1.5px solid var(--text3);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  transition:background-color 0.15s,border-color 0.15s,color 0.15s;
+}
+.cl-item.checked .cl-box{background:var(--green);border-color:var(--green);color:white;box-shadow:0 0 8px rgba(22,163,74,0.3);}
+.cl-item.checked .cl-text{color:var(--text3);text-decoration:line-through;}
+.cl-text{font-size:0.95rem;color:var(--text2);line-height:1.5;}
+.cl-check{display:none;font-size:0.78rem;}
+.cl-item.checked .cl-check{display:block;}
+
+/* ── TIMELINE (Transition) ── */
+.timeline{position:relative;padding-left:2rem;}
+.timeline::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:2px;background:var(--border);border-radius:2px;
+}
+.tl-item{position:relative;margin-bottom:2rem;}
+.tl-dot {
+  position:absolute;left:-2.45rem;top:4px;
+  width:18px;height:18px;border-radius:50%;
+  border:2px solid var(--surface);
+  background:var(--teal);box-shadow:0 0 12px var(--teal-glow),0 0 24px rgba(13,148,136,0.08);
+}
+.tl-time{font-family:var(--mono);font-size:0.82rem;letter-spacing:0.08em;color:var(--teal2);text-transform:uppercase;margin-bottom:6px;}
+.tl-title{font-family:var(--display);font-size:1.2rem;font-weight:700;margin-bottom:0.6rem;}
+.tl-desc{font-size:1rem;color:var(--text2);line-height:1.65;}
+.tl-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:0.6rem;}
+
+/* ── SCHEDULE ── */
+.schedule{display:grid;grid-template-columns:160px 1fr;gap:0;}
+.sch-row{display:contents;}
+.sch-time{
+  font-family:var(--mono);font-size:0.9rem;color:var(--teal2);
+  padding:1rem 1.1rem;
+  border-bottom:1px solid var(--border);
+  border-right:1px solid var(--border);
+  white-space:nowrap;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  text-align:center;
+}
+.sch-dur{font-size:0.78rem;color:var(--text3);}
+.sch-item{
+  padding:0.85rem 0 0.85rem 1.1rem;
+  border-bottom:1px solid var(--border);
+}
+.sch-topic{font-weight:500;font-size:1rem;margin-bottom:4px;}
+.sch-detail{font-size:0.92rem;color:var(--text2);}
+.sch-break{background:rgba(13,148,136,0.06);}
+.sch-hands{background:rgba(217,119,6,0.06);}
+.sch-retro{background:rgba(59,130,246,0.06);}
+
+/* ── FEATURE PILL ── */
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.25rem;}
+.feature-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:1.5rem;
+  transition:border-color 0.25s ease,transform 0.25s ease,box-shadow 0.25s ease;
+}
+.feature-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,0.2);}
+.fc-icon{font-size:2rem;margin-bottom:0.85rem;}
+.fc-title{font-family:var(--display);font-size:1.15rem;font-weight:700;margin-bottom:0.5rem;}
+.fc-desc{font-size:0.95rem;color:var(--text2);line-height:1.65;}
+.fc-usage{
+  margin-top:0.85rem;
+  font-family:var(--mono);font-size:0.85rem;
+  color:var(--teal2);background:var(--teal-glow);
+  border:1px solid rgba(13,148,136,0.2);
+  border-radius:5px;padding:5px 8px;
+}
+
+/* ── ALERT ── */
+.alert {
+  border-radius:10px;padding:1.25rem 1.5rem;margin-bottom:1.25rem;
+  display:flex;gap:14px;align-items:flex-start;
+  font-size:1rem;line-height:1.7;
+}
+.alert.warn{background:rgba(217,119,6,0.1);border:1px solid rgba(217,119,6,0.25);color:var(--text2);}
+.alert.danger{background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.25);color:var(--text2);}
+.alert.info{background:rgba(13,148,136,0.1);border:1px solid rgba(13,148,136,0.25);color:var(--text2);}
+.alert-icon{font-size:1.15rem;flex-shrink:0;margin-top:1px;}
+.alert strong{color:var(--text);}
+
+/* ── INSTALL TABS ── */
+.install-tabs{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap;}
+.itab-btn{
+  font-family:var(--mono);font-size:0.85rem;letter-spacing:0.06em;
+  padding:8px 16px;border-radius:7px;border:1px solid var(--border2);
+  background:transparent;color:var(--text2);cursor:pointer;transition:color 0.15s,background-color 0.15s,border-color 0.15s;
+}
+.itab-btn:hover{border-color:var(--teal);color:var(--teal2);}
+.itab-btn.active{background:var(--teal-glow);border-color:var(--teal);color:var(--teal2);}
+.itab-panel{display:none;}
+.itab-panel.active{display:block;}
+
+/* ── INCIDENT TABLE ── */
+.incident-row{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:0.5rem;border-radius:8px;overflow:hidden;border:1px solid var(--border);}
+.ir-event{padding:0.9rem 1.2rem;background:rgba(220,38,38,0.06);font-size:0.95rem;color:var(--text2);}
+.ir-action{padding:0.9rem 1.2rem;background:var(--surface2);font-size:0.95rem;color:var(--text2);}
+.ir-event strong,.ir-action strong{display:block;font-size:0.82rem;font-family:var(--mono);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:5px;}
+.ir-event strong{color:var(--red2);}
+.ir-action strong{color:var(--teal2);}
+
+/* ── FOOTER ── */
+.panel-footer{
+  padding:1.75rem 2.5rem;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;
+  background:var(--surface);
+}
+.pf-label{font-family:var(--mono);font-size:0.82rem;color:var(--text3);letter-spacing:0.08em;}
+.pf-vers{font-family:var(--mono);font-size:0.82rem;color:var(--accent2);}
+
+/* ── MISC ── */
+.divider{height:1px;background:var(--border);margin:2rem 0;}
+.pill{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:0.8rem;letter-spacing:0.06em;
+  padding:4px 11px;border-radius:20px;
+}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+@media(max-width:640px){.two-col{grid-template-columns:1fr;}.incident-row{grid-template-columns:1fr;}}
+.mt-1{margin-top:0.5rem;}.mt-2{margin-top:1rem;}.mt-3{margin-top:1.5rem;}
+.text-sm{font-size:0.95rem;color:var(--text2);line-height:1.65;}
+.text-mono{font-family:var(--mono);font-size:0.88rem;}
+em.hl{font-style:normal;color:var(--accent2);}
+em.teal{font-style:normal;color:var(--teal2);}
+em.red{font-style:normal;color:var(--red2);}
+em.green{font-style:normal;color:var(--green2);}
+
+/* ── SKIP LINK ── */
+.skip-link{
+  position:absolute;top:-100%;left:1rem;
+  padding:8px 16px;background:var(--accent);color:#000;
+  font-size:0.85rem;font-weight:600;border-radius:0 0 6px 6px;
+  z-index:9999;text-decoration:none;
+}
+.skip-link:focus{top:0;}
+
+/* ── FOCUS VISIBLE ── */
+.tab-btn:focus-visible,
+.itab-btn:focus-visible{
+  outline:2px solid var(--accent2);
+  outline-offset:2px;
+  border-radius:4px;
+}
+.pipeline-step:focus-visible,
+.sec-rule:focus-visible{
+  outline:2px solid var(--accent2);
+  outline-offset:2px;
+}
+.cl-item:focus-visible{
+  outline:2px solid var(--teal2);
+  outline-offset:2px;
+  border-radius:4px;
+}
+
+/* ── TOUCH ACTION ── */
+.tab-btn,.itab-btn,.pipeline-step,.sec-rule,.cl-item{
+  touch-action:manipulation;
+}
+
+/* ── REDUCED MOTION ── */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:0.01ms!important;
+    transition-duration:0.01ms!important;
+    animation-iteration-count:1!important;
+  }
+  .feature-card:hover{transform:none;}
+  .stat:hover .stat-val{transform:none;}
+}
+
+/* ── ULTRA-WIDE / TV ── */
+@media(min-width:1600px){
+  html{font-size:22px;}
+  .content{max-width:1600px;}
+  .hero-strip{padding:5.5rem 4.5rem 4.5rem;}
+  .hero-title{font-size:clamp(2.5rem,5.5vw,4rem);}
+  .stat-val{font-size:3rem;}
+  .hero-stats{gap:4.5rem;}
+  .grid-2{grid-template-columns:repeat(2,1fr);}
+  .feature-grid{grid-template-columns:repeat(3,1fr);}
+  .schedule{grid-template-columns:180px 1fr;}
+  .section{margin-bottom:3.5rem;}
+  .tab-btn{padding:1.3rem 2rem;font-size:1.05rem;}
+  .card{padding:1.75rem;}
+  .step-header{padding:1.35rem 1.75rem;}
+  .rule-card{padding:1.5rem 1.75rem;}
+}
+
+/* ── 4K / Large TV ── */
+@media(min-width:2400px){
+  html{font-size:26px;}
+  .content{max-width:2000px;}
+  .hero-strip{padding:6rem 5rem 5rem;}
+  .stat-val{font-size:3.5rem;}
+  .tab-btn{padding:1.5rem 2.5rem;font-size:1.1rem;}
+}
+</style>
+</head>
+<body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="logo">
+    <div class="logo-dot" aria-hidden="true"></div>
+    Claude Code — <span>Team Guide</span>
+  </div>
+  <div class="badge-live">SPRINT LAUNCH</div>
+</header>
+
+<!-- TABS NAV -->
+<nav class="tab-nav" role="tablist" aria-label="Guide sections">
+  <button class="tab-btn active" onclick="switchTab('workflow',this)" role="tab" aria-selected="true" aria-controls="tab-workflow" id="tab-btn-workflow">
+    <span class="tab-icon" aria-hidden="true">⚙️</span> Workflow
+  </button>
+  <button class="tab-btn" onclick="switchTab('security',this)" role="tab" aria-selected="false" aria-controls="tab-security" id="tab-btn-security">
+    <span class="tab-icon" aria-hidden="true">🔒</span> Security
+  </button>
+  <button class="tab-btn" onclick="switchTab('transition',this)" role="tab" aria-selected="false" aria-controls="tab-transition" id="tab-btn-transition">
+    <span class="tab-icon" aria-hidden="true">🚀</span> Transition Plan
+  </button>
+  <button class="tab-btn" onclick="switchTab('customize',this)" role="tab" aria-selected="false" aria-controls="tab-customize" id="tab-btn-customize">
+    <span class="tab-icon" aria-hidden="true">🎨</span> Customization
+  </button>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     TAB 1 — WORKFLOW
+════════════════════════════════════════════ -->
+<main id="main-content">
+<div id="tab-workflow" class="tab-panel active" role="tabpanel" aria-labelledby="tab-btn-workflow">
+
+  <div class="hero-strip">
+    <div class="hero-eyebrow">Version 3 · AI-First Engineering</div>
+    <h1 class="hero-title">The Claude Code<br>Development Workflow</h1>
+    <p class="hero-sub">A structured pipeline from PRD to production. Every feature, every hotfix, every sprint — the same sequence. No step is skippable.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-val">8</div><div class="stat-label">Pipeline Steps</div></div>
+      <div class="stat"><div class="stat-val">11</div><div class="stat-label">Non-Negotiable Rules</div></div>
+      <div class="stat"><div class="stat-val">85%+</div><div class="stat-label">1-Session Target</div></div>
+      <div class="stat"><div class="stat-val">&lt;10%</div><div class="stat-label">Rework Rate</div></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- CORE IDEA -->
+    <div class="section">
+      <div class="section-title"><span class="st-icon">◈</span> The Core Idea</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head"><div class="card-icon">⚡</div><div class="card-title">What This Workflow Does</div></div>
+          <p>Replaces the traditional dev loop with an AI-assisted one. Claude handles scoping, implementation, review, and documentation. The developer's job shifts from <em class="hl">writing boilerplate</em> to <em class="hl">making decisions inside a well-scoped boundary</em>.</p>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-icon">📊</div><div class="card-title">Without vs. With Claude Code</div></div>
+          <ul>
+            <li>PRD → cards: 2–4 hrs → <em class="hl">20 min via /prd-assess</em></li>
+            <li>Session context setup: 45 min → <em class="hl">5 min with Skills</em></li>
+            <li>PR pre-review: 30–60 min → <em class="hl">10 min via Review Buddy Skill</em></li>
+            <li>Test generation: 1–2 hrs → <em class="hl">20 min from acceptance criteria</em></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBSCRIPTIONS -->
+    <div class="section">
+      <div class="section-title"><span class="st-icon">◈</span> Subscriptions</div>
+      <div class="card" style="padding:0;overflow:hidden;">
+        <table class="data-table">
+          <thead><tr><th>Role</th><th>Plan</th><th>Cost</th><th>Why</th></tr></thead>
+          <tbody>
+            <tr><td>Team Leads</td><td><span class="pill tag-amber">Max 5×</span></td><td>$100/mo</td><td>Claude Code, PRD assessment, Skill building</td></tr>
+            <tr><td>All Developers</td><td><span class="pill tag-teal">Pro</span></td><td>$20/mo</td><td>Full Claude access, Agent Skills, replaces Cursor</td></tr>
+            <tr><td>Team Standard</td><td><span class="pill" style="background:var(--surface3);border:1px solid var(--border2);color:var(--text3);">Reference</span></td><td>$20/mo (annual)</td><td>Centralized plan option at scale</td></tr>
+            <tr><td>Team Premium</td><td><span class="pill" style="background:var(--surface3);border:1px solid var(--border2);color:var(--text3);">Reference</span></td><td>$100/mo (annual)</td><td>Adds Claude Code centrally — option at 25+ devs</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 8-STEP PIPELINE -->
+    <div class="section">
+      <div class="section-title"><span class="st-icon">◈</span> The 8-Step Pipeline</div>
+      <div class="alert info"><span class="alert-icon" aria-hidden="true">ℹ️</span><div>Click any step to expand full detail — what to do, inputs/outputs, and what can go wrong.</div></div>
+
+      <!-- Step 1 -->
+      <div class="pipeline-step" onclick="toggleStep(1)" role="button" tabindex="0" aria-expanded="false">
+        <div class="step-header">
+          <div class="step-num">01</div>
+          <div class="step-title">PRD Received</div>
+          <span class="step-tag tag-blue">PM → Lead</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="step-body">
+          <div class="step-grid">
+            <div class="step-col"><div class="step-col-title">What to Do</div><ul>
+              <li>Receive PRD from PM / stakeholder</li>
+              <li>Verify it has all 4 required fields</li>
+              <li>If incomplete — return it. Work does not start.</li>
+            </ul></div>
+            <div class="step-col"><div class="step-col-title">A Valid PRD Must Have</div><ul>
+              <li>Clear objective</li>
+              <li>Scope — IN and OUT explicitly defined</li>
+              <li>At least one verifiable acceptance criterion</li>
+              <li>PRD number (e.g. PRD-042)</li>
+            </ul></div>
+            <div class="step-col"><div class="step-col-title">What Can Go Wrong</div><ul>
+              <li>Vague scope → leads to card bloat</li>
+              <li>Missing acceptance criteria → untestable output</li>
+              <li>No PRD number → can't link Jira cards</li>
+            </ul></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="pipeline-step" onclick="toggleStep(2)" role="button" tabindex="0" aria-expanded="false">
+        <div class="step-header">
+          <div class="step-num">02</div>
+          <div class="step-title">Impact Assessment</div>
+          <span class="step-tag tag-amber">Lead · Max tier</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="step-body">
+          <div class="cb-label">Command</div>
+          <div class="code-block"><pre>/prd-assess docs/prd/PRD-042.md</pre></div>
+          <div class="step-grid">
+            <div class="step-col"><div class="step-col-title">Claude Reads</div><ul>
+              <li>ARCHITECTURE.md</li>
+              <li>The PRD document</li>
+              <li>All active context MDs</li>
+            </ul></div>
+            <div class="step-col"><div class="step-col-title">IMPACT-ASSESSMENT.md Output</div><ul>
+              <li>PRD type classification</li>
+              <li>Affected modules + owners</li>
+              <li>Context MDs needing update</li>
+              <li>Skills needing rebuild</li>
+              <li>Estimated cards per role</li>
+              <li>Dependency + cross-project risks</li>
+            </ul></div>
+            <div class="step-col"><div class="step-col-title">Gate</div><ul>
+              <li>Nothing moves forward until document exists</li>
+              <li>Lead reviews before cards are created</li>
+              <li>Missed dependencies here = rework later</li>
+            </ul></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="pipeline-step" onclick="toggleStep(3)" role="button" tabindex="0" aria-expanded="false">
+        <div class="step-header">
+          <div class="step-num">03</div>
+          <div class="step-title">Context MDs Updated</div>
+          <span class="step-tag tag-amber">Lead</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="step-body">
+          <div class="step-grid">
+            <div class="step-col"><div class="step-col-title">For Each Affected Module</div><ul>
+              <li>Update key files, dependencies, gotchas</li>
+              <li>Set <code>last_verified_sprint</code> to current sprint</li>
+              <li>Update ARCHITECTURE.md if structure changed</li>
+              <li>Rebuild Custom Skill for that module</li>
+              <li>Update CONTEXT-HEALTH.md staleness flags</li>
+            </ul></div>
+            <div class="step-col"><div class="step-col-title">Context MD Structure</div><ul>
+              <li>last_verified_sprint: Sprint-N</li>
+              <li>Key Files — exact files devs may touch</li>
+              <li>Dependencies — internal + external</li>
+              <li>Do Not Touch — needs Lead approval</li>
+              <li>Gotchas — known bugs, quirks</li>
+              <li>Required Patterns — React Query, Zod, etc.</li>
+            </ul></div>
+            <div class="step-col"><div class="step-col-title">What Can Go Wrong</div><ul>
+              <li>Stale context MD = devs build in wrong direction confidently</li>
+              <li>Missing gotchas = Safari bugs in PRs</li>
+              <li>Skill not rebuilt = dev gets outdated guidance</li>
+            </ul></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="pipeline-step" onclick="toggleStep(4)" role="button" tabindex="0" aria-expanded="false">
+        <div class="step-header">
+          <div class="step-num">04</div>
+          <div class="step-title">Jira Cards Created</div>
+          <span class="step-tag tag-amber">Lead</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="step-body">
+          <div class="cb-label">Command</div>
+          <div class="code-block"><pre>/gen-cards docs/context/IMPACT-ASSESSMENT.md</pre></div>
+          <div class="step-grid">
+            <div class="step-col"><div class="step-col-title">Every Card Must Have</div><ul>
+              <li>PRD reference (no card without this)</li>
+              <li>Skill name or context MD path</li>
+              <li>Exact scope: files you MAY touch</li>
+              <li>Explicit do-not-touch list</li>
+              <li>Acceptance criteria (verifiable)</li>
+              <li>Size: XS, S, or M only — no L or XL</li>
+            </ul></div>
+            <div class="step-col"><div class="step-col-title">3 Log Fields Pre-Set</div><ul>
+              <li>AI-assisted: Y/N</li>
+              <li>Rework required: Y/N</li>
+              <li>Session count</li>
+            </ul></div>
+            <div class="step-col"><div class="step-col-title">What Can Go Wrong</div><ul>
+              <li>L/XL card = session limit hit mid-implementation</li>
+              <li>Missing scope = dev touches wrong files</li>
+              <li>Missing log fields = no sprint measurement</li>
+            </ul></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="pipeline-step" onclick="toggleStep(5)" role="button" tabindex="0" aria-expanded="false">
+        <div class="step-header">
+          <div class="step-num">05</div>
+          <div class="step-title">Implementation</div>
+          <span class="step-tag tag-green">Developer · Pro</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="step-body">
+          <div class="cb-label">Session Start Prompt Template</div>
+          <div class="code-block"><pre>PRD: PRD-042 — [PRD title]
+TASK: [exact task from Jira card]
+SCOPE: Touch ONLY [files listed on card]
+DO NOT: [do-not-touch list from card]
+CONTEXT: [Skill name] loaded / [module.context.md] attached
+DONE WHEN: [acceptance criteria]</pre></div>
+          <div class="step-grid">
+            <div class="step-col"><div class="step-col-title">Session Rules</div><ul>
+              <li>One session per card — restart for each</li>
+              <li>Stop when acceptance criteria are met</li>
+              <li>Limit hit = card was too large → flag and split</li>
+              <li>Never paste raw source files into Claude</li>
+            </ul></div>
+            <div class="step-col"><div class="step-col-title">On Card Close</div><ul>
+              <li>Fill AI-assisted field (Y/N)</li>
+              <li>Fill rework required field (Y/N)</li>
+              <li>Fill session count</li>
+              <li>Move to Done only after log fields filled</li>
+            </ul></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 6 -->
+      <div class="pipeline-step" onclick="toggleStep(6)" role="button" tabindex="0" aria-expanded="false">
+        <div class="step-header">
+          <div class="step-num">06</div>
+          <div class="step-title">Review Buddy + QA</div>
+          <span class="step-tag tag-teal">Senior Dev → QA</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="step-body">
+          <div class="step-grid">
+            <div class="step-col"><div class="step-col-title">Buddy Checklist (Skill)</div><ul>
+              <li>PR only touches files listed on card?</li>
+              <li>Acceptance criteria verifiable from code?</li>
+              <li>No untouched-file modifications?</li>
+              <li>No schema changes outside scope?</li>
+              <li>Patterns match coding-standards Skill?</li>
+            </ul></div>
+            <div class="step-col"><div class="step-col-title">QA (After Buddy Sign-Off)</div><ul>
+              <li>Test cases from acceptance criteria</li>
+              <li>Edge cases: empty states, boundary values, errors</li>
+              <li>Browser matrix: Chrome, Firefox, Safari</li>
+              <li>Regression on files adjacent to scope</li>
+            </ul></div>
+            <div class="step-col"><div class="step-col-title">Gate Rules</div><ul>
+              <li>Buddy fail → returns to dev with comments</li>
+              <li>No QA without Buddy sign-off</li>
+              <li>Both gates must pass before Lead sees PR</li>
+            </ul></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 7 -->
+      <div class="pipeline-step" onclick="toggleStep(7)" role="button" tabindex="0" aria-expanded="false">
+        <div class="step-header">
+          <div class="step-num">07</div>
+          <div class="step-title">Lead PR Review</div>
+          <span class="step-tag tag-amber">Lead</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="step-body">
+          <div class="step-grid">
+            <div class="step-col"><div class="step-col-title">Lead Reviews</div><ul>
+              <li>Architectural decisions in the diff</li>
+              <li>Cross-module dependency changes</li>
+              <li>Anything Buddy escalated</li>
+              <li>Target: &lt;30% of all PRs</li>
+            </ul></div>
+            <div class="step-col"><div class="step-col-title">Post-Merge Loop</div><ul>
+              <li>Update ARCHITECTURE.md if structure changed</li>
+              <li>Flag context MD for re-verification if module shifted</li>
+              <li>Note for Sprint Review if rework was required</li>
+            </ul></div>
+            <div class="step-col"><div class="step-col-title">Health Signal</div><ul>
+              <li>Lead queue &gt;5 PRs waiting &gt;1 day = Buddy system failing</li>
+              <li>Lead reviewing &gt;30% = Impact Assessments not getting done</li>
+            </ul></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 8 -->
+      <div class="pipeline-step" onclick="toggleStep(8)" role="button" tabindex="0" aria-expanded="false">
+        <div class="step-header">
+          <div class="step-num">08</div>
+          <div class="step-title">Deploy + Monitor</div>
+          <span class="step-tag tag-blue">DevOps · Lead</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="step-body">
+          <div class="step-grid">
+            <div class="step-col"><div class="step-col-title">DevOps</div><ul>
+              <li>Smoke test in staging via devops-infra Skill</li>
+              <li>Sentry error monitoring active</li>
+              <li>Rollback plan confirmed before production</li>
+            </ul></div>
+            <div class="step-col"><div class="step-col-title">Lead (on Release)</div><ul>
+              <li>ARCHITECTURE.md version bump</li>
+              <li>Full Skills audit — rebuild stale Skills</li>
+              <li>CONTEXT-HEALTH.md sprint sign-off</li>
+            </ul></div>
+            <div class="step-col"><div class="step-col-title">Triggers</div><ul>
+              <li>Sentry error spike → Lead notified immediately</li>
+              <li>Rollback = context MD revert + Skill rebuild</li>
+            </ul></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11 RULES -->
+    <div class="section">
+      <div class="section-title"><span class="st-icon">◈</span> 11 Non-Negotiable Rules</div>
+      <div class="grid-2">
+        <div>
+          <div class="rule-card"><div class="rule-num">01</div><div class="rule-body"><div class="rule-title">PRD First, Jira Second</div><div class="rule-desc">No card without a completed Impact Assessment. Work does not start on a partial PRD.</div></div></div>
+          <div class="rule-card"><div class="rule-num">02</div><div class="rule-body"><div class="rule-title">Skills Support, Pipeline Leads</div><div class="rule-desc">The PRD → Assessment → Context → Card → Session pipeline is immovable.</div></div></div>
+          <div class="rule-card"><div class="rule-num">03</div><div class="rule-body"><div class="rule-title">No Raw Codebase Dumping</div><div class="rule-desc">Context MDs or Skills only. Never paste raw source files into Claude.</div></div></div>
+          <div class="rule-card"><div class="rule-num">04</div><div class="rule-body"><div class="rule-title">One Session Per Card</div><div class="rule-desc">Close and restart for each card. No thread kept alive across multiple cards.</div></div></div>
+          <div class="rule-card"><div class="rule-num">05</div><div class="rule-body"><div class="rule-title">Pivot = Disable Old Skills Immediately</div><div class="rule-desc">Notify all devs before Skills are re-enabled. Stale Skills cause confident wrong output.</div></div></div>
+          <div class="rule-card"><div class="rule-num">06</div><div class="rule-body"><div class="rule-title">Leads Handle "Why", Devs Handle "How"</div><div class="rule-desc">Architectural decisions stay with Leads on Max tier.</div></div></div>
+        </div>
+        <div>
+          <div class="rule-card"><div class="rule-num">07</div><div class="rule-body"><div class="rule-title">Prompt Template is Mandatory</div><div class="rule-desc">PRD ref, task, scope, do-not-touch, done criteria — every session, no exceptions.</div></div></div>
+          <div class="rule-card"><div class="rule-num">08</div><div class="rule-body"><div class="rule-title">Limit Hits are Planning Signals</div><div class="rule-desc">Card was too large. Split it. Track limit events as a sprint health metric.</div></div></div>
+          <div class="rule-card"><div class="rule-num">09</div><div class="rule-body"><div class="rule-title">Measure Every Sprint</div><div class="rule-desc">AI-assist rate, 1-session completion, rework rate. Without measurement there is no improvement.</div></div></div>
+          <div class="rule-card"><div class="rule-num">10</div><div class="rule-body"><div class="rule-title">Review Buddies Protect Lead Capacity</div><div class="rule-desc">Lead reviews &lt;30% of PRs. If Lead reviews everything, Impact Assessments don't get done.</div></div></div>
+          <div class="rule-card"><div class="rule-num">11</div><div class="rule-body"><div class="rule-title">Stale Context MDs are Worse Than None</div><div class="rule-desc">Every MD carries <code>last_verified_sprint</code>. If not signed off this sprint, it is not a valid source.</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SKILLS -->
+    <div class="section">
+      <div class="section-title"><span class="st-icon">◈</span> Skills Reference</div>
+      <div class="two-col">
+        <div>
+          <div style="font-family:var(--mono);font-size:0.68rem;color:var(--accent2);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;">Custom Skills (Lead-Built)</div>
+          <div class="card" style="padding:0;overflow:hidden;">
+            <table class="data-table">
+              <thead><tr><th>Skill</th><th>Role</th><th>Purpose</th></tr></thead>
+              <tbody>
+                <tr><td><code>prd-assessment</code></td><td>Lead</td><td>/prd-assess — full impact assessment</td></tr>
+                <tr><td><code>card-generator</code></td><td>Lead</td><td>/gen-cards — Jira cards from assessment (creates directly in Jira via Atlassian MCP, pre-sets 3 measurement fields)</td></tr>
+                <tr><td><code>coding-standards</code></td><td>All</td><td>Required patterns, anti-patterns</td></tr>
+                <tr><td><code>fe-best-practices</code></td><td>Frontend</td><td>React, Tailwind, component patterns</td></tr>
+                <tr><td><code>be-best-practices</code></td><td>Backend</td><td>API, Zod, Prisma, error handling</td></tr>
+                <tr><td><code>pre-review-checklist</code></td><td>Buddy</td><td>Scope check before Lead sees any PR</td></tr>
+                <tr><td><code>context-audit</code></td><td>Lead</td><td>Compare context MD vs actual module files</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:var(--mono);font-size:0.68rem;color:var(--teal2);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;">Partner Skills (MCP Integrations)</div>
+          <div class="card" style="padding:0;overflow:hidden;">
+            <table class="data-table">
+              <thead><tr><th>Skill</th><th>Role</th><th>What It Does</th></tr></thead>
+              <tbody>
+                <tr><td>Figma</td><td>Frontend</td><td>Pull design tokens, component specs into session</td></tr>
+                <tr><td>Atlassian</td><td>All</td><td>Query Jira cards, Confluence docs in session</td></tr>
+                <tr><td>Sentry</td><td>Backend/DevOps</td><td>Surface active errors for the module</td></tr>
+                <tr><td>Hugging Face</td><td>ML/DC</td><td>Model cards, datasets, inference endpoints</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEASUREMENT -->
+    <div class="section">
+      <div class="section-title"><span class="st-icon">◈</span> Measurement Targets</div>
+      <div class="card" style="padding:0;overflow:hidden;">
+        <table class="data-table">
+          <thead><tr><th>Metric</th><th>Target</th><th>Tracked By</th></tr></thead>
+          <tbody>
+            <tr><td>1-session card completion rate</td><td><em class="green">85%+</em></td><td>Jira log fields</td></tr>
+            <tr><td>AI-assisted code rate</td><td>Track baseline, improve sprint-on-sprint</td><td>Jira log fields</td></tr>
+            <tr><td>AI-related rework rate</td><td><em class="green">&lt;10%</em></td><td>Jira log fields</td></tr>
+            <tr><td>Lead PR review %</td><td><em class="green">&lt;30% of all PRs</em></td><td>GitHub/Jira</td></tr>
+            <tr><td>Limit events per sprint</td><td><em class="green">Near zero by Day 3</em></td><td>Session log</td></tr>
+            <tr><td>Stale context MDs used</td><td><em class="red">0 — hard requirement</em></td><td>CONTEXT-HEALTH.md</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="panel-footer">
+    <span class="pf-label">WORKFLOW · AI-FIRST ENGINEERING</span>
+    <span class="pf-vers">v3 · Active Sprint</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TAB 2 — SECURITY
+════════════════════════════════════════════ -->
+<div id="tab-security" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-security">
+
+  <div class="hero-strip red">
+    <div class="hero-eyebrow">Effective Immediately · Mandatory for All Developers</div>
+    <h1 class="hero-title">Claude Code Security Guidelines</h1>
+    <p class="hero-sub">Claude Code runs in your terminal with your permissions. It can read any file, execute commands, and access credentials. These rules are not suggestions — bypassing them is a security incident.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-val">10</div><div class="stat-label">Security Rules</div></div>
+      <div class="stat"><div class="stat-val">3</div><div class="stat-label">Real-World CVEs</div></div>
+      <div class="stat"><div class="stat-val">0</div><div class="stat-label">Auto-Accepts Allowed</div></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- WHY THIS MATTERS -->
+    <div class="section">
+      <div class="section-title"><span class="st-icon" style="color:var(--red2)">◈</span> Why This Matters — Real Incidents</div>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-head"><div class="card-icon red">⚠️</div><div class="card-title">CVE-2025-55284</div></div>
+          <p>API key theft via DNS exfiltration triggered directly through Claude Code. Credentials were leaked to an external server through a malicious session.</p>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-icon red">⚠️</div><div class="card-title">GlueStack Supply Chain</div></div>
+          <p>17 npm packages with 1M+ weekly downloads were compromised. AI-assisted dependency installs accelerated the spread to developer machines.</p>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-icon red">⚠️</div><div class="card-title">Rules File Backdoor</div></div>
+          <p>Invisible Unicode characters in config files used to poison AI coding tool repositories. The attack was undetectable by visual inspection.</p>
+        </div>
+      </div>
+      <div class="alert danger mt-2"><span class="alert-icon">🔴</span><div>Claude Code is a powerful tool. <strong>Misconfigured, it becomes an attack surface with your credentials attached.</strong> Treat it like a brilliant but untrusted intern — capable of excellent work but requiring supervision on everything security-related.</div></div>
+    </div>
+
+    <!-- SECURITY RULES -->
+    <div class="section">
+      <div class="section-title"><span class="st-icon" style="color:var(--red2)">◈</span> The 10 Security Rules</div>
+      <div class="alert warn"><span class="alert-icon" aria-hidden="true">👆</span><div>Click any rule to expand full detail, banned patterns, and what to do.</div></div>
+
+      <!-- Rule 1 -->
+      <div class="sec-rule" onclick="toggleSec(1)" role="button" tabindex="0" aria-expanded="false">
+        <div class="sec-rule-header">
+          <div class="sec-num">01</div>
+          <div class="sec-title">No Auto-Accept. No Bypassed Permissions.</div>
+          <span class="pill tag-red">CRITICAL</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="sec-body">
+          <div class="alert danger mt-2"><span class="alert-icon">🚫</span><div><strong>Banned:</strong> <code>--dangerously-skip-permissions</code> · auto-accepting without reading · "yolo mode" · approving commands you don't understand</div></div>
+          <div class="mt-2 text-sm"><strong style="color:var(--text)">Required:</strong> Read every permission prompt before accepting. If you don't understand what a command does — deny it and ask the Lead. Only allowlist genuinely safe, repetitive commands.</div>
+          <div class="cb-label mt-3">Team .claude/settings.json Template</div>
+          <div class="code-block"><pre>{
+  "permissions": {
+    "allow": ["Bash(git status)", "Bash(git diff*)", "Bash(ls*)", "Bash(echo*)"],
+    "ask":   ["Bash(npm install*)", "Bash(git add*)", "Bash(git commit*)"],
+    "deny":  ["Bash(rm -rf*)", "Bash(curl*)", "Bash(wget*)", "Bash(git push*)", "Bash(chmod 777*)"]
+  }
+}</pre></div>
+          <div class="alert info mt-2"><span class="alert-icon">ℹ️</span><div>Lead provides the team's base <code>.claude/settings.json</code> at sprint start. Developers do not modify the deny list without Lead approval.</div></div>
+        </div>
+      </div>
+
+      <!-- Rule 2 -->
+      <div class="sec-rule" onclick="toggleSec(2)" role="button" tabindex="0" aria-expanded="false">
+        <div class="sec-rule-header">
+          <div class="sec-num">02</div>
+          <div class="sec-title">Claude Must Never See Secrets or Credentials</div>
+          <span class="pill tag-red">CRITICAL</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="sec-body">
+          <div class="grid-2 mt-2">
+            <div>
+              <div class="step-col-title">Claude Must Never See</div>
+              <div class="card"><ul class="red">
+                <li>API keys (any service)</li>
+                <li>Database credentials or connection strings</li>
+                <li>JWT secrets or session signing keys</li>
+                <li>OAuth client secrets</li>
+                <li>SSH private keys</li>
+                <li>.env files containing any of the above</li>
+              </ul></div>
+            </div>
+            <div>
+              <div class="step-col-title">Required Practices</div>
+              <div class="card"><ul>
+                <li>Use <code>.env.example</code> only — never <code>.env</code> in worktree</li>
+                <li>Reference by name only: <code>process.env.DATABASE_URL</code></li>
+                <li>Use secrets manager CLI, not plaintext files</li>
+                <li>Never paste credential values into a session</li>
+              </ul></div>
+            </div>
+          </div>
+          <div class="alert danger mt-2"><span class="alert-icon">🔴</span><div><strong>If Claude asks for a credential — stop the session and report to Lead.</strong> Claude should never need your actual credentials to help you code.</div></div>
+          <div class="cb-label mt-3">Rotate Immediately Protocol</div>
+          <div class="code-block"><pre>1. Stop the session immediately
+2. Rotate the credential through the relevant service dashboard
+3. Report to Lead — do not continue the session until confirmed</pre></div>
+        </div>
+      </div>
+
+      <!-- Rule 3 -->
+      <div class="sec-rule" onclick="toggleSec(3)" role="button" tabindex="0" aria-expanded="false">
+        <div class="sec-rule-header">
+          <div class="sec-num">03</div>
+          <div class="sec-title">Mandatory Git Worktree for Every Task</div>
+          <span class="pill tag-red">REQUIRED</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="sec-body">
+          <div class="grid-2 mt-2">
+            <div>
+              <div class="step-col-title">Why Worktrees</div>
+              <div class="card"><ul>
+                <li>Isolates Claude's file access to your card only</li>
+                <li>Prevents accidental modification of unrelated modules</li>
+                <li>Impossible to commit to the wrong branch</li>
+                <li>Clean, card-scoped directory Claude operates safely in</li>
+              </ul></div>
+            </div>
+            <div>
+              <div class="step-col-title">Branch Naming Convention</div>
+              <div class="card"><ul>
+                <li><code>feature/FE-241-settings-plan-switcher</code></li>
+                <li><code>fix/BE-109-auth-refresh-token-expiry</code></li>
+                <li><code>hotfix/FE-255-safari-modal-z-index</code></li>
+              </ul></div>
+            </div>
+          </div>
+          <div class="cb-label mt-3">Worktree Setup for Every Card</div>
+          <div class="code-block"><pre># Create worktree for your card
+git worktree add ../salina-web-FE-241 feature/FE-241-settings-plan-switcher
+
+# Navigate into it
+cd ../salina-web-FE-241
+
+# Start Claude Code here — scoped to this worktree only
+claude
+
+# After PR is merged — cleanup
+git worktree remove ../salina-web-FE-241
+git branch -d feature/FE-241-settings-plan-switcher</pre></div>
+          <div class="alert danger mt-2"><span class="alert-icon">🚫</span><div><strong>Never run Claude Code from the repo root or main/develop branch directly.</strong></div></div>
+        </div>
+      </div>
+
+      <!-- Rule 4 -->
+      <div class="sec-rule" onclick="toggleSec(4)" role="button" tabindex="0" aria-expanded="false">
+        <div class="sec-rule-header">
+          <div class="sec-num">04</div>
+          <div class="sec-title">MCP Servers: Explicit Allowlist Only</div>
+          <span class="pill tag-amber">REQUIRED</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="sec-body">
+          <div class="grid-2 mt-2">
+            <div>
+              <div class="step-col-title">Approved MCP Servers</div>
+              <div class="card" style="padding:0;overflow:hidden;">
+                <table class="data-table">
+                  <thead><tr><th>Server</th><th>Role</th></tr></thead>
+                  <tbody>
+                    <tr><td>Atlassian <span class="pill tag-green" style="margin-left:6px;">Live</span></td><td>All</td></tr>
+                    <tr><td>Figma</td><td>Frontend</td></tr>
+                    <tr><td>Sentry</td><td>Backend / DevOps</td></tr>
+                    <tr><td>Hugging Face</td><td>ML/DC</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div>
+              <div class="step-col-title">Configuration</div>
+              <div class="code-block"><pre>// NEVER
+{ "enableAllProjectMcpServers": true }
+
+// REQUIRED
+{
+  "enabledMcpjsonServers": [
+    "atlassian", "figma", "sentry"
+  ],
+  "disabledMcpjsonServers": ["filesystem"]
+}</pre></div>
+            </div>
+          </div>
+          <div class="alert danger mt-2"><span class="alert-icon">⚠️</span><div>Any server not on the approved list requires Lead approval. If you find an <code>.mcp.json</code> config you didn't put there — stop and report to Lead. This is a prompt injection vector.</div></div>
+        </div>
+      </div>
+
+      <!-- Rule 5 -->
+      <div class="sec-rule" onclick="toggleSec(5)" role="button" tabindex="0" aria-expanded="false">
+        <div class="sec-rule-header">
+          <div class="sec-num">05</div>
+          <div class="sec-title">Prompt Injection Awareness</div>
+          <span class="pill tag-amber">AWARENESS</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="sec-body">
+          <div class="grid-2 mt-2">
+            <div>
+              <div class="step-col-title">High-Risk Content Sources</div>
+              <div class="card"><ul class="red">
+                <li>npm/pip package READMEs during install</li>
+                <li>External API responses in session</li>
+                <li>Code comments in third-party libraries</li>
+                <li>Jira card descriptions from unknown sources</li>
+                <li>Any file you didn't write yourself</li>
+              </ul></div>
+            </div>
+            <div>
+              <div class="step-col-title">What to Watch For</div>
+              <div class="card"><ul class="red">
+                <li>Claude suggesting actions outside your card</li>
+                <li>Claude asking to read files outside your worktree</li>
+                <li>Claude requesting credentials or env vars</li>
+                <li>"Ignore previous instructions" in content Claude reads</li>
+                <li>Any unexpected behavior mid-session</li>
+              </ul></div>
+            </div>
+          </div>
+          <div class="alert danger mt-2"><span class="alert-icon">🔴</span><div>If Claude behaves unexpectedly — <strong>stop the session, deny the action, report to Lead.</strong></div></div>
+        </div>
+      </div>
+
+      <!-- Rules 6-10 condensed -->
+      <div class="sec-rule" onclick="toggleSec(6)" role="button" tabindex="0" aria-expanded="false">
+        <div class="sec-rule-header">
+          <div class="sec-num">06</div>
+          <div class="sec-title">File Access Scope — Start in Worktree Only</div>
+          <span class="pill tag-amber">REQUIRED</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="sec-body">
+          <div class="cb-label mt-2">Sensitive Paths — Claude Must Never Access</div>
+          <div class="code-block"><pre>~/.ssh/                    # SSH keys
+~/.aws/                    # AWS credentials
+~/.config/                 # App configs with credentials
+~/.npmrc                   # npm auth tokens
+~/.claude/shell-snapshots/ # Shell history captured by Claude
+.env                       # All variants: .env.local, .env.production</pre></div>
+          <div class="text-sm mt-2">Add these to your project <code>.gitignore</code> and your CLAUDE.md Do Not Touch section.</div>
+        </div>
+      </div>
+
+      <div class="sec-rule" onclick="toggleSec(7)" role="button" tabindex="0" aria-expanded="false">
+        <div class="sec-rule-header">
+          <div class="sec-num">07</div>
+          <div class="sec-title">Dependency Install Review</div>
+          <span class="pill tag-amber">REQUIRED</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="sec-body">
+          <div class="text-sm mt-2">Before approving any <code>npm install</code> or <code>pip install</code>:</div>
+          <div class="card mt-2"><ul>
+            <li>Check the package name exactly — typosquatting is common (<code>crossenv</code> vs <code>cross-env</code>)</li>
+            <li>Verify the package is in your existing <code>package.json</code> or was explicitly discussed in the session</li>
+            <li>If Claude suggests a new dependency not in your card scope — deny it and check with Lead</li>
+            <li>After install, run <code>npm audit</code> and review the output before continuing</li>
+          </ul></div>
+          <div class="alert warn mt-2"><span class="alert-icon">⚠️</span><div>Every PR triggers automated dependency scan. PRs with new dependencies flagged at high/critical severity are <strong>blocked from merge</strong>.</div></div>
+        </div>
+      </div>
+
+      <div class="sec-rule" onclick="toggleSec(8)" role="button" tabindex="0" aria-expanded="false">
+        <div class="sec-rule-header">
+          <div class="sec-num">08</div>
+          <div class="sec-title">Code Review — Never Trust, Always Verify</div>
+          <span class="pill tag-amber">REQUIRED</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="sec-body">
+          <div class="alert warn mt-2"><span class="alert-icon">⚠️</span><div>AI-generated code introduces security vulnerabilities at approximately <strong>2% of all defects</strong>, often at critical severity. Manual review is not optional.</div></div>
+          <div class="cb-label mt-3">Pre-PR Commands</div>
+          <div class="code-block"><pre>npm audit                        # Check for vulnerable dependencies
+git diff main -- '*.env*'        # Confirm no .env changes in diff
+grep -r "process.env\." src/     # Verify env vars referenced by name only
+grep -rn "console.log" src/      # Remove debug logs before PR</pre></div>
+        </div>
+      </div>
+
+      <div class="sec-rule" onclick="toggleSec(9)" role="button" tabindex="0" aria-expanded="false">
+        <div class="sec-rule-header">
+          <div class="sec-num">09</div>
+          <div class="sec-title">Session Hygiene</div>
+          <span class="pill tag-amber">REQUIRED</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="sec-body">
+          <div class="grid-2 mt-2">
+            <div>
+              <div class="step-col-title">Start of Every Session</div>
+              <div class="card"><ul>
+                <li>Confirm you're in the correct worktree directory</li>
+                <li>Run <code>ls -la | grep env</code> — confirm .env is not present</li>
+                <li>Confirm role Skill is loaded</li>
+                <li>Use the role prompt template</li>
+              </ul></div>
+            </div>
+            <div>
+              <div class="step-col-title">Never Do In a Session</div>
+              <div class="card"><ul class="red">
+                <li>Paste actual .env contents "for context"</li>
+                <li>Share database connection strings</li>
+                <li>Run Claude Code as sudo</li>
+                <li>Leave session open overnight or across days</li>
+              </ul></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sec-rule" onclick="toggleSec(10)" role="button" tabindex="0" aria-expanded="false">
+        <div class="sec-rule-header">
+          <div class="sec-num">10</div>
+          <div class="sec-title">Incident Reporting</div>
+          <span class="pill tag-red">CRITICAL</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="sec-body">
+          <div class="mt-2">
+            <div class="incident-row"><div class="ir-event"><strong>Incident</strong>.env present when Claude Code ran</div><div class="ir-action"><strong>Action</strong>Rotate all credentials in that file. Report to Lead immediately.</div></div>
+            <div class="incident-row"><div class="ir-event"><strong>Incident</strong>Claude suggested reading files outside worktree</div><div class="ir-action"><strong>Action</strong>Deny. Stop session. Report to Lead.</div></div>
+            <div class="incident-row"><div class="ir-event"><strong>Incident</strong>Claude requested a credential or secret</div><div class="ir-action"><strong>Action</strong>Deny. Stop session. Report to Lead.</div></div>
+            <div class="incident-row"><div class="ir-event"><strong>Incident</strong>Unexpected MCP server in project config</div><div class="ir-action"><strong>Action</strong>Do not run Claude Code until Lead reviews it.</div></div>
+            <div class="incident-row"><div class="ir-event"><strong>Incident</strong>Claude behavior changed unexpectedly mid-session</div><div class="ir-action"><strong>Action</strong>Prompt injection suspected. Stop session. Report.</div></div>
+            <div class="incident-row"><div class="ir-event"><strong>Incident</strong>PR contains dependency not in card scope</div><div class="ir-action"><strong>Action</strong>Do not merge. Flag in Jira. Report to Lead.</div></div>
+          </div>
+          <div class="alert danger mt-2"><span class="alert-icon">🔴</span><div><strong>Reporting is not punishment. Not reporting is.</strong></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE CHECKLIST -->
+    <div class="section">
+      <div class="section-title"><span class="st-icon" style="color:var(--red2)">◈</span> Interactive Session Checklist</div>
+      <div class="checklist">
+        <div class="checklist-section">
+          <div class="cl-head">Before Starting a Session</div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div><div class="cl-text">In the correct worktree directory?</div></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div><div class="cl-text">.env NOT in current directory? <code>ls -la | grep env</code></div></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div><div class="cl-text">Role Skill loaded (not stale)?</div></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div><div class="cl-text">Prompt template ready — PRD ref, task, scope, do-not-touch, done criteria?</div></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div><div class="cl-text">No sensitive paths accessible from this directory?</div></div>
+        </div>
+        <div class="checklist-section">
+          <div class="cl-head">During the Session</div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div><div class="cl-text">Reading every permission prompt before approving?</div></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div><div class="cl-text">Not approving commands I don't understand?</div></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div><div class="cl-text">Claude staying within card scope?</div></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div><div class="cl-text">No credentials appearing in session?</div></div>
+        </div>
+        <div class="checklist-section">
+          <div class="cl-head">Before Submitting PR</div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div><div class="cl-text">Reviewed all Claude-generated code manually?</div></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div><div class="cl-text">npm audit clean?</div></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div><div class="cl-text">No .env changes in git diff?</div></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div><div class="cl-text">No hardcoded credentials or tokens in code?</div></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div><div class="cl-text">Log fields filled: AI-assisted, rework required, session count?</div></div>
+        </div>
+        <div class="checklist-section">
+          <div class="cl-head">On Card Close</div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div><div class="cl-text">Worktree cleaned up?</div></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div><div class="cl-text">Branch deleted after merge?</div></div>
+          <div class="cl-item" onclick="toggleCheck(this)"><div class="cl-box"><span class="cl-check">✓</span></div><div class="cl-text">Session closed?</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLAUDE.MD BLOCK -->
+    <div class="section">
+      <div class="section-title"><span class="st-icon" style="color:var(--red2)">◈</span> CLAUDE.md Security Block — Paste Into Every Project</div>
+      <div class="code-block"><pre>## Security — Non-Negotiable
+
+### Do Not Read or Reference
+- .env, .env.local, .env.production, .env.staging
+- Any file containing credentials, secrets, or API keys
+- ~/.ssh/, ~/.aws/, ~/.config/
+- Any file path outside the current worktree
+
+### Do Not Suggest
+- Hardcoded credentials, tokens, or passwords in code
+- Reading sensitive paths for "context"
+- Installing packages outside the card's defined scope
+- Running commands as sudo or with elevated privileges
+- Bypassing permission prompts
+
+### All API Calls
+- Must go through /lib/api/*.ts only
+- Never raw fetch/axios to external URLs
+- Never expose API keys in client-side code
+
+### Credentials Are Referenced By Name Only
+- process.env.DATABASE_URL — correct
+- postgresql://user:secret@host — NEVER</pre></div>
+    </div>
+
+  </div>
+
+  <div class="panel-footer">
+    <span class="pf-label">SECURITY GUIDELINES v1 · EFFECTIVE IMMEDIATELY</span>
+    <span class="pf-vers" style="color:var(--red2)">Review after Day 1</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TAB 3 — TRANSITION PLAN
+════════════════════════════════════════════ -->
+<div id="tab-transition" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-transition">
+
+  <div class="hero-strip teal">
+    <div class="hero-eyebrow">Onboarding Session · Half-Day Format</div>
+    <h1 class="hero-title">Claude Code Transition Plan</h1>
+    <p class="hero-sub">A structured half-day that covers everything developers need to know: how to install, how to use Claude Code in CLI, desktop, and IDE, what Skills and agents are, and how memory and CLAUDE.md work. Afternoon is a Build Sprint Challenge with presentations and judging.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-val">½</div><div class="stat-label">Day Session</div></div>
+      <div class="stat"><div class="stat-val">10</div><div class="stat-label">Build Problems</div></div>
+      <div class="stat"><div class="stat-val">60m</div><div class="stat-label">Build Sprint</div></div>
+      <div class="stat"><div class="stat-val">25</div><div class="stat-label">Max Score</div></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- SESSION SCHEDULE -->
+    <div class="section">
+      <div class="section-title"><span class="st-icon" style="color:var(--teal2)">◈</span> Session Schedule</div>
+      <div class="card" style="padding:0;overflow:hidden;">
+        <div class="schedule">
+
+          <div class="sch-time"><span>8:00 AM</span><span class="sch-dur">15 min</span></div>
+          <div class="sch-item"><div class="sch-topic">🎯 Opening — Why We're Here</div><div class="sch-detail">Context on the shift from Cursor to Claude Code. What changes, what stays. The team filter — measurement makes it objective.</div></div>
+
+          <div class="sch-time"><span>8:15 AM</span><span class="sch-dur">30 min</span></div>
+          <div class="sch-item"><div class="sch-topic">⚙️ What is Claude Code? — Features Overview</div><div class="sch-detail">CLI, Claude Desktop, IDE extensions. Agentic mode, multi-file editing, terminal access, web search. Skills, Agents, Memory, CLAUDE.md explained.</div></div>
+
+          <div class="sch-time"><span>8:45 AM</span><span class="sch-dur">30 min</span></div>
+          <div class="sch-item"><div class="sch-topic">🛠️ Installation + Setup Walkthrough</div><div class="sch-detail">Live installation: CLI via npm, Claude Desktop, VS Code extension. Account setup. Role-specific settings.json. Base CLAUDE.md for each project type.</div></div>
+
+          <div class="sch-time sch-break"><span>9:15 AM</span><span class="sch-dur">15 min</span></div>
+          <div class="sch-item sch-break"><div class="sch-topic">☕ Break</div><div class="sch-detail">Setup issues resolved 1:1 during break. Leads circulate.</div></div>
+
+          <div class="sch-time"><span>9:30 AM</span><span class="sch-dur">30 min</span></div>
+          <div class="sch-item"><div class="sch-topic">📋 The Workflow — Pipeline Walkthrough</div><div class="sch-detail">8-step pipeline from PRD to deploy. Prompt template. Log fields. Review Buddy. What 1-session looks like in practice. Live demo using a real card.</div></div>
+
+          <div class="sch-time"><span>10:00 AM</span><span class="sch-dur">30 min</span></div>
+          <div class="sch-item"><div class="sch-topic">🔒 Security Rules — Non-Negotiable</div><div class="sch-detail">10 security rules walkthrough. Git worktree setup demo. Permissions config. What to do when something feels wrong. Incident reporting.</div></div>
+
+          <div class="sch-time"><span>10:30 AM</span><span class="sch-dur">30 min</span></div>
+          <div class="sch-item"><div class="sch-topic">🧩 Skills, Agents, Memory + CLAUDE.md Deep Dive</div><div class="sch-detail">What Skills are, how they load, how to use them. Agent mode explained. Memory (project vs global). CLAUDE.md structure and what Claude reads at session start.</div></div>
+
+          <div class="sch-time sch-break"><span>11:00 AM</span><span class="sch-dur">60 min</span></div>
+          <div class="sch-item sch-break"><div class="sch-topic">🍱 Lunch Break</div><div class="sch-detail">Q&A open. Leads available for individual questions.</div></div>
+
+          <div class="sch-time sch-hands"><span>12:00 PM</span><span class="sch-dur">60 min</span></div>
+          <div class="sch-item sch-hands"><div class="sch-topic">🏗️ Build Sprint Challenge — Solo Build</div><div class="sch-detail">Each dev picks one of 10 build problems. 60 minutes to build it entirely using Claude Code in a worktree. Any stack, any approach. Leads circulate and assist — this is learning time, not a coding competition.</div></div>
+
+          <div class="sch-time sch-hands"><span>1:00 PM</span><span class="sch-dur">90 min</span></div>
+          <div class="sch-item sch-hands"><div class="sch-topic">🎤 Presentations &amp; Judging</div><div class="sch-detail">5 minutes per dev: live demo, prompt walkthrough, what worked, what broke. Judges score on 5 criteria (25 points max): Prompt Craft, Working Output, Creativity, Presentation Clarity, Workflow Discipline.</div></div>
+
+          <div class="sch-time sch-retro"><span>2:30 PM</span><span class="sch-dur">30 min</span></div>
+          <div class="sch-item sch-retro"><div class="sch-topic">📣 Day 1 Debrief — What Did We Learn?</div><div class="sch-detail">Quick round-table: what worked, what was confusing, what broke. Not a performance review — this data feeds the feedback session. Collect top 3 blockers per dev.</div></div>
+
+          <div class="sch-time sch-retro"><span>3:00 PM</span><span class="sch-dur">—</span></div>
+          <div class="sch-item sch-retro"><div class="sch-topic">✅ End of Day 1 · Feedback Session Scheduled</div><div class="sch-detail">Leads collect written feedback forms. Next session date confirmed. Devs encouraged to use Claude Code on one real card before the feedback session.</div></div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- WHAT IS CLAUDE CODE — FEATURES -->
+    <div class="section">
+      <div class="section-title"><span class="st-icon" style="color:var(--teal2)">◈</span> What is Claude Code? — Feature Overview</div>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="fc-icon">🖥️</div>
+          <div class="fc-title">Terminal / CLI Mode</div>
+          <div class="fc-desc">Claude Code runs directly in your terminal. Full codebase access, bash command execution, multi-file editing, git operations — all from a natural language prompt. The primary way most devs will use it.</div>
+          <div class="fc-usage">$ claude → starts an interactive session</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🖱️</div>
+          <div class="fc-title">Claude Desktop App</div>
+          <div class="fc-desc">The GUI version. Connect to your local codebase via MCP, switch between projects, manage Skills and memory visually. Good for Leads doing PRD assessment and context MD work.</div>
+          <div class="fc-usage">claude.ai/download → available for Mac, Windows</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🔌</div>
+          <div class="fc-title">IDE Extension (VS Code)</div>
+          <div class="fc-desc">Install the Claude Code extension in VS Code or Cursor. Chat panel inside the editor, inline suggestions, code lens explanations. Lowest context-switch cost — stays in your existing IDE workflow.</div>
+          <div class="fc-usage">VS Code Extensions → search "Claude Code"</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🤖</div>
+          <div class="fc-title">Agentic Mode</div>
+          <div class="fc-desc">Claude can run multi-step tasks autonomously — reading files, running tests, making edits across multiple files, then summarizing what changed. Used for complex card implementations and codebase-wide refactors.</div>
+          <div class="fc-usage">Triggered by open-ended task prompts</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🌐</div>
+          <div class="fc-title">Web Search in Session</div>
+          <div class="fc-desc">Claude can search the web mid-session to look up docs, package APIs, or current error messages. Useful when working with libraries or debugging without switching browser tabs.</div>
+          <div class="fc-usage">Claude uses it automatically when relevant</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">⚡</div>
+          <div class="fc-title">Multi-File Editing</div>
+          <div class="fc-desc">Claude can propose changes across multiple files in a single response. You review each change before approving. The permission system ensures you see every edit before it's applied.</div>
+          <div class="fc-usage">Approve or reject each file diff individually</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INSTALLATION GUIDE -->
+    <div class="section">
+      <div class="section-title"><span class="st-icon" style="color:var(--teal2)">◈</span> Installation Guide</div>
+      <div class="install-tabs">
+        <button class="itab-btn active" onclick="switchInstall('cli',this)">CLI / Terminal</button>
+        <button class="itab-btn" onclick="switchInstall('desktop',this)">Claude Desktop</button>
+        <button class="itab-btn" onclick="switchInstall('vscode',this)">VS Code Extension</button>
+      </div>
+
+      <div id="install-cli" class="itab-panel active">
+        <div class="grid-2">
+          <div>
+            <div class="cb-label">Step 1 — Install Node.js (if not already installed)</div>
+            <div class="code-block"><pre># Check if Node.js is installed (need v18+)
+node --version
+
+# Install via nvm (recommended)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+nvm install 20
+nvm use 20</pre></div>
+            <div class="cb-label mt-3">Step 2 — Install Claude Code CLI</div>
+            <div class="code-block"><pre>npm install -g @anthropic-ai/claude-code</pre></div>
+            <div class="cb-label mt-3">Step 3 — Authenticate</div>
+            <div class="code-block"><pre>claude
+# Follow the browser authentication prompt
+# Sign in with your Anthropic account (Pro or Max)</pre></div>
+          </div>
+          <div>
+            <div class="cb-label">Step 4 — First Session in Your Worktree</div>
+            <div class="code-block"><pre># Create your worktree first (see Security Rule 3)
+git worktree add ../project-FE-001 feature/FE-001-test
+
+# Navigate into it
+cd ../project-FE-001
+
+# Start Claude Code
+claude</pre></div>
+            <div class="cb-label mt-3">Useful CLI Flags</div>
+            <div class="code-block"><pre>claude --help               # Show all options
+claude --print "task"       # Non-interactive single task
+claude --model claude-sonnet-4-20250514</pre></div>
+            <div class="alert info mt-2"><span class="alert-icon">ℹ️</span><div>Claude Code CLI works on Mac, Linux, and WSL2 on Windows. Native Windows support is experimental — use WSL2 for best results.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="install-desktop" class="itab-panel">
+        <div class="grid-2">
+          <div>
+            <div class="cb-label">Step 1 — Download Claude Desktop</div>
+            <div class="code-block"><pre>Visit: https://claude.ai/download
+Download for macOS or Windows
+Run the installer</pre></div>
+            <div class="cb-label mt-3">Step 2 — Sign In</div>
+            <div class="code-block"><pre>Open Claude Desktop
+Sign in with your Anthropic account
+Pro or Max subscription required for full features</pre></div>
+            <div class="cb-label mt-3">Step 3 — Enable Claude Code (Desktop)</div>
+            <div class="code-block"><pre>Settings → Features → Enable Claude Code
+This allows file system access and terminal execution
+from within the Desktop app</pre></div>
+          </div>
+          <div>
+            <div class="cb-label">Step 4 — Connect a Project via MCP</div>
+            <div class="code-block"><pre>Settings → Integrations → Add MCP Server
+Point to your project directory
+Claude Desktop will read your CLAUDE.md and Skills</pre></div>
+            <div class="cb-label mt-3">Best Uses for Desktop App</div>
+            <div class="card mt-2"><ul>
+              <li>Leads: PRD impact assessment with full context</li>
+              <li>Leads: Context MD creation and review</li>
+              <li>All: Skill browsing and management</li>
+              <li>All: Long-running agentic tasks you want to monitor visually</li>
+              <li>All: Sessions where you want to review diffs in a GUI</li>
+            </ul></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="install-vscode" class="itab-panel">
+        <div class="grid-2">
+          <div>
+            <div class="cb-label">Step 1 — Install the Extension</div>
+            <div class="code-block"><pre>In VS Code:
+  Extensions panel (Ctrl+Shift+X)
+  Search: "Claude Code" by Anthropic
+  Click Install
+
+Or via CLI:
+  code --install-extension anthropic.claude-code</pre></div>
+            <div class="cb-label mt-3">Step 2 — Sign In</div>
+            <div class="code-block"><pre>Click the Claude icon in the sidebar
+Sign in with your Anthropic account
+Pro subscription gives you full access</pre></div>
+          </div>
+          <div>
+            <div class="cb-label">Step 3 — Open Claude Panel</div>
+            <div class="code-block"><pre>Ctrl+Shift+P → "Claude: Open Chat"
+Or click the Claude icon in the activity bar
+Type your task — Claude sees your open files</pre></div>
+            <div class="cb-label mt-3">Key Shortcuts</div>
+            <div class="code-block"><pre>Ctrl+Shift+C  → Open Claude chat panel
+Ctrl+K        → Inline edit selected code
+Ctrl+Shift+A  → Accept all Claude suggestions
+Ctrl+Shift+R  → Reject all Claude suggestions</pre></div>
+            <div class="alert info mt-2"><span class="alert-icon">ℹ️</span><div>The VS Code extension shares context with the CLI — Skills and CLAUDE.md settings apply in both modes.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CORE CONCEPTS -->
+    <div class="section">
+      <div class="section-title"><span class="st-icon" style="color:var(--teal2)">◈</span> Core Concepts — What Developers Need to Know</div>
+
+      <div style="display:grid;grid-template-columns:1fr;gap:1.25rem;">
+        <!-- SKILLS -->
+        <div>
+          <div style="font-family:var(--mono);font-size:0.68rem;color:var(--teal2);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;">🧩 Skills</div>
+          <div class="card">
+            <p>Skills are reusable instruction sets that load into Claude's context at session start. Think of them as role-specific operating manuals that ensure Claude always knows your team's patterns, architecture, and standards.</p>
+            <ul class="mt-1">
+              <li><strong style="color:var(--text)">Custom Skills</strong> — built by Lead, stored in your repo's <code>.claude/skills/</code> folder</li>
+              <li><strong style="color:var(--text)">Partner Skills</strong> — Figma, Atlassian, Sentry, Hugging Face — enabled via MCP</li>
+              <li><strong style="color:var(--text)">Loading a Skill</strong> — referenced in your session prompt or auto-loaded via project config</li>
+              <li><strong style="color:var(--text)">Skill staleness</strong> — if the module changed, Skill must be rebuilt before use</li>
+            </ul>
+            <div class="code-block mt-2"><pre># Reference a skill in your prompt
+CONTEXT: [fe-best-practices] loaded
+
+# Or attach the context MD directly
+CONTEXT: docs/context/settings.context.md attached</pre></div>
+          </div>
+        </div>
+
+        <!-- AGENTS -->
+        <div>
+          <div style="font-family:var(--mono);font-size:0.68rem;color:var(--teal2);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;">🤖 Agents</div>
+          <div class="card">
+            <p>In agentic mode, Claude executes multi-step tasks autonomously — reading files, running commands, making edits, running tests, then reporting back. You still approve each action via the permission system.</p>
+            <ul class="mt-1">
+              <li><strong style="color:var(--text)">When to use agents</strong> — complex cards spanning multiple files or systems</li>
+              <li><strong style="color:var(--text)">When NOT to use</strong> — simple single-file changes (overkill, less predictable)</li>
+              <li><strong style="color:var(--text)">Supervision required</strong> — agent mode does not bypass the permission system</li>
+              <li><strong style="color:var(--text)">Subagents</strong> — Claude can spawn subagents for parallel tasks (Lead-only feature on Max)</li>
+            </ul>
+            <div class="alert warn mt-2"><span class="alert-icon">⚠️</span><div>Agentic mode inherits your shell environment. <strong>Never run it with credentials exported in your shell.</strong></div></div>
+          </div>
+        </div>
+
+        <!-- MEMORY -->
+        <div>
+          <div style="font-family:var(--mono);font-size:0.68rem;color:var(--teal2);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;">🧠 Memory</div>
+          <div class="card">
+            <p>Claude Code has no persistent memory between sessions by default. Memory is structured through files Claude reads at session start.</p>
+            <ul class="mt-1">
+              <li><strong style="color:var(--text)">Project memory</strong> — <code>CLAUDE.md</code> in your project root. Read at every session start.</li>
+              <li><strong style="color:var(--text)">Global memory</strong> — <code>~/.claude/CLAUDE.md</code> — applies to all projects. Good for personal preferences.</li>
+              <li><strong style="color:var(--text)">Context MDs</strong> — module-specific memory. Loaded manually or via Skills.</li>
+              <li><strong style="color:var(--text)">No cross-session memory</strong> — each session starts fresh. This is why context MDs matter.</li>
+            </ul>
+            <div class="code-block mt-2"><pre># Global memory (applies everywhere)
+~/.claude/CLAUDE.md
+
+# Project memory (per repo)
+[project-root]/CLAUDE.md
+
+# Module memory (loaded per card)
+docs/context/[module].context.md</pre></div>
+          </div>
+        </div>
+
+        <!-- CLAUDE.MD -->
+        <div>
+          <div style="font-family:var(--mono);font-size:0.68rem;color:var(--teal2);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;">📄 CLAUDE.md</div>
+          <div class="card">
+            <p>The most important file in the entire workflow. Claude reads this at the start of every session in your project. It sets the rules, patterns, do-not-touch list, and security constraints that apply to every interaction.</p>
+            <div class="code-block mt-2"><pre># CLAUDE.md — Minimum Structure
+
+## Project
+[project name, purpose, tech stack]
+
+## Architecture
+[key module map — what files do what]
+
+## Required Patterns
+[coding standards, API call rules, state patterns]
+
+## Do Not Touch
+[files needing Lead approval before changes]
+
+## Gotchas
+[known bugs, Safari quirks, race conditions]
+
+## Security — Non-Negotiable
+[Do Not Read, Do Not Suggest — paste security block]</pre></div>
+            <div class="alert info mt-2"><span class="alert-icon">ℹ️</span><div>Lead provides a pre-filled CLAUDE.md template for each project at session start. Devs do not modify the Security section.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3-PHASE ROLLOUT -->
+    <div class="section">
+      <div class="section-title"><span class="st-icon" style="color:var(--teal2)">◈</span> 3-Phase Rollout</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-time">Day 1 — Foundation</div>
+          <div class="tl-title">Install, Learn, First Sessions</div>
+          <div class="tl-desc">All devs migrate from Cursor to Claude Pro. Leads on Max 5×. Context MD system built for Tier A projects. /prd-assess Skill live. Partner Skills enabled per role. Measurement starts: limit events, sessions-per-card, 1-session rate.</div>
+          <div class="tl-tags">
+            <span class="pill tag-teal">All devs on Claude Pro</span>
+            <span class="pill tag-amber">Leads on Max 5×</span>
+            <span class="pill tag-blue">Cursor retired</span>
+            <span class="pill tag-green">Jira log fields added</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-time">Day 2 — Skills Scaling</div>
+          <div class="tl-title">Custom Skills + Review Buddies Active</div>
+          <div class="tl-desc">Top 5 context MDs per role converted to Custom Skills. Role Skills deployed. Senior devs become co-owners of module Skills. Review Buddy per role designated. Pre-review checklist Skill live. CONTEXT-HEALTH.md on every Tier A project.</div>
+          <div class="tl-tags">
+            <span class="pill tag-teal">Custom Skills live</span>
+            <span class="pill tag-amber">Buddy system active</span>
+            <span class="pill tag-green">CONTEXT-HEALTH.md</span>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-time">Day 3+ — Lean Operations</div>
+          <div class="tl-title">Full Workflow, Measurement-Driven Decisions</div>
+          <div class="tl-desc">Every project has a full Custom Skill. Shared Skills library for cross-project modules. /context-audit Skill running every sprint start. Regular measurement review: AI-assist rate, rework &lt;10%, Lead reviews &lt;30% of PRs. Team sizing decision follows the data.</div>
+          <div class="tl-tags">
+            <span class="pill tag-teal">Full Skills library</span>
+            <span class="pill tag-amber">Regular measurement review</span>
+            <span class="pill tag-red">Team filter active</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECT TIERS -->
+    <div class="section">
+      <div class="section-title"><span class="st-icon" style="color:var(--teal2)">◈</span> Project Tiers — Skills Priority</div>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-head"><div class="card-icon teal" style="font-size:1.2rem;">A</div><div class="card-title">Tier A — Build First</div></div>
+          <p style="font-size:0.8rem;color:var(--text2);margin-bottom:0.5rem;">Impact Assessment + context Skills immediately at Day 1.</p>
+          <ul class="teal">
+            <li>Salina Web</li>
+            <li>V4 Admin</li>
+            <li>V4 Client</li>
+            <li>V4 Mobile</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-icon" style="font-size:1.2rem;">B</div><div class="card-title">Tier B — Build by Sprint 2</div></div>
+          <p style="font-size:0.8rem;color:var(--text2);margin-bottom:0.5rem;">After Tier A Skills are proven and stable.</p>
+          <ul>
+            <li>Salina Desktop</li>
+            <li>Salina CRX</li>
+            <li>Downlodr</li>
+            <li>Dividr, Dyaryo App, Schedulosa</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-icon blue" style="font-size:1.2rem;">C</div><div class="card-title">Tier C — On-Demand</div></div>
+          <p style="font-size:0.8rem;color:var(--text2);margin-bottom:0.5rem;">Build as sprints actively touch these projects.</p>
+          <ul>
+            <li>Putulero, Lexibean</li>
+            <li>Pallos, SearchSif</li>
+            <li>Scoup, Metawhale</li>
+            <li>AFDA</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEEDBACK SESSION PLAN -->
+    <div class="section">
+      <div class="section-title"><span class="st-icon" style="color:var(--teal2)">◈</span> Feedback Session — Next Meeting</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head"><div class="card-icon teal">📋</div><div class="card-title">What Developers Do Before Feedback Session</div></div>
+          <ul>
+            <li>Complete at least 1 real card using Claude Code and the workflow</li>
+            <li>Fill all 3 log fields on that card in Jira</li>
+            <li>Note: what worked, what broke, what was confusing</li>
+            <li>Time the card — compare estimate vs actual</li>
+            <li>Note any security rule friction (not to avoid — to improve)</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-icon teal">🗣️</div><div class="card-title">Feedback Session Structure</div></div>
+          <ul>
+            <li>Each dev shares: what they built + how it felt</li>
+            <li>Top 3 blockers collected per role</li>
+            <li>Skills gaps identified — which Skills are missing?</li>
+            <li>Worktree friction — any issues with git worktree setup?</li>
+            <li>Security rule friction — what felt like overhead?</li>
+            <li>Lead commits to fixes before next sprint</li>
+          </ul>
+        </div>
+      </div>
+      <div class="alert info mt-2"><span class="alert-icon">💡</span><div><strong>This is not a performance review.</strong> The feedback session is a system improvement exercise. The more honestly developers report blockers, the faster the workflow improves for everyone.</div></div>
+    </div>
+
+    <!-- BUILD SPRINT CHALLENGE -->
+    <div class="section">
+      <div class="section-title"><span class="st-icon" style="color:var(--teal2)">◈</span> Build Sprint Challenge — 60-Minute Solo Build</div>
+
+      <div class="alert info"><span class="alert-icon" aria-hidden="true">🏗️</span><div>Each developer picks <strong>one problem</strong> from the list below. Build it entirely using Claude Code in 60 minutes, then present your work in a 5-minute demo. This measures prompting skill, creativity, and workflow discipline — not coding speed.</div></div>
+
+      <!-- FORMAT -->
+      <div style="display:grid;grid-template-columns:1fr;gap:1.25rem;margin-bottom:1.5rem;">
+        <div class="card">
+          <div class="card-head"><div class="card-icon teal">⏱️</div><div class="card-title">Challenge Format</div></div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-top:0.75rem;">
+            <div>
+              <div class="step-col-title" style="color:var(--teal2)">Rules</div>
+              <ul class="teal">
+                <li><strong>Solo</strong> — one dev, one problem, one Claude session</li>
+                <li><strong>60 minutes</strong> build time, strict cutoff</li>
+                <li><strong>Free choice</strong> — pick any problem from the 10 below</li>
+                <li><strong>Any stack</strong> — use whatever language/framework you want</li>
+                <li><strong>Must use Claude Code</strong> — CLI, Desktop, or VS Code extension</li>
+                <li><strong>Worktree required</strong> — follow Security Rule 3</li>
+              </ul>
+            </div>
+            <div>
+              <div class="step-col-title" style="color:var(--teal2)">Presentation (5 min each)</div>
+              <ul class="teal">
+                <li><strong>Live demo</strong> — show it working (or show progress)</li>
+                <li><strong>Prompt walkthrough</strong> — show your session start prompt</li>
+                <li><strong>What worked</strong> — best Claude interaction moment</li>
+                <li><strong>What broke</strong> — where Claude struggled or you had to redirect</li>
+                <li><strong>One lesson</strong> — what you'd do differently next time</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10 PROBLEMS -->
+      <div style="font-family:var(--mono);font-size:0.68rem;color:var(--teal2);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;">Pick One — 10 Build Problems</div>
+
+      <div style="display:grid;grid-template-columns:1fr;gap:0.75rem;">
+
+        <div class="rule-card" style="border-left:3px solid var(--teal);">
+          <div class="rule-num" style="background:var(--teal-glow);border-color:rgba(13,148,136,0.3);color:var(--teal2);">01</div>
+          <div class="rule-body">
+            <div class="rule-title">CLI Pomodoro Timer</div>
+            <div class="rule-desc">Build a terminal-based Pomodoro timer with work/break cycles and session stats. Bonus: sound alerts, daily summary, configurable intervals.</div>
+            <div style="margin-top:0.5rem;display:flex;gap:6px;flex-wrap:wrap;">
+              <span class="pill tag-teal">CLI</span>
+              <span class="pill tag-green">Any language</span>
+              <span class="pill tag-blue">Productivity</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-card" style="border-left:3px solid var(--teal);">
+          <div class="rule-num" style="background:var(--teal-glow);border-color:rgba(13,148,136,0.3);color:var(--teal2);">02</div>
+          <div class="rule-body">
+            <div class="rule-title">Expense Splitter</div>
+            <div class="rule-desc">Split a bill among friends with custom rules — equal split, percentage-based, or item-level. Handle who paid what and who owes whom. Bonus: currency support, receipt parsing.</div>
+            <div style="margin-top:0.5rem;display:flex;gap:6px;flex-wrap:wrap;">
+              <span class="pill tag-amber">Logic</span>
+              <span class="pill tag-green">Web or CLI</span>
+              <span class="pill tag-blue">Utility</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-card" style="border-left:3px solid var(--teal);">
+          <div class="rule-num" style="background:var(--teal-glow);border-color:rgba(13,148,136,0.3);color:var(--teal2);">03</div>
+          <div class="rule-body">
+            <div class="rule-title">Markdown Resume Builder</div>
+            <div class="rule-desc">Input your details (name, experience, skills), output a beautifully styled HTML or PDF resume. Bonus: multiple themes, export options, live preview.</div>
+            <div style="margin-top:0.5rem;display:flex;gap:6px;flex-wrap:wrap;">
+              <span class="pill tag-teal">Frontend</span>
+              <span class="pill tag-green">Creative</span>
+              <span class="pill tag-blue">Design</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-card" style="border-left:3px solid var(--teal);">
+          <div class="rule-num" style="background:var(--teal-glow);border-color:rgba(13,148,136,0.3);color:var(--teal2);">04</div>
+          <div class="rule-body">
+            <div class="rule-title">API Health Monitor</div>
+            <div class="rule-desc">Monitor multiple API endpoints — check status, response time, uptime percentage. Display a live dashboard. Bonus: alerting, history graphs, configurable check intervals.</div>
+            <div style="margin-top:0.5rem;display:flex;gap:6px;flex-wrap:wrap;">
+              <span class="pill tag-amber">DevOps</span>
+              <span class="pill tag-green">Backend</span>
+              <span class="pill tag-blue">Monitoring</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-card" style="border-left:3px solid var(--teal);">
+          <div class="rule-num" style="background:var(--teal-glow);border-color:rgba(13,148,136,0.3);color:var(--teal2);">05</div>
+          <div class="rule-body">
+            <div class="rule-title">Code Snippet Manager</div>
+            <div class="rule-desc">Save, tag, and search code snippets from your terminal or a web UI. Support syntax highlighting, categories, and quick copy. Bonus: language detection, fuzzy search, export/import.</div>
+            <div style="margin-top:0.5rem;display:flex;gap:6px;flex-wrap:wrap;">
+              <span class="pill tag-teal">Full-stack</span>
+              <span class="pill tag-green">Developer tool</span>
+              <span class="pill tag-blue">CRUD</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-card" style="border-left:3px solid var(--teal);">
+          <div class="rule-num" style="background:var(--teal-glow);border-color:rgba(13,148,136,0.3);color:var(--teal2);">06</div>
+          <div class="rule-body">
+            <div class="rule-title">Mood Tracker with Sentiment</div>
+            <div class="rule-desc">Log your mood daily with a short note. Analyze entries for sentiment trends over time. Bonus: mood calendar heatmap, word cloud, weekly summary email/report.</div>
+            <div style="margin-top:0.5rem;display:flex;gap:6px;flex-wrap:wrap;">
+              <span class="pill tag-amber">DC/ML</span>
+              <span class="pill tag-green">Data viz</span>
+              <span class="pill tag-blue">NLP</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-card" style="border-left:3px solid var(--teal);">
+          <div class="rule-num" style="background:var(--teal-glow);border-color:rgba(13,148,136,0.3);color:var(--teal2);">07</div>
+          <div class="rule-body">
+            <div class="rule-title">Team Randomizer</div>
+            <div class="rule-desc">Input a list of names with optional constraints (skill level, department, preferences). Generate balanced teams. Bonus: drag-to-swap UI, save presets, export to Slack format.</div>
+            <div style="margin-top:0.5rem;display:flex;gap:6px;flex-wrap:wrap;">
+              <span class="pill tag-teal">Algorithm</span>
+              <span class="pill tag-green">Web or CLI</span>
+              <span class="pill tag-blue">Utility</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-card" style="border-left:3px solid var(--teal);">
+          <div class="rule-num" style="background:var(--teal-glow);border-color:rgba(13,148,136,0.3);color:var(--teal2);">08</div>
+          <div class="rule-body">
+            <div class="rule-title">CSV Data Visualizer</div>
+            <div class="rule-desc">Upload or pipe in a CSV file, auto-detect column types, generate interactive charts (bar, line, pie, scatter). Bonus: filtering, column selection, export as PNG, dark mode.</div>
+            <div style="margin-top:0.5rem;display:flex;gap:6px;flex-wrap:wrap;">
+              <span class="pill tag-amber">DC/ML</span>
+              <span class="pill tag-green">Data viz</span>
+              <span class="pill tag-blue">Charts</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-card" style="border-left:3px solid var(--teal);">
+          <div class="rule-num" style="background:var(--teal-glow);border-color:rgba(13,148,136,0.3);color:var(--teal2);">09</div>
+          <div class="rule-body">
+            <div class="rule-title">Standup Bot</div>
+            <div class="rule-desc">Collect daily standup entries (yesterday, today, blockers) via CLI or web form. Summarize blockers across the team. Bonus: Slack-formatted output, blocker trend tracking, auto-reminder.</div>
+            <div style="margin-top:0.5rem;display:flex;gap:6px;flex-wrap:wrap;">
+              <span class="pill tag-teal">Backend</span>
+              <span class="pill tag-green">Workflow</span>
+              <span class="pill tag-blue">Team tool</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-card" style="border-left:3px solid var(--teal);">
+          <div class="rule-num" style="background:var(--teal-glow);border-color:rgba(13,148,136,0.3);color:var(--teal2);">10</div>
+          <div class="rule-body">
+            <div class="rule-title">Git Changelog Generator</div>
+            <div class="rule-desc">Parse git commit history and generate a formatted changelog grouped by type (feat, fix, chore). Bonus: version detection, breaking change flags, Markdown/HTML output, date range filter.</div>
+            <div style="margin-top:0.5rem;display:flex;gap:6px;flex-wrap:wrap;">
+              <span class="pill tag-amber">DevOps</span>
+              <span class="pill tag-green">CLI</span>
+              <span class="pill tag-blue">Git</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- JUDGING CRITERIA -->
+      <div style="margin-top:2rem;">
+        <div style="font-family:var(--mono);font-size:0.68rem;color:var(--accent2);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.75rem;">Judging Criteria — 25 Points Maximum</div>
+        <div class="card" style="padding:0;overflow:hidden;">
+          <table class="data-table">
+            <thead><tr><th>Criteria</th><th>Points</th><th>What Judges Look For</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong style="color:var(--teal2)">Prompt Craft</strong></td>
+                <td>1–5</td>
+                <td>Clear scope, constraints, and done criteria in their Claude session. Used the prompt template structure. Gave Claude the right context without raw code dumps.</td>
+              </tr>
+              <tr>
+                <td><strong style="color:var(--teal2)">Working Output</strong></td>
+                <td>1–5</td>
+                <td>Does it run? Can you demo it live? Partial credit for clear, demonstrable progress. Broken builds with good prompting still score on other criteria.</td>
+              </tr>
+              <tr>
+                <td><strong style="color:var(--teal2)">Creativity &amp; Polish</strong></td>
+                <td>1–5</td>
+                <td>Went beyond the minimum. Surprising features, thoughtful UX, visual polish, clever edge-case handling. Shows imagination — not just completion.</td>
+              </tr>
+              <tr>
+                <td><strong style="color:var(--teal2)">Presentation Clarity</strong></td>
+                <td>1–5</td>
+                <td>Can they explain their prompting decisions? What worked, what didn't? Clear walkthrough of their session start prompt and key pivots during the build.</td>
+              </tr>
+              <tr>
+                <td><strong style="color:var(--teal2)">Workflow Discipline</strong></td>
+                <td>1–5</td>
+                <td>Used git worktree. Proper session hygiene (no .env, no raw dumps). Clean git history. Followed the team workflow — not just "it works."</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="alert warn mt-2"><span class="alert-icon" aria-hidden="true">⚖️</span><div><strong>This is not a coding competition.</strong> A developer who builds less but prompts brilliantly and explains their process clearly can outscore a developer who ships more but can't explain how they got there. The goal is learning the workflow, not shipping features.</div></div>
+      </div>
+
+      <!-- SCORE CARD -->
+      <div style="margin-top:1.5rem;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:1.25rem;">
+          <div class="card">
+            <div class="card-head"><div class="card-icon teal">🏆</div><div class="card-title">Score Bands</div></div>
+            <ul class="teal">
+              <li><strong style="color:var(--green2)">21–25</strong> — Exceptional. Ready to mentor others on Claude Code.</li>
+              <li><strong style="color:var(--teal2)">16–20</strong> — Strong. Comfortable with the workflow, minor refinements needed.</li>
+              <li><strong style="color:var(--accent2)">11–15</strong> — Developing. Understands the basics, needs more practice with prompting.</li>
+              <li><strong style="color:var(--red2)">1–10</strong> — Needs support. Pair with a mentor for the next sprint.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <div class="card-head"><div class="card-icon teal">📊</div><div class="card-title">After the Challenge</div></div>
+            <ul class="teal">
+              <li>Collect all scores — average per team (FE, BE, DC/ML, DevOps)</li>
+              <li>Identify top prompter per team — potential Buddy candidate</li>
+              <li>Collect the best session start prompts — add to team prompt library</li>
+              <li>Note common struggles — feeds into the feedback session agenda</li>
+              <li>Celebrate creativity — highlight the most surprising build</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- QUICK REF FOR DEVS -->
+    <div class="section">
+      <div class="section-title"><span class="st-icon" style="color:var(--teal2)">◈</span> Developer Quick Reference</div>
+      <div style="display:grid;grid-template-columns:1fr;gap:1.25rem;">
+        <div class="card">
+          <div class="card-head"><div class="card-icon teal">🚀</div><div class="card-title">First Time Setup</div></div>
+          <ul>
+            <li>Install Claude Code CLI: <code>npm i -g @anthropic-ai/claude-code</code></li>
+            <li>Authenticate: run <code>claude</code>, follow browser prompt</li>
+            <li>Install VS Code extension if using IDE mode</li>
+            <li>Copy team <code>.claude/settings.json</code> from Lead</li>
+            <li>Add CLAUDE.md security block to your project</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-icon teal">🔄</div><div class="card-title">Every Card — Start</div></div>
+          <ul>
+            <li><code>git worktree add ../[repo]-[id] feature/[id]-[desc]</code></li>
+            <li><code>cd ../[repo]-[id]</code></li>
+            <li><code>ls -la | grep env</code> — confirm no .env</li>
+            <li>Open Claude Code: <code>claude</code></li>
+            <li>Paste prompt template with PRD, task, scope, done criteria</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-icon teal">✅</div><div class="card-title">Every Card — Close</div></div>
+          <ul>
+            <li><code>npm audit</code> — clean before PR</li>
+            <li>Review all Claude-generated code manually</li>
+            <li>Fill Jira log fields: AI-assisted, rework, sessions</li>
+            <li>Close Claude Code session</li>
+            <li>After merge: <code>git worktree remove ../[repo]-[id]</code></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="panel-footer">
+    <span class="pf-label">TRANSITION PLAN · HALF-DAY SESSION</span>
+    <span class="pf-vers" style="color:var(--teal2)">Day 1 · Foundation Phase</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TAB 4 — CUSTOMIZATION
+════════════════════════════════════════════ -->
+<div id="tab-customize" class="tab-panel" role="tabpanel" aria-labelledby="tab-btn-customize">
+
+  <div class="hero-strip teal">
+    <div class="hero-eyebrow">Daily Driver Tips · Personalize Your Setup</div>
+    <h1 class="hero-title">Claude Code<br>Customization Guide</h1>
+    <p class="hero-sub">8 high-impact tweaks to make Claude Code faster, smarter, and more personal. From aliases to sound alerts — each one takes under 5 minutes to set up.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-val">8</div><div class="stat-label">Customizations</div></div>
+      <div class="stat"><div class="stat-val">&lt;5m</div><div class="stat-label">Each Setup</div></div>
+      <div class="stat"><div class="stat-val">89%</div><div class="stat-label">Rule Compliance</div></div>
+      <div class="stat"><div class="stat-val">3</div><div class="stat-label">Config Files</div></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- WHERE THINGS LIVE -->
+    <div class="section">
+      <div class="section-title"><span class="st-icon" style="color:var(--teal2)">◈</span> Where Everything Lives</div>
+      <div class="card" style="padding:0;overflow:hidden;">
+        <table class="data-table">
+          <thead><tr><th>File</th><th>Purpose</th><th>Scope</th></tr></thead>
+          <tbody>
+            <tr><td><code>~/.zshrc</code> / <code>~/.bashrc</code></td><td>Shell aliases (<code>cc</code>, <code>ccm</code>, etc.)</td><td>System-wide</td></tr>
+            <tr><td><code>~/.claude/settings.json</code></td><td>User settings — compact threshold, hooks, spinner, output style</td><td>All projects</td></tr>
+            <tr><td><code>~/.claude/CLAUDE.md</code></td><td>Personal instructions — preferences, stack, style</td><td>All sessions</td></tr>
+            <tr><td><code>.claude/settings.json</code></td><td>Project-level hooks (auto-format, lint)</td><td>Per project</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CUSTOMIZATIONS -->
+    <div class="section">
+      <div class="section-title"><span class="st-icon" style="color:var(--teal2)">◈</span> The 8 Customizations</div>
+      <div class="alert info"><span class="alert-icon" aria-hidden="true">ℹ️</span><div>Click any item to expand — includes the prompt to give Claude, resulting config, and notes.</div></div>
+
+      <!-- Tip 1 -->
+      <div class="pipeline-step cust-step" onclick="toggleCust(1)" role="button" tabindex="0" aria-expanded="false">
+        <div class="step-header">
+          <div class="step-num" style="background:var(--teal-glow);border-color:rgba(13,148,136,0.3);color:var(--teal2);">01</div>
+          <div class="step-title">Set Up the <code>cc</code> Alias</div>
+          <span class="pill tag-green">Most Popular</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="step-body cust-body">
+          <p style="color:var(--text2);line-height:1.65;margin-top:1rem;">Type <code>cc</code> instead of the full <code>claude</code> command — skips permission prompts for faster workflow.</p>
+
+          <div class="cb-label">Prompt to Claude</div>
+          <div class="code-block"><pre>Create an alias for me called cc that runs claude with --dangerously-skip-permissions</pre></div>
+
+          <div class="cb-label" style="margin-top:1rem;">Added to ~/.zshrc or ~/.bashrc</div>
+          <div class="code-block"><pre>alias cc='claude --dangerously-skip-permissions'
+alias ccm='cc -c "make"'    # one-shot make
+alias ccd='cc -c "dev"'     # one-shot dev</pre></div>
+
+          <div class="alert danger mt-2"><span class="alert-icon">⚠️</span><div><strong>Warning:</strong> <code>--dangerously-skip-permissions</code> allows edits and commands without asking. Only enable after months of safe usage and understanding the risks.</div></div>
+          <p style="color:var(--text3);font-size:0.92rem;margin-top:0.5rem;">Linux note: <code>cc</code> may conflict with the C compiler — use any alias name you prefer.</p>
+        </div>
+      </div>
+
+      <!-- Tip 2 -->
+      <div class="pipeline-step cust-step" onclick="toggleCust(2)" role="button" tabindex="0" aria-expanded="false">
+        <div class="step-header">
+          <div class="step-num" style="background:var(--teal-glow);border-color:rgba(13,148,136,0.3);color:var(--teal2);">02</div>
+          <div class="step-title">Auto-Compact Before Context Degrades</div>
+          <span class="pill tag-teal">Quality</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="step-body cust-body">
+          <p style="color:var(--text2);line-height:1.65;margin-top:1rem;">Prevents quality drop when the context window fills up. Default ~95% is too late — compact earlier.</p>
+
+          <div class="cb-label">Prompt to Claude</div>
+          <div class="code-block"><pre>Set my auto-compact threshold to 75% in my user settings</pre></div>
+
+          <div class="cb-label" style="margin-top:1rem;">~/.claude/settings.json</div>
+          <div class="code-block"><pre>{
+  "autoCompactThreshold": 0.75
+}</pre></div>
+
+          <div class="step-grid">
+            <div class="step-col">
+              <div class="step-col-title" style="color:var(--teal2)">Recommended Range</div>
+              <ul class="teal">
+                <li>60–75% for most people</li>
+                <li>85% if you need more raw context</li>
+              </ul>
+            </div>
+            <div class="step-col">
+              <div class="step-col-title" style="color:var(--teal2)">Related Commands</div>
+              <ul class="teal">
+                <li><code>/clear</code> — wipe history, start fresh</li>
+                <li><code>/compact</code> — manual summarize</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="alert info mt-2"><span class="alert-icon">💡</span><div>Add to your CLAUDE.md: <em>"During compaction, always preserve: file structure overview, current feature goal, key decisions, open questions."</em></div></div>
+        </div>
+      </div>
+
+      <!-- Tip 3 -->
+      <div class="pipeline-step cust-step" onclick="toggleCust(3)" role="button" tabindex="0" aria-expanded="false">
+        <div class="step-header">
+          <div class="step-num" style="background:var(--teal-glow);border-color:rgba(13,148,136,0.3);color:var(--teal2);">03</div>
+          <div class="step-title">Write Your Personal CLAUDE.md</div>
+          <span class="pill tag-amber">Biggest Lever</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="step-body cust-body">
+          <p style="color:var(--text2);line-height:1.65;margin-top:1rem;">Applies globally to every session and project. Shapes Claude's style, tool choices, and behavior to match your workflow.</p>
+
+          <div class="cb-label">Prompt to Claude</div>
+          <div class="code-block"><pre>Create my personal CLAUDE.md at ~/.claude/CLAUDE.md.
+I prefer pnpm over npm, types over interfaces,
+Vitest over Jest, and concise PR descriptions.</pre></div>
+
+          <div class="cb-label" style="margin-top:1rem;">Example ~/.claude/CLAUDE.md</div>
+          <div class="code-block"><pre># Personal Claude Instructions
+
+- Use pnpm, never npm or yarn
+- Prefer TypeScript types over interfaces
+- Testing: Vitest + React Testing Library
+- PR descriptions: one-line summary + bullet points
+- Keep answers concise unless asked for explanation</pre></div>
+
+          <div class="step-grid">
+            <div class="step-col">
+              <div class="step-col-title" style="color:var(--teal2)">Rule Specificity Matters</div>
+              <ul class="teal">
+                <li>Specific rules → ~89% compliance</li>
+                <li>Vague rules ("write clean code") → ~35%</li>
+                <li>Be concrete and actionable</li>
+              </ul>
+            </div>
+            <div class="step-col">
+              <div class="step-col-title" style="color:var(--teal2)">Project-Level</div>
+              <ul class="teal">
+                <li>Run <code>/init</code> in repo root</li>
+                <li>Heavily trim the generated result</li>
+                <li>Keep it focused on project-specific rules</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tip 4 -->
+      <div class="pipeline-step cust-step" onclick="toggleCust(4)" role="button" tabindex="0" aria-expanded="false">
+        <div class="step-header">
+          <div class="step-num" style="background:var(--teal-glow);border-color:rgba(13,148,136,0.3);color:var(--teal2);">04</div>
+          <div class="step-title">Add a Live Status Line</div>
+          <span class="pill tag-teal">Visibility</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="step-body cust-body">
+          <p style="color:var(--text2);line-height:1.65;margin-top:1rem;">Dashboard at the bottom of your terminal showing current directory, git branch, context usage %, and more.</p>
+
+          <div class="cb-label">Quick Setup</div>
+          <div class="code-block"><pre># Inside Claude Code, type:
+/statusline
+
+# This launches an interactive setup wizard</pre></div>
+
+          <div class="cb-label" style="margin-top:1rem;">Custom Script (~/.claude/statusline-command.sh)</div>
+          <div class="code-block"><pre>#!/bin/bash
+# Shows cwd, branch, context % with color coding
+# green = plenty of context, yellow = getting full, red = compact soon
+
+BRANCH=$(git branch --show-current 2>/dev/null || echo "no-repo")
+DIR=$(basename "$PWD")
+echo "$DIR · $BRANCH"</pre></div>
+
+          <p style="color:var(--text3);font-size:0.92rem;margin-top:0.75rem;">Community options: <code>ccstatusline</code>, starship-claude integrations.</p>
+        </div>
+      </div>
+
+      <!-- Tip 5 -->
+      <div class="pipeline-step cust-step" onclick="toggleCust(5)" role="button" tabindex="0" aria-expanded="false">
+        <div class="step-header">
+          <div class="step-num" style="background:var(--teal-glow);border-color:rgba(13,148,136,0.3);color:var(--teal2);">05</div>
+          <div class="step-title">Auto-Format on Every Edit</div>
+          <span class="pill tag-green">Recommended</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="step-body cust-body">
+          <p style="color:var(--text2);line-height:1.65;margin-top:1rem;">Code stays formatted after every Claude edit — no manual Prettier/ESLint runs needed.</p>
+
+          <div class="cb-label">Prompt to Claude</div>
+          <div class="code-block"><pre>Set up a PostToolUse hook in the project settings
+that runs Prettier on any file after you edit or write it</pre></div>
+
+          <div class="cb-label" style="margin-top:1rem;">Project .claude/settings.json</div>
+          <div class="code-block"><pre>{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "triggers": ["Edit", "Write"],
+        "command": "pnpm prettier --write {file} || true"
+      }
+    ]
+  }
+}</pre></div>
+
+          <div class="alert info mt-2"><span class="alert-icon">💡</span><div>Extend it: Chain ESLint, <code>tsc</code>, Vitest, or any other tool in the hook pipeline.</div></div>
+        </div>
+      </div>
+
+      <!-- Tip 6 -->
+      <div class="pipeline-step cust-step" onclick="toggleCust(6)" role="button" tabindex="0" aria-expanded="false">
+        <div class="step-header">
+          <div class="step-num" style="background:var(--teal-glow);border-color:rgba(13,148,136,0.3);color:var(--teal2);">06</div>
+          <div class="step-title">Customize the Spinner Verbs</div>
+          <span class="pill tag-blue">Fun</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="step-body cust-body">
+          <p style="color:var(--text2);line-height:1.65;margin-top:1rem;">Make waiting more fun. Replace the default loading text with custom messages.</p>
+
+          <div class="cb-label">Prompt to Claude</div>
+          <div class="code-block"><pre>Replace my spinner verbs with these:
+Hallucinating responsibly, Pretending to think,
+Confidently guessing, Asking the void, Vibing with tokens</pre></div>
+
+          <div class="cb-label" style="margin-top:1rem;">~/.claude/settings.json</div>
+          <div class="code-block"><pre>{
+  "spinnerVerbsOverride": [
+    "Hallucinating responsibly",
+    "Pretending to think",
+    "Confidently guessing",
+    "Asking the void",
+    "Vibing with tokens"
+  ]
+}</pre></div>
+
+          <p style="color:var(--text3);font-size:0.92rem;margin-top:0.75rem;">Try themed sets: Harry Potter spells, Star Wars quotes, cooking verbs. Also customize <code>spinnerTipsOverride</code>.</p>
+        </div>
+      </div>
+
+      <!-- Tip 7 -->
+      <div class="pipeline-step cust-step" onclick="toggleCust(7)" role="button" tabindex="0" aria-expanded="false">
+        <div class="step-header">
+          <div class="step-num" style="background:var(--teal-glow);border-color:rgba(13,148,136,0.3);color:var(--teal2);">07</div>
+          <div class="step-title">Play a Sound When Claude Finishes</div>
+          <span class="pill tag-teal">Productivity</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="step-body cust-body">
+          <p style="color:var(--text2);line-height:1.65;margin-top:1rem;">Multitask freely — get notified with an audio chime when a response is ready.</p>
+
+          <div class="cb-label">Prompt to Claude (macOS)</div>
+          <div class="code-block"><pre>Set up a Stop hook in my user settings that plays
+the Glass sound when you finish responding.
+Use afplay on macOS.</pre></div>
+
+          <div class="cb-label" style="margin-top:1rem;">~/.claude/settings.json</div>
+          <div class="code-block"><pre>{
+  "hooks": {
+    "Stop": "afplay /System/Library/Sounds/Glass.aiff"
+  }
+}</pre></div>
+
+          <div class="step-grid">
+            <div class="step-col">
+              <div class="step-col-title" style="color:var(--teal2)">macOS Sounds</div>
+              <ul class="teal">
+                <li>Glass · Submarine · Purr</li>
+                <li>Funk · Pop · Frog · Hero</li>
+              </ul>
+            </div>
+            <div class="step-col">
+              <div class="step-col-title" style="color:var(--teal2)">Cross-Platform</div>
+              <ul class="teal">
+                <li>Linux: <code>paplay sound.wav</code></li>
+                <li>Any .mp3/.wav with your player</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tip 8 -->
+      <div class="pipeline-step cust-step" onclick="toggleCust(8)" role="button" tabindex="0" aria-expanded="false">
+        <div class="step-header">
+          <div class="step-num" style="background:var(--teal-glow);border-color:rgba(13,148,136,0.3);color:var(--teal2);">08</div>
+          <div class="step-title">Set Your Output Style</div>
+          <span class="pill tag-amber">Daily Driver</span>
+          <div class="step-arrow">▼</div>
+        </div>
+        <div class="step-body cust-body">
+          <p style="color:var(--text2);line-height:1.65;margin-top:1rem;">Switch between response styles depending on what you're doing — learning, shipping, or deep work.</p>
+
+          <div class="cb-label">Quick Switch</div>
+          <div class="code-block"><pre># Inside Claude Code:
+/config
+# Then select your output style
+
+# Or tell Claude directly:
+Set my output style to Concise</pre></div>
+
+          <div class="card" style="padding:0;overflow:hidden;margin-top:1rem;">
+            <table class="data-table">
+              <thead><tr><th>Style</th><th>Best For</th><th>Behavior</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Explanatory</strong></td><td>Learning & onboarding</td><td>Detailed explanations, reasoning shown</td></tr>
+                <tr><td><strong>Concise</strong></td><td>Shipping fast</td><td>Minimal text, just the code and actions</td></tr>
+                <tr><td><strong>Technical</strong></td><td>Deep work & debugging</td><td>Precise terminology, architecture focus</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p style="color:var(--text3);font-size:0.92rem;margin-top:0.75rem;">Advanced: Create custom styles in <code>~/.claude/output-styles/</code> as markdown + YAML.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- GETTING STARTED -->
+    <div class="section">
+      <div class="section-title"><span class="st-icon" style="color:var(--teal2)">◈</span> Getting Started</div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head"><div class="card-icon teal">🏁</div><div class="card-title">Recommended Order</div></div>
+          <ul class="teal">
+            <li><strong>#1 Alias</strong> — most instant win, do this first</li>
+            <li><strong>#3 CLAUDE.md</strong> — biggest long-term impact</li>
+            <li><strong>#2 Auto-compact</strong> — set and forget</li>
+            <li><strong>#5 Auto-format</strong> — eliminates formatting friction</li>
+            <li><strong>#7 Sound alert</strong> — quality-of-life boost</li>
+            <li>Rest: customize as you go</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-head"><div class="card-icon teal">🔮</div><div class="card-title">Next Level</div></div>
+          <ul class="teal">
+            <li><strong>MCP Servers</strong> — connect Playwright, Figma, Supabase</li>
+            <li><strong>Skills</strong> — domain-specific workflows and guardrails</li>
+            <li><strong>Hooks</strong> — chain linters, testers, deployers</li>
+            <li><strong>Custom output styles</strong> — team-wide tone & format</li>
+            <li><strong>Git worktrees</strong> — parallel feature branches</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="panel-footer">
+    <span class="pf-label">CUSTOMIZATION GUIDE · 8 DAILY DRIVER TIPS</span>
+    <span class="pf-vers" style="color:var(--teal2)">Source: @CodevolutionWeb</span>
+  </div>
+</div>
+
+</main>
+
+<script>
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-selected', 'false');
+  });
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  btn.setAttribute('aria-selected', 'true');
+}
+
+function toggleStep(n) {
+  const steps = document.querySelectorAll('#tab-workflow .pipeline-step');
+  if (steps[n-1]) {
+    const el = steps[n-1];
+    const isOpen = el.classList.toggle('open');
+    el.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  }
+}
+
+function toggleCust(n) {
+  const steps = document.querySelectorAll('#tab-customize .cust-step');
+  if (steps[n-1]) {
+    const el = steps[n-1];
+    const isOpen = el.classList.toggle('open');
+    el.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  }
+}
+
+function toggleSec(n) {
+  const rules = document.querySelectorAll('#tab-security .sec-rule');
+  if (rules[n-1]) {
+    const el = rules[n-1];
+    const isOpen = el.classList.toggle('open');
+    el.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  }
+}
+
+function toggleCheck(el) {
+  const isChecked = el.classList.toggle('checked');
+  el.setAttribute('aria-checked', isChecked ? 'true' : 'false');
+}
+
+function switchInstall(id, btn) {
+  document.querySelectorAll('.itab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.itab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('install-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// Keyboard support for expandable divs and checklist items
+document.addEventListener('DOMContentLoaded', function() {
+  // Add role/keyboard to checklist items
+  document.querySelectorAll('.cl-item').forEach(item => {
+    item.setAttribute('role', 'checkbox');
+    item.setAttribute('aria-checked', 'false');
+    item.setAttribute('tabindex', '0');
+    item.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleCheck(this);
+      }
+    });
+  });
+
+  // Keyboard support for pipeline steps
+  document.querySelectorAll('.pipeline-step').forEach(el => {
+    el.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        this.click();
+      }
+    });
+  });
+
+  // Keyboard support for customization steps
+  document.querySelectorAll('.cust-step').forEach(el => {
+    el.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        this.click();
+      }
+    });
+  });
+
+  // Keyboard support for security rules
+  document.querySelectorAll('.sec-rule').forEach(el => {
+    el.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        this.click();
+      }
+    });
+  });
+
+  // Arrow key navigation between tabs
+  document.querySelector('.tab-nav').addEventListener('keydown', function(e) {
+    const tabs = Array.from(this.querySelectorAll('.tab-btn'));
+    const current = tabs.findIndex(t => t.getAttribute('aria-selected') === 'true');
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      const next = tabs[(current + 1) % tabs.length];
+      next.click();
+      next.focus();
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const prev = tabs[(current - 1 + tabs.length) % tabs.length];
+      prev.click();
+      prev.focus();
+    }
+  });
+});
+</script>
+</body>
+</html>
