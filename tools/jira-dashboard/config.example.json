@@ -1,0 +1,6 @@
+{
+  "jira_base_url": "https://YOUR_ORG.atlassian.net",
+  "projects": [
+    { "key": "PROJECT_KEY", "board_id": 0 }
+  ]
+}
