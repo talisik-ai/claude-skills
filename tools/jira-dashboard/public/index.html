@@ -33,6 +33,23 @@
   <!-- Global banner -->
   <div id="global-banner" class="global-banner hidden"></div>
 
+  <!-- Project configuration -->
+  <section id="project-config" class="project-config hidden">
+    <div class="project-config-header" onclick="document.getElementById('project-config-body').classList.toggle('hidden')">
+      <span class="project-config-title">Projects &amp; Board IDs</span>
+      <span class="project-config-toggle">▼</span>
+    </div>
+    <div id="project-config-body" class="project-config-body hidden">
+      <ul id="project-list" class="project-list"></ul>
+      <form id="add-project-form" class="add-project-form">
+        <input id="new-project-key" type="text" placeholder="Project key (e.g. SALINA)" required>
+        <input id="new-board-id" type="number" placeholder="Board ID" required min="1">
+        <button type="submit" class="btn-secondary">Add</button>
+      </form>
+      <p class="project-config-hint">Projects are saved in your browser and persist across sessions.</p>
+    </div>
+  </section>
+
   <!-- Filter bar -->
   <section class="filter-bar">
     <div class="filter-group">

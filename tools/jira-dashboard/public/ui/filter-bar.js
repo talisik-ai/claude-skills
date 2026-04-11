@@ -1,3 +1,56 @@
+const STORAGE_KEY = 'jira_dashboard_projects';
+
+// --- Project persistence (localStorage) ---
+
+export function getStoredProjects() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  } catch {
+    return [];
+  }
+}
+
+function saveProjects(projects) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+}
+
+export function addProject(key, boardId) {
+  const projects = getStoredProjects();
+  if (projects.some(p => p.key === key)) return false; // duplicate
+  projects.push({ key: key.toUpperCase(), board_id: Number(boardId) });
+  saveProjects(projects);
+  return true;
+}
+
+export function removeProject(key) {
+  saveProjects(getStoredProjects().filter(p => p.key !== key));
+}
+
+// --- Project config UI ---
+
+export function renderProjectList(onChangeCallback) {
+  const list = document.getElementById('project-list');
+  const projects = getStoredProjects();
+  list.innerHTML = projects.length === 0
+    ? '<li style="color:#999;font-size:0.8rem">No projects configured yet.</li>'
+    : projects.map(p => `
+        <li class="project-list-item">
+          <span class="project-key">${p.key}</span>
+          <span class="project-board">Board ID: ${p.board_id}</span>
+          <button data-key="${p.key}" title="Remove">✕</button>
+        </li>`).join('');
+
+  list.querySelectorAll('button[data-key]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      removeProject(btn.dataset.key);
+      renderProjectList(onChangeCallback);
+      onChangeCallback();
+    });
+  });
+}
+
+// --- Filter selects ---
+
 export function populateProjects(projects) {
   const sel = document.getElementById('filter-projects');
   sel.innerHTML = '';

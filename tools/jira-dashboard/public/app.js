@@ -1,8 +1,8 @@
-import { resolveFields, fetchConfig, fetchSprints, fetchAllIssues, fetchChangelog } from './api.js';
+import { resolveFields, fetchSprints, fetchAllIssues, fetchChangelog } from './api.js';
 import { computeMetrics, computePerDeveloper } from './metrics.js';
 import { buildTimeline } from './traces.js';
 import { showAuthModal, hideAuthModal, showAuthError, clearAuthError, getCredentials } from './ui/auth-modal.js';
-import { populateProjects, populateSprints, populateDevelopers, getSelected, enableLoadButton } from './ui/filter-bar.js';
+import { getStoredProjects, addProject, renderProjectList, populateProjects, populateSprints, populateDevelopers, getSelected, enableLoadButton } from './ui/filter-bar.js';
 import { renderHealthTiles } from './ui/health-tiles.js';
 import { renderTraces } from './ui/trace-panel.js';
 import { renderAITable } from './ui/ai-table.js';
@@ -20,7 +20,7 @@ function hideBanner() {
 }
 
 async function postAuthSetup() {
-  const { projects } = await fetchConfig();
+  const projects = getStoredProjects();
   populateProjects(projects);
 
   const sprintsByBoard = {};
@@ -32,7 +32,7 @@ async function postAuthSetup() {
     }
   }
   populateSprints(sprintsByBoard);
-  enableLoadButton();
+  if (projects.length > 0) enableLoadButton();
 }
 
 async function loadData() {
@@ -115,11 +115,28 @@ async function loadData() {
 }
 
 async function init() {
+  // Show project config section after auth
   if (sessionStorage.getItem('jira_auth')) {
+    document.getElementById('project-config').classList.remove('hidden');
+    renderProjectList(postAuthSetup);
     await postAuthSetup();
   } else {
     showAuthModal();
   }
+
+  // Project add form
+  document.getElementById('add-project-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const key = document.getElementById('new-project-key').value.trim().toUpperCase();
+    const boardId = document.getElementById('new-board-id').value.trim();
+    if (!key || !boardId) return;
+    const added = addProject(key, boardId);
+    if (!added) { showBanner(`Project ${key} already configured.`); return; }
+    document.getElementById('new-project-key').value = '';
+    document.getElementById('new-board-id').value = '';
+    renderProjectList(postAuthSetup);
+    await postAuthSetup();
+  });
 
   document.getElementById('auth-submit').addEventListener('click', async () => {
     clearAuthError();
@@ -131,6 +148,8 @@ async function init() {
         showBanner(`Warning: Could not resolve Jira fields: ${result.missing.join(', ')}. Some metrics will show —`);
       }
       hideAuthModal();
+      document.getElementById('project-config').classList.remove('hidden');
+      renderProjectList(postAuthSetup);
       await postAuthSetup();
     } catch (e) {
       showAuthError(e.type === 'auth' ? 'Invalid credentials. Check your email and API token.' : 'Could not reach Jira. Check your connection.');

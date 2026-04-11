@@ -40,11 +40,6 @@ async function jiraFetch(path, auth, options = {}) {
   });
 }
 
-// GET /api/config — safe, no credentials
-app.get('/api/config', (req, res) => {
-  res.json({ projects: config.projects });
-});
-
 // POST /api/resolve-fields — resolve field IDs by display name, cache in memory
 app.post('/api/resolve-fields', async (req, res) => {
   const { auth } = req.body;
