@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLAUDE.md — Interactive Guide</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=Geist:wght@300;400;500;600;700&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #09090b;
+  --surface: #111113;
+  --surface2: #18181b;
+  --border: #27272a;
+  --border2: #3f3f46;
+  --text: #fafafa;
+  --muted: #8b8b96;
+  --muted2: #a8a8b3;
+  --accent-yellow: #eab308;
+  --accent-green: #22c55e;
+  --accent-blue: #3b82f6;
+  --accent-purple: #a855f7;
+  --accent-orange: #f97316;
+  --accent-red: #ef4444;
+  --accent-cyan: #06b6d4;
+  --mono: 'DM Mono', monospace;
+  --sans: 'Geist', sans-serif;
+  --serif: 'Instrument Serif', serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── NOISE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── LAYOUT ── */
+.layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: none;
+}
+.sidebar::-webkit-scrollbar { display: none; }
+
+.sidebar-header {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.logo-icon {
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, var(--accent-yellow), var(--accent-orange));
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.sidebar-title {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+
+.sidebar-sub {
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.nav-section {
+  padding: 8px 12px 4px;
+}
+
+.nav-label {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0 12px;
+  margin-bottom: 4px;
+  margin-top: 8px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-decoration: none;
+  color: var(--muted2);
+  font-size: 0.82rem;
+  position: relative;
+}
+
+.nav-item:hover {
+  background: var(--surface2);
+  color: var(--text);
+}
+
+.nav-item.active {
+  background: var(--surface2);
+  color: var(--text);
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  border-radius: 0 2px 2px 0;
+  background: var(--item-color, var(--accent-yellow));
+}
+
+.nav-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--item-color, var(--muted));
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.nav-item.active .nav-dot,
+.nav-item:hover .nav-dot {
+  background: var(--item-color, var(--accent-yellow));
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+}
+
+.sidebar-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.68rem;
+  font-family: var(--mono);
+  color: var(--muted);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+
+.sidebar-badge span { color: var(--accent-green); }
+
+/* ── MAIN ── */
+.main {
+  overflow-y: auto;
+  padding: 0;
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 72px 64px 56px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: 'CLAUDE.md';
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  font-family: var(--mono);
+  font-size: 5rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.02);
+  pointer-events: none;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--accent-yellow);
+  background: rgba(234,179,8,0.08);
+  border: 1px solid rgba(234,179,8,0.2);
+  padding: 4px 12px;
+  border-radius: 100px;
+  margin-bottom: 24px;
+}
+
+.hero-eyebrow::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--accent-yellow);
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.hero h1 {
+  font-family: var(--serif);
+  font-size: 3.2rem;
+  font-weight: 400;
+  line-height: 1.15;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+
+.hero h1 em {
+  font-style: italic;
+  color: var(--accent-yellow);
+}
+
+.hero-desc {
+  font-size: 1rem;
+  color: var(--muted2);
+  line-height: 1.7;
+  max-width: 560px;
+  margin-bottom: 32px;
+}
+
+.hero-meta {
+  display: flex;
+  gap: 24px;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.meta-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.meta-value {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--text);
+}
+
+/* ── SECTIONS ── */
+.section {
+  padding: 56px 64px;
+  border-bottom: 1px solid var(--border);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.section-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.section-num {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--muted);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.section-tag {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 10px;
+  border-radius: 100px;
+}
+
+.section-title {
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.section-subtitle {
+  font-size: 0.9rem;
+  color: var(--muted2);
+  line-height: 1.7;
+  max-width: 600px;
+  margin-bottom: 36px;
+}
+
+/* ── RULE CARDS ── */
+.rules-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.rule-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.rule-card:hover {
+  border-color: var(--border2);
+  transform: translateX(3px);
+}
+
+.rule-card.open {
+  border-color: var(--card-accent, var(--border2));
+}
+
+.rule-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  gap: 16px;
+}
+
+.rule-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.rule-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  background: var(--icon-bg, rgba(255,255,255,0.05));
+}
+
+.rule-name {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.rule-tagline {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 1px;
+}
+
+.rule-chevron {
+  color: var(--muted);
+  font-size: 0.8rem;
+  transition: transform 0.25s;
+  flex-shrink: 0;
+}
+
+.rule-card.open .rule-chevron {
+  transform: rotate(180deg);
+}
+
+.rule-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rule-card.open .rule-body {
+  max-height: 600px;
+}
+
+.rule-body-inner {
+  padding: 0 20px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.rule-why {
+  font-size: 0.82rem;
+  color: var(--muted2);
+  line-height: 1.7;
+  padding: 14px 0 16px;
+  font-style: italic;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.rule-points {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rule-point {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 0.84rem;
+  line-height: 1.6;
+  color: var(--muted2);
+}
+
+.point-bullet {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--card-accent, var(--muted));
+  flex-shrink: 0;
+  margin-top: 7px;
+}
+
+.rule-point code {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--card-accent, var(--text));
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+/* ── FLOW STEPS ── */
+.flow-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+
+.flow-steps::before {
+  content: '';
+  position: absolute;
+  left: 18px;
+  top: 36px;
+  bottom: 36px;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--border2), var(--border));
+}
+
+.flow-step {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  padding: 12px 0;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.flow-step:hover .flow-step-content {
+  background: var(--surface2);
+}
+
+.flow-num {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border2);
+  background: var(--surface2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--muted2);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  transition: all 0.2s;
+}
+
+.flow-step:hover .flow-num,
+.flow-step.active-step .flow-num {
+  border-color: var(--step-color, var(--accent-yellow));
+  color: var(--step-color, var(--accent-yellow));
+  background: rgba(234,179,8,0.08);
+}
+
+.flow-step-content {
+  flex: 1;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  transition: background 0.2s;
+}
+
+.flow-step-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.flow-step-desc {
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.flow-step-note {
+  display: inline-block;
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--step-color, var(--accent-yellow));
+  background: rgba(234,179,8,0.07);
+  border: 1px solid rgba(234,179,8,0.15);
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+
+/* ── PRINCIPLES TABLE ── */
+.principles-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.principle-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  transition: border-color 0.2s, transform 0.15s;
+  cursor: default;
+}
+
+.principle-card:hover {
+  border-color: var(--p-color, var(--border2));
+  transform: translateY(-2px);
+}
+
+.principle-icon {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.principle-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.principle-rule {
+  font-size: 0.8rem;
+  color: var(--muted2);
+  line-height: 1.6;
+}
+
+/* ── NEVER DO ── */
+.never-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.never-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.never-item:hover {
+  border-color: rgba(239,68,68,0.3);
+  background: rgba(239,68,68,0.03);
+}
+
+.never-x {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(239,68,68,0.12);
+  border: 1px solid rgba(239,68,68,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  color: var(--accent-red);
+  flex-shrink: 0;
+  margin-top: 1px;
+  font-weight: 700;
+}
+
+.never-text {
+  font-size: 0.85rem;
+  color: var(--muted2);
+  line-height: 1.6;
+}
+
+.never-text code {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--accent-red);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+/* ── TASKS DIR ── */
+.tasks-visual {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.tasks-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+}
+
+.tb-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.tb-title {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-left: 4px;
+}
+
+.tasks-body {
+  padding: 20px 24px;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  line-height: 2;
+}
+
+.dir-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dir-indent { padding-left: 24px; }
+
+.dir-folder { color: var(--accent-yellow); }
+.dir-file-green { color: var(--accent-green); }
+.dir-file-blue { color: var(--accent-blue); }
+.dir-comment { color: var(--muted); font-size: 0.75rem; }
+
+.tasks-note {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: rgba(34,197,94,0.05);
+  border: 1px solid rgba(34,197,94,0.15);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: #86efac;
+  line-height: 1.6;
+}
+
+/* ── CONVENTIONS ── */
+.convention-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.convention-item {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 16px;
+  align-items: start;
+  padding: 14px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.convention-key {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted2);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.convention-val {
+  font-size: 0.82rem;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.convention-val code {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--accent-cyan);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+/* ── PROJECT CONTEXT ── */
+.context-form {
+  display: grid;
+  gap: 12px;
+}
+
+.context-field {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 14px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.field-label {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--accent-yellow);
+}
+
+.field-hint {
+  font-size: 0.82rem;
+  color: var(--muted2);
+  line-height: 1.5;
+}
+
+.field-hint strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* ── PROGRESS BAR ── */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 260px;
+  right: 0;
+  height: 2px;
+  background: var(--border);
+  z-index: 100;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-yellow), var(--accent-orange));
+  transition: width 0.1s linear;
+  width: 0%;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { position: fixed; left: -260px; z-index: 200; transition: left 0.3s; }
+  .sidebar.open { left: 0; }
+  .progress-bar { left: 0; }
+  .hero, .section { padding: 40px 24px; }
+  .principles-grid { grid-template-columns: 1fr; }
+  .convention-item { grid-template-columns: 1fr; }
+  .context-field { grid-template-columns: 1fr; }
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-eyebrow { animation: fadeSlideUp 0.5s ease 0.1s both; }
+.hero h1 { animation: fadeSlideUp 0.5s ease 0.2s both; }
+.hero-desc { animation: fadeSlideUp 0.5s ease 0.3s both; }
+.hero-meta { animation: fadeSlideUp 0.5s ease 0.4s both; }
+
+/* ── SKIP LINK ── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  padding: 8px 16px;
+  background: var(--accent-yellow);
+  color: #000;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 0 0 6px 6px;
+  z-index: 9999;
+  text-decoration: none;
+}
+.skip-link:focus { top: 0; }
+
+/* ── FOCUS VISIBLE ── */
+.rule-card:focus-visible,
+.flow-step:focus-visible,
+.nav-item:focus-visible {
+  outline: 2px solid var(--accent-yellow);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .rule-card:hover { transform: none; }
+  .principle-card:hover { transform: none; }
+}
+
+/* ── MOBILE HAMBURGER ── */
+.mobile-toggle {
+  display: none;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 300;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  background: var(--surface);
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+.mobile-toggle span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 1px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+.mobile-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.mobile-toggle.active span:nth-child(2) { opacity: 0; }
+.mobile-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+@media (max-width: 768px) {
+  .mobile-toggle { display: flex; }
+}
+
+/* ── SIDEBAR OVERLAY ── */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 199;
+}
+.sidebar-overlay.active { display: block; }
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to main content</a>
+<button class="mobile-toggle" id="menuToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
+
+<div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="logo-icon">⚡</div>
+        <div>
+          <div class="sidebar-title">CLAUDE.md</div>
+        </div>
+      </div>
+      <div class="sidebar-sub">Interactive Reference Guide</div>
+    </div>
+
+    <nav class="nav-section">
+      <div class="nav-label">Overview</div>
+      <a class="nav-item active" href="#hero" style="--item-color: #eab308">
+        <div class="nav-dot"></div> Introduction
+      </a>
+      <a class="nav-item" href="#project-context" style="--item-color: #eab308">
+        <div class="nav-dot"></div> Project Context
+      </a>
+
+      <div class="nav-label">Behavioral Rules</div>
+      <a class="nav-item" href="#rule-plan" style="--item-color: #3b82f6">
+        <div class="nav-dot"></div> Plan Before Acting
+      </a>
+      <a class="nav-item" href="#rule-flow" style="--item-color: #22c55e">
+        <div class="nav-dot"></div> Task Flow
+      </a>
+      <a class="nav-item" href="#rule-loop" style="--item-color: #a855f7">
+        <div class="nav-dot"></div> Self-Improvement Loop
+      </a>
+      <a class="nav-item" href="#rule-verify" style="--item-color: #f97316">
+        <div class="nav-dot"></div> Verification
+      </a>
+      <a class="nav-item" href="#rule-elegance" style="--item-color: #06b6d4">
+        <div class="nav-dot"></div> Demand Elegance
+      </a>
+      <a class="nav-item" href="#rule-bugs" style="--item-color: #ef4444">
+        <div class="nav-dot"></div> Autonomous Bugs
+      </a>
+      <a class="nav-item" href="#rule-agents" style="--item-color: #eab308">
+        <div class="nav-dot"></div> Subagent Usage
+      </a>
+
+      <div class="nav-label">Standards</div>
+      <a class="nav-item" href="#principles" style="--item-color: #a855f7">
+        <div class="nav-dot"></div> Core Principles
+      </a>
+      <a class="nav-item" href="#conventions" style="--item-color: #06b6d4">
+        <div class="nav-dot"></div> Conventions
+      </a>
+      <a class="nav-item" href="#never" style="--item-color: #ef4444">
+        <div class="nav-dot"></div> Never Do
+      </a>
+      <a class="nav-item" href="#tasks" style="--item-color: #22c55e">
+        <div class="nav-dot"></div> Tasks Directory
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-badge">
+        <span>●</span> Claude Code config
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main" id="main">
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+      <div class="hero-eyebrow">Auto-loaded every session</div>
+      <h1>Your AI's<br><em>rulebook.</em></h1>
+      <p class="hero-desc">
+        <code style="font-family: var(--mono); font-size: 0.85rem; background: var(--surface2); border: 1px solid var(--border); padding: 2px 8px; border-radius: 4px; color: var(--accent-yellow)">CLAUDE.md</code> is a configuration file placed in your project root. Claude Code reads it automatically at the start of every session — setting context, constraints, and behavioral rules without you having to repeat yourself.
+      </p>
+      <div class="hero-meta">
+        <div class="meta-item">
+          <span class="meta-label">Sections</span>
+          <span class="meta-value">7 rules + 4 standards</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Scope</span>
+          <span class="meta-value">Project-wide</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Format</span>
+          <span class="meta-value">Markdown</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECT CONTEXT -->
+    <section class="section" id="project-context" data-nav="project-context">
+      <div class="section-eyebrow">
+        <span class="section-num">§ 0</span>
+        <span class="section-tag" style="background:rgba(234,179,8,0.1);color:var(--accent-yellow);border:1px solid rgba(234,179,8,0.2)">Fill This In</span>
+      </div>
+      <h2 class="section-title"><span style="color:var(--accent-yellow)">§</span> Project Context</h2>
+      <p class="section-subtitle">The first thing Claude reads. Without this, it guesses — and guessing means mistakes. Fill in every field once, per project.</p>
+
+      <div class="context-form">
+        <div class="context-field">
+          <span class="field-label">Project Name</span>
+          <span class="field-hint">The repo/app name. Claude uses this when writing commit messages, todo plans, and log entries. <strong>Don't leave as a placeholder.</strong></span>
+        </div>
+        <div class="context-field">
+          <span class="field-label">Description</span>
+          <span class="field-hint">1–2 sentences on what the app does. Gives Claude enough business context to make sensible decisions without asking you.</span>
+        </div>
+        <div class="context-field">
+          <span class="field-label">Tech Stack</span>
+          <span class="field-hint">List frameworks, libraries, and versions. e.g. <strong>Next.js 14, TypeScript, shadcn/ui, Tailwind, Neon PostgreSQL</strong>. Claude uses this to avoid suggesting incompatible patterns.</span>
+        </div>
+        <div class="context-field">
+          <span class="field-label">Key Directories</span>
+          <span class="field-hint">Map your folder structure. Prevents Claude from creating files in the wrong places or asking where things live.</span>
+        </div>
+        <div class="context-field">
+          <span class="field-label">Environment</span>
+          <span class="field-hint">Node version, how to run the dev server, any required env vars. Claude uses this for setup and debugging commands.</span>
+        </div>
+        <div class="context-field">
+          <span class="field-label">Deployment</span>
+          <span class="field-hint">Where and how the app deploys. Affects how Claude writes build scripts, CI configs, and environment handling.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- BEHAVIORAL RULES -->
+    <section class="section" id="rule-plan" data-nav="rule-plan">
+      <div class="section-eyebrow">
+        <span class="section-num">§ 1</span>
+        <span class="section-tag" style="background:rgba(59,130,246,0.1);color:var(--accent-blue);border:1px solid rgba(59,130,246,0.2)">Behavioral Rule</span>
+      </div>
+      <h2 class="section-title"><span style="color:var(--accent-blue)">§</span> Plan Before Acting</h2>
+      <p class="section-subtitle">Stops Claude from diving into code the moment it reads the task. Forces a thinking step first.</p>
+
+      <div class="rules-grid">
+        <div class="rule-card" style="--card-accent: var(--accent-blue)" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="rule-header">
+            <div class="rule-header-left">
+              <div class="rule-icon" style="--icon-bg: rgba(59,130,246,0.1)">✎</div>
+              <div>
+                <div class="rule-name">Enter plan mode for non-trivial tasks</div>
+                <div class="rule-tagline">3+ steps or any architectural decision</div>
+              </div>
+            </div>
+            <div class="rule-chevron">▼</div>
+          </div>
+          <div class="rule-body">
+            <div class="rule-body-inner">
+              <div class="rule-why">"Non-trivial" means anything with more than 3 steps, or any decision that affects architecture. A one-liner fix? Just do it. Adding a new feature? Plan first.</div>
+              <div class="rule-points">
+                <div class="rule-point"><div class="point-bullet"></div>Plan gets written to <code>tasks/todo.md</code> as checkable items before touching code</div>
+                <div class="rule-point"><div class="point-bullet"></div>User checks in on the plan before implementation starts — no silent autonomous runs</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-card" style="--card-accent: var(--accent-blue)" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="rule-header">
+            <div class="rule-header-left">
+              <div class="rule-icon" style="--icon-bg: rgba(59,130,246,0.1)">⊘</div>
+              <div>
+                <div class="rule-name">Stop and re-plan when things go sideways</div>
+                <div class="rule-tagline">Don't keep pushing through blockers</div>
+              </div>
+            </div>
+            <div class="rule-chevron">▼</div>
+          </div>
+          <div class="rule-body">
+            <div class="rule-body-inner">
+              <div class="rule-why">Claude's biggest failure mode is compounding errors — hitting a wall, guessing a workaround, and making things worse. This rule creates a hard stop.</div>
+              <div class="rule-points">
+                <div class="rule-point"><div class="point-bullet"></div>If mid-task execution fails, Claude stops, surfaces the blocker, and re-plans instead of improvising</div>
+                <div class="rule-point"><div class="point-bullet"></div>Plan mode applies to verification steps too — not just build steps</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TASK FLOW -->
+    <section class="section" id="rule-flow" data-nav="rule-flow">
+      <div class="section-eyebrow">
+        <span class="section-num">§ 2</span>
+        <span class="section-tag" style="background:rgba(34,197,94,0.1);color:var(--accent-green);border:1px solid rgba(34,197,94,0.2)">Behavioral Rule</span>
+      </div>
+      <h2 class="section-title"><span style="color:var(--accent-green)">§</span> Task Management Flow</h2>
+      <p class="section-subtitle">A 6-step ritual that every task runs through — from first plan to final lesson. Click any step to learn more.</p>
+
+      <div class="flow-steps">
+        <div class="flow-step" role="button" tabindex="0" style="--step-color: #3b82f6" onclick="toggleFlowStep(this)">
+          <div class="flow-num">01</div>
+          <div class="flow-step-content">
+            <div class="flow-step-title">Plan <span style="font-size:0.7rem;font-weight:400;color:var(--muted)">→ tasks/todo.md</span></div>
+            <div class="flow-step-desc">Write checkable items to <code style="font-family:var(--mono);font-size:0.78rem">tasks/todo.md</code> before touching any code. No plan = no execution.</div>
+            <div class="flow-step-note">writes: tasks/todo.md</div>
+          </div>
+        </div>
+
+        <div class="flow-step" role="button" tabindex="0" style="--step-color: #22c55e" onclick="toggleFlowStep(this)">
+          <div class="flow-num">02</div>
+          <div class="flow-step-content">
+            <div class="flow-step-title">Verify Plan</div>
+            <div class="flow-step-desc">Check in with the user before starting implementation. The user reviews and approves the todo list — Claude doesn't self-authorize.</div>
+            <div class="flow-step-note">gate: user approval</div>
+          </div>
+        </div>
+
+        <div class="flow-step" role="button" tabindex="0" style="--step-color: #a855f7" onclick="toggleFlowStep(this)">
+          <div class="flow-num">03</div>
+          <div class="flow-step-content">
+            <div class="flow-step-title">Track Progress</div>
+            <div class="flow-step-desc">Mark items complete with <code style="font-family:var(--mono);font-size:0.78rem">- [x]</code> as work finishes. Gives the user a live view of progress without asking for updates.</div>
+            <div class="flow-step-note">updates: todo.md checkboxes</div>
+          </div>
+        </div>
+
+        <div class="flow-step" role="button" tabindex="0" style="--step-color: #f97316" onclick="toggleFlowStep(this)">
+          <div class="flow-num">04</div>
+          <div class="flow-step-content">
+            <div class="flow-step-title">Explain Changes</div>
+            <div class="flow-step-desc">At each step, give a high-level summary of what changed and why. Keeps the user informed without making them read diffs.</div>
+            <div class="flow-step-note">output: step summaries</div>
+          </div>
+        </div>
+
+        <div class="flow-step" role="button" tabindex="0" style="--step-color: #06b6d4" onclick="toggleFlowStep(this)">
+          <div class="flow-num">05</div>
+          <div class="flow-step-content">
+            <div class="flow-step-title">Document Results</div>
+            <div class="flow-step-desc">Add a review/result section to <code style="font-family:var(--mono);font-size:0.78rem">tasks/todo.md</code> when the task is done. What worked, what was tricky, what changed from the plan.</div>
+            <div class="flow-step-note">writes: results to todo.md</div>
+          </div>
+        </div>
+
+        <div class="flow-step" role="button" tabindex="0" style="--step-color: #ef4444" onclick="toggleFlowStep(this)">
+          <div class="flow-num">06</div>
+          <div class="flow-step-content">
+            <div class="flow-step-title">Capture Lessons</div>
+            <div class="flow-step-desc">After any user correction, log the pattern in <code style="font-family:var(--mono);font-size:0.78rem">tasks/lessons.md</code>. This feeds into the Self-Improvement Loop in rule §3.</div>
+            <div class="flow-step-note">writes: tasks/lessons.md</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SELF-IMPROVEMENT -->
+    <section class="section" id="rule-loop" data-nav="rule-loop">
+      <div class="section-eyebrow">
+        <span class="section-num">§ 3</span>
+        <span class="section-tag" style="background:rgba(168,85,247,0.1);color:var(--accent-purple);border:1px solid rgba(168,85,247,0.2)">Behavioral Rule</span>
+      </div>
+      <h2 class="section-title"><span style="color:var(--accent-purple)">§</span> Self-Improvement Loop</h2>
+      <p class="section-subtitle">Claude accumulates corrections session by session. Over time, it makes fewer of the same mistakes.</p>
+
+      <div class="rules-grid">
+        <div class="rule-card" style="--card-accent: var(--accent-purple)" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="rule-header">
+            <div class="rule-header-left">
+              <div class="rule-icon" style="--icon-bg: rgba(168,85,247,0.1)">✎</div>
+              <div>
+                <div class="rule-name">Log every correction to lessons.md</div>
+                <div class="rule-tagline">After any user correction, immediately</div>
+              </div>
+            </div>
+            <div class="rule-chevron">▼</div>
+          </div>
+          <div class="rule-body">
+            <div class="rule-body-inner">
+              <div class="rule-why">Without this, Claude repeats the same mistakes across tasks. This rule creates a growing rulebook specific to your project and your corrections.</div>
+              <div class="rule-points">
+                <div class="rule-point"><div class="point-bullet"></div>Entry is written as a preventive rule, not a log entry — "Don't do X, do Y instead"</div>
+                <div class="rule-point"><div class="point-bullet"></div>File is reviewed at session start — Claude reads its own past mistakes before doing anything</div>
+                <div class="rule-point"><div class="point-bullet"></div>If <code>tasks/lessons.md</code> doesn't exist, Claude creates it with header <code># Lessons Learned</code></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VERIFICATION -->
+    <section class="section" id="rule-verify" data-nav="rule-verify">
+      <div class="section-eyebrow">
+        <span class="section-num">§ 4</span>
+        <span class="section-tag" style="background:rgba(249,115,22,0.1);color:var(--accent-orange);border:1px solid rgba(249,115,22,0.2)">Behavioral Rule</span>
+      </div>
+      <h2 class="section-title"><span style="color:var(--accent-orange)">§</span> Verification Before Done</h2>
+      <p class="section-subtitle">A task isn't done because Claude says so. It's done when it provably works.</p>
+
+      <div class="rules-grid">
+        <div class="rule-card" style="--card-accent: var(--accent-orange)" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="rule-header">
+            <div class="rule-header-left">
+              <div class="rule-icon" style="--icon-bg: rgba(249,115,22,0.1)">✓</div>
+              <div>
+                <div class="rule-name">Prove it works before marking done</div>
+                <div class="rule-tagline">Tests, logs, diffs — not just "I think it works"</div>
+              </div>
+            </div>
+            <div class="rule-chevron">▼</div>
+          </div>
+          <div class="rule-body">
+            <div class="rule-body-inner">
+              <div class="rule-why">Claude has a tendency to say "done" optimistically. This rule forces a verification gate before the checkbox gets checked.</div>
+              <div class="rule-points">
+                <div class="rule-point"><div class="point-bullet"></div>Run tests, check logs, demonstrate correctness — evidence required</div>
+                <div class="rule-point"><div class="point-bullet"></div>Diff behavior between main and changes when the change is non-trivial</div>
+                <div class="rule-point"><div class="point-bullet"></div>Internal check: <em>"Would a staff engineer approve this?"</em> — if unsure, don't mark done</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ELEGANCE -->
+    <section class="section" id="rule-elegance" data-nav="rule-elegance">
+      <div class="section-eyebrow">
+        <span class="section-num">§ 5</span>
+        <span class="section-tag" style="background:rgba(6,182,212,0.1);color:var(--accent-cyan);border:1px solid rgba(6,182,212,0.2)">Behavioral Rule</span>
+      </div>
+      <h2 class="section-title"><span style="color:var(--accent-cyan)">§</span> Demand Elegance (Balanced)</h2>
+      <p class="section-subtitle">Claude should challenge its own solutions — but only when it's worth the effort. The "balanced" qualifier is intentional.</p>
+
+      <div class="rules-grid">
+        <div class="rule-card" style="--card-accent: var(--accent-cyan)" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="rule-header">
+            <div class="rule-header-left">
+              <div class="rule-icon" style="--icon-bg: rgba(6,182,212,0.1)">◈</div>
+              <div>
+                <div class="rule-name">Pause and ask: "Is there a more elegant way?"</div>
+                <div class="rule-tagline">Non-trivial changes only — not simple fixes</div>
+              </div>
+            </div>
+            <div class="rule-chevron">▼</div>
+          </div>
+          <div class="rule-body">
+            <div class="rule-body-inner">
+              <div class="rule-why">Prevents the two failure modes: hacky solutions that compound technical debt, and over-engineered solutions that waste time. The word "balanced" forces Claude to judge which situation it's in.</div>
+              <div class="rule-points">
+                <div class="rule-point"><div class="point-bullet"></div>For non-trivial: if a solution feels hacky, step back and implement the clean version</div>
+                <div class="rule-point"><div class="point-bullet"></div>For simple, obvious fixes: skip the elegance check entirely — don't over-engineer</div>
+                <div class="rule-point"><div class="point-bullet"></div>Always challenge output before presenting it to the user</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BUGS -->
+    <section class="section" id="rule-bugs" data-nav="rule-bugs">
+      <div class="section-eyebrow">
+        <span class="section-num">§ 6</span>
+        <span class="section-tag" style="background:rgba(239,68,68,0.1);color:var(--accent-red);border:1px solid rgba(239,68,68,0.2)">Behavioral Rule</span>
+      </div>
+      <h2 class="section-title"><span style="color:var(--accent-red)">§</span> Autonomous Bug Fixing</h2>
+      <p class="section-subtitle">When you hand Claude a bug, it handles it end-to-end. No back-and-forth, no hand-holding required.</p>
+
+      <div class="rules-grid">
+        <div class="rule-card" style="--card-accent: var(--accent-red)" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="rule-header">
+            <div class="rule-header-left">
+              <div class="rule-icon" style="--icon-bg: rgba(239,68,68,0.1)">↯</div>
+              <div>
+                <div class="rule-name">Given a bug report — just fix it</div>
+                <div class="rule-tagline">Zero context switching from the user</div>
+              </div>
+            </div>
+            <div class="rule-chevron">▼</div>
+          </div>
+          <div class="rule-body">
+            <div class="rule-body-inner">
+              <div class="rule-why">Claude's default is to ask clarifying questions before acting on bugs. This rule disables that and makes Claude act like a senior engineer who owns the problem.</div>
+              <div class="rule-points">
+                <div class="rule-point"><div class="point-bullet"></div>Point at logs, errors, and failing tests — then resolve them directly</div>
+                <div class="rule-point"><div class="point-bullet"></div>Fix failing CI tests without being told how — explore the error, find the root cause</div>
+                <div class="rule-point"><div class="point-bullet"></div>Only escalate back to the user if the fix requires a decision above Claude's scope</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUBAGENTS -->
+    <section class="section" id="rule-agents" data-nav="rule-agents">
+      <div class="section-eyebrow">
+        <span class="section-num">§ 7</span>
+        <span class="section-tag" style="background:rgba(234,179,8,0.1);color:var(--accent-yellow);border:1px solid rgba(234,179,8,0.2)">Behavioral Rule</span>
+      </div>
+      <h2 class="section-title"><span style="color:var(--accent-yellow)">§</span> Subagent Usage</h2>
+      <p class="section-subtitle">For complex problems, Claude can spin up sub-agents to run parallel workloads — keeping the main session clean and focused.</p>
+
+      <div class="rules-grid">
+        <div class="rule-card" style="--card-accent: var(--accent-yellow)" onclick="toggleCard(this)" role="button" tabindex="0" aria-expanded="false">
+          <div class="rule-header">
+            <div class="rule-header-left">
+              <div class="rule-icon" style="--icon-bg: rgba(234,179,8,0.1)">⊞</div>
+              <div>
+                <div class="rule-name">One focused task per subagent</div>
+                <div class="rule-tagline">Offload research, exploration, parallel analysis</div>
+              </div>
+            </div>
+            <div class="rule-chevron">▼</div>
+          </div>
+          <div class="rule-body">
+            <div class="rule-body-inner">
+              <div class="rule-why">Context windows fill up. Subagents let Claude handle complex problems by distributing work — one agent per concern, results reported back to main.</div>
+              <div class="rule-points">
+                <div class="rule-point"><div class="point-bullet"></div>Use subagents to keep the main context window clean — no polluting main with research noise</div>
+                <div class="rule-point"><div class="point-bullet"></div>For complex problems: throw more compute via subagents, don't just try harder in a single context</div>
+                <div class="rule-point"><div class="point-bullet"></div>Only active when Claude Code's agent mode is enabled — graceful fallback to single-agent</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CORE PRINCIPLES -->
+    <section class="section" id="principles" data-nav="principles">
+      <div class="section-eyebrow">
+        <span class="section-num">§ 8</span>
+        <span class="section-tag" style="background:rgba(168,85,247,0.1);color:var(--accent-purple);border:1px solid rgba(168,85,247,0.2)">Standards</span>
+      </div>
+      <h2 class="section-title"><span style="color:var(--accent-purple)">§</span> Core Principles</h2>
+      <p class="section-subtitle">Five non-negotiable behaviors that apply to every single task, regardless of context.</p>
+
+      <div class="principles-grid">
+        <div class="principle-card" style="--p-color: var(--accent-blue)">
+          <span class="principle-icon">◇</span>
+          <div class="principle-name">Simplicity First</div>
+          <div class="principle-rule">Make every change as simple as possible. Impact minimal code. The simplest solution that works is usually the right one.</div>
+        </div>
+        <div class="principle-card" style="--p-color: var(--accent-orange)">
+          <span class="principle-icon">◎</span>
+          <div class="principle-name">No Laziness</div>
+          <div class="principle-rule">Find root causes. No temporary fixes. Senior developer standards apply — not "good enough for now."</div>
+        </div>
+        <div class="principle-card" style="--p-color: var(--accent-red)">
+          <span class="principle-icon">✕</span>
+          <div class="principle-name">No Hallucination</div>
+          <div class="principle-rule">If unsure, say so. Never invent APIs, file paths, or behaviors that haven't been confirmed to exist.</div>
+        </div>
+        <div class="principle-card" style="--p-color: var(--accent-green)">
+          <span class="principle-icon">◆</span>
+          <div class="principle-name">Preserve Existing Code</div>
+          <div class="principle-rule">Don't refactor what wasn't asked. Scope changes tightly. The work requested is the work done — nothing more.</div>
+        </div>
+        <div class="principle-card" style="--p-color: var(--accent-cyan); grid-column: 1 / -1; max-width: 50%;">
+          <span class="principle-icon">△</span>
+          <div class="principle-name">No Orphaned Code</div>
+          <div class="principle-rule">Remove code that is no longer used. No dead imports, no dead files, no unreachable exports left behind.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONVENTIONS -->
+    <section class="section" id="conventions" data-nav="conventions">
+      <div class="section-eyebrow">
+        <span class="section-num">§ 9</span>
+        <span class="section-tag" style="background:rgba(6,182,212,0.1);color:var(--accent-cyan);border:1px solid rgba(6,182,212,0.2)">Standards</span>
+      </div>
+      <h2 class="section-title"><span style="color:var(--accent-cyan)">§</span> Coding Conventions</h2>
+      <p class="section-subtitle">Default conventions for the template. Customize these per project — Claude reads and follows them every session.</p>
+
+      <div class="convention-grid">
+        <div class="convention-item">
+          <span class="convention-key">🎨 Formatting</span>
+          <span class="convention-val">Prettier on save, ESLint strict mode. Claude won't introduce formatting inconsistencies.</span>
+        </div>
+        <div class="convention-item">
+          <span class="convention-key">🏷️ Naming</span>
+          <span class="convention-val"><code>camelCase</code> for variables/functions — <code>PascalCase</code> for components — <code>kebab-case</code> for files</span>
+        </div>
+        <div class="convention-item">
+          <span class="convention-key">⚛️ Components</span>
+          <span class="convention-val">Functional components only. No class components. Hooks over lifecycle methods.</span>
+        </div>
+        <div class="convention-item">
+          <span class="convention-key">📦 Imports</span>
+          <span class="convention-val">Absolute paths via <code>@/</code> alias. No relative <code>../../</code> climbing up the tree.</span>
+        </div>
+        <div class="convention-item">
+          <span class="convention-key">🔷 Types</span>
+          <span class="convention-val">Prefer <code>type</code> over <code>interface</code> unless extending. Zero tolerance for <code>any</code>.</span>
+        </div>
+        <div class="convention-item">
+          <span class="convention-key">💬 Comments</span>
+          <span class="convention-val">Only explain <em>why</em>, not <em>what</em>. Code should be self-documenting. No noisy inline comments.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEVER DO -->
+    <section class="section" id="never" data-nav="never">
+      <div class="section-eyebrow">
+        <span class="section-num">§ 10</span>
+        <span class="section-tag" style="background:rgba(239,68,68,0.1);color:var(--accent-red);border:1px solid rgba(239,68,68,0.2)">Hard Rules</span>
+      </div>
+      <h2 class="section-title"><span style="color:var(--accent-red)">§</span> Never Do</h2>
+      <p class="section-subtitle">Absolute prohibitions. Claude treats these as zero-exception rules — no "just this once."</p>
+
+      <div class="never-list">
+        <div class="never-item">
+          <div class="never-x">✕</div>
+          <div class="never-text"><strong style="color:var(--text)">Push to main directly.</strong> Always use a feature branch. Direct pushes to main bypass review and break team workflow.</div>
+        </div>
+        <div class="never-item">
+          <div class="never-x">✕</div>
+          <div class="never-text"><strong style="color:var(--text)">Use <code>console.log</code> in production code.</strong> Use the project logger. Stray logs pollute output and can leak sensitive data.</div>
+        </div>
+        <div class="never-item">
+          <div class="never-x">✕</div>
+          <div class="never-text"><strong style="color:var(--text)">Install packages without confirming.</strong> New dependencies have security, bundle size, and compatibility implications. Always ask first.</div>
+        </div>
+        <div class="never-item">
+          <div class="never-x">✕</div>
+          <div class="never-text"><strong style="color:var(--text)">Skip error handling.</strong> Every async operation needs a <code>try/catch</code> or <code>.catch()</code>. Unhandled rejections crash apps silently in production.</div>
+        </div>
+        <div class="never-item">
+          <div class="never-x">✕</div>
+          <div class="never-text"><strong style="color:var(--text)">Use <code>any</code> as a TypeScript escape hatch.</strong> It disables type safety and spreads. Find the right type, or use <code>unknown</code> with a type guard.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TASKS DIR -->
+    <section class="section" id="tasks" data-nav="tasks" style="border-bottom:none;">
+      <div class="section-eyebrow">
+        <span class="section-num">§ 11</span>
+        <span class="section-tag" style="background:rgba(34,197,94,0.1);color:var(--accent-green);border:1px solid rgba(34,197,94,0.2)">File System</span>
+      </div>
+      <h2 class="section-title"><span style="color:var(--accent-green)">§</span> Tasks Directory</h2>
+      <p class="section-subtitle">Two auto-managed files that Claude uses as its working memory within a project session.</p>
+
+      <div class="tasks-visual">
+        <div class="tasks-titlebar">
+          <div class="tb-dot" style="background:#ef4444"></div>
+          <div class="tb-dot" style="background:#eab308"></div>
+          <div class="tb-dot" style="background:#22c55e"></div>
+          <span class="tb-title">project-root/tasks/</span>
+        </div>
+        <div class="tasks-body">
+          <div class="dir-line">
+            <span class="dir-folder">tasks/</span>
+          </div>
+          <div class="dir-line dir-indent">
+            <span>├── </span>
+            <span class="dir-file-green">todo.md</span>
+            <span class="dir-comment">&nbsp;&nbsp;&nbsp;&nbsp;← active task plan (Claude writes here)</span>
+          </div>
+          <div class="dir-line dir-indent">
+            <span>└── </span>
+            <span class="dir-file-blue">lessons.md</span>
+            <span class="dir-comment">&nbsp;← corrections &amp; patterns (Claude updates after mistakes)</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+        <div class="rule-card" style="--card-accent: var(--accent-green); cursor:default;" >
+          <div class="rule-header" style="cursor:default">
+            <div class="rule-header-left">
+              <div class="rule-icon" style="--icon-bg: rgba(34,197,94,0.1)">✎</div>
+              <div>
+                <div class="rule-name">todo.md</div>
+                <div class="rule-tagline">Active task planning file</div>
+              </div>
+            </div>
+          </div>
+          <div class="rule-body" style="max-height: 200px">
+            <div class="rule-body-inner">
+              <div class="rule-points">
+                <div class="rule-point"><div class="point-bullet" style="background:var(--accent-green)"></div>Claude writes the task plan here before touching code</div>
+                <div class="rule-point"><div class="point-bullet" style="background:var(--accent-green)"></div>Checkboxes tracked live as items are completed</div>
+                <div class="rule-point"><div class="point-bullet" style="background:var(--accent-green)"></div>Results section appended at end of task</div>
+                <div class="rule-point"><div class="point-bullet" style="background:var(--accent-green)"></div>Safe to delete between tasks — Claude recreates it</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="rule-card" style="--card-accent: var(--accent-blue); cursor:default;">
+          <div class="rule-header" style="cursor:default">
+            <div class="rule-header-left">
+              <div class="rule-icon" style="--icon-bg: rgba(59,130,246,0.1)">◉</div>
+              <div>
+                <div class="rule-name">lessons.md</div>
+                <div class="rule-tagline">Accumulated session memory</div>
+              </div>
+            </div>
+          </div>
+          <div class="rule-body" style="max-height: 200px">
+            <div class="rule-body-inner">
+              <div class="rule-points">
+                <div class="rule-point"><div class="point-bullet" style="background:var(--accent-blue)"></div>Grows over time — one entry per user correction</div>
+                <div class="rule-point"><div class="point-bullet" style="background:var(--accent-blue)"></div>Claude reads it at session start — knows past mistakes</div>
+                <div class="rule-point"><div class="point-bullet" style="background:var(--accent-blue)"></div>Entries written as prevention rules, not log entries</div>
+                <div class="rule-point"><div class="point-bullet" style="background:var(--accent-blue)"></div>Add to <code>.gitignore</code> — session-scoped, not repo content</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tasks-note">
+        <strong>Bootstrap command:</strong> Run this once in your project root to initialize the tasks directory.<br>
+        <code style="font-family:var(--mono);font-size:0.8rem;display:block;margin-top:8px;color:#86efac">mkdir -p tasks && echo "# Active Task Plan" > tasks/todo.md && echo "# Lessons Learned" > tasks/lessons.md</code>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+// ── ACCORDION ──
+function toggleCard(card) {
+  const isOpen = card.classList.contains('open');
+  card.closest('.rules-grid').querySelectorAll('.rule-card').forEach(c => {
+    c.classList.remove('open');
+    c.setAttribute('aria-expanded', 'false');
+  });
+  if (!isOpen) {
+    card.classList.add('open');
+    card.setAttribute('aria-expanded', 'true');
+  }
+}
+
+// ── FLOW STEPS ──
+function toggleFlowStep(step) {
+  step.classList.toggle('active-step');
+}
+
+// Auto-open first card in each section
+document.querySelectorAll('.rules-grid').forEach(grid => {
+  const first = grid.querySelector('.rule-card');
+  if (first) {
+    first.classList.add('open');
+    if (first.hasAttribute('aria-expanded')) first.setAttribute('aria-expanded', 'true');
+  }
+});
+
+// Auto-open both cards in tasks section
+document.querySelectorAll('#tasks .rule-card').forEach(c => c.classList.add('open'));
+
+// ── SCROLL OBSERVER ──
+const sections = document.querySelectorAll('.section');
+const navItems = document.querySelectorAll('.nav-item');
+const main = document.getElementById('main');
+const progress = document.getElementById('progress');
+
+// Intersection observer for fade-in
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('visible');
+  });
+}, { threshold: 0.1 });
+
+sections.forEach(s => observer.observe(s));
+
+// Active nav + progress
+function updateNav() {
+  const scrollTop = main.scrollTop;
+  const scrollHeight = main.scrollHeight - main.clientHeight;
+  const pct = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+  progress.style.width = pct + '%';
+
+  let current = '';
+  sections.forEach(s => {
+    const top = s.offsetTop - 80;
+    if (scrollTop >= top) current = s.id;
+  });
+
+  // also handle hero
+  if (scrollTop < 100) current = 'hero';
+
+  navItems.forEach(item => {
+    const href = item.getAttribute('href').replace('#', '');
+    item.classList.toggle('active', href === current);
+  });
+}
+
+main.addEventListener('scroll', updateNav, { passive: true });
+
+// Smooth scroll for nav links
+navItems.forEach(item => {
+  item.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(item.getAttribute('href'));
+    if (target) {
+      main.scrollTo({ top: target.offsetTop - 32, behavior: 'smooth' });
+    }
+  });
+});
+
+// Initial state
+updateNav();
+document.querySelector('.hero').style.opacity = '1';
+document.querySelector('.hero').style.transform = 'none';
+
+// Keyboard support for rule cards
+document.querySelectorAll('.rule-card').forEach(card => {
+  card.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleCard(this);
+    }
+  });
+});
+
+// Keyboard support for flow steps
+document.querySelectorAll('.flow-step').forEach(step => {
+  step.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleFlowStep(this);
+    }
+  });
+});
+
+// Mobile menu toggle
+const menuToggle = document.getElementById('menuToggle');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+
+menuToggle.addEventListener('click', () => {
+  const isOpen = sidebar.classList.toggle('open');
+  menuToggle.classList.toggle('active');
+  overlay.classList.toggle('active');
+  menuToggle.setAttribute('aria-expanded', isOpen);
+});
+
+overlay.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  menuToggle.classList.remove('active');
+  overlay.classList.remove('active');
+  menuToggle.setAttribute('aria-expanded', 'false');
+});
+
+// Close sidebar on nav click (mobile)
+navItems.forEach(item => {
+  item.addEventListener('click', () => {
+    if (window.innerWidth <= 768) {
+      sidebar.classList.remove('open');
+      menuToggle.classList.remove('active');
+      overlay.classList.remove('active');
+    }
+  });
+});
+</script>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+</body>
+</html>

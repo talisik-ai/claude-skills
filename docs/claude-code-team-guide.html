@@ -240,6 +240,226 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 .data-table td:first-child{color:var(--text);font-weight:500;}
 .data-table code{font-family:var(--mono);font-size:0.88rem;background:rgba(255,255,255,0.07);padding:2px 6px;border-radius:4px;color:var(--accent2);}
 
+/* ── SCOREBOARD ── */
+.scoreboard-shell{
+  margin-top:1.5rem;padding:1.5rem;
+  border:1px solid rgba(13,148,136,0.25);
+  background:
+    radial-gradient(circle at top right, rgba(13,148,136,0.12), transparent 28%),
+    linear-gradient(180deg, rgba(13,148,136,0.08), rgba(17,19,24,0.98) 30%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.03);
+}
+.scoreboard-head{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem;
+}
+.scoreboard-kicker{
+  font-family:var(--mono);font-size:0.76rem;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--teal2);margin-bottom:0.5rem;
+}
+.scoreboard-title{
+  font-family:var(--display);font-size:1.45rem;font-weight:700;
+  letter-spacing:-0.02em;margin-bottom:0.45rem;
+}
+.scoreboard-copy{max-width:52rem;color:var(--text2);line-height:1.7;}
+.scoreboard-meta{
+  display:flex;align-items:center;justify-content:flex-end;
+  gap:0.75rem;flex-wrap:wrap;
+}
+.scoreboard-status{
+  font-family:var(--mono);font-size:0.8rem;
+  letter-spacing:0.04em;color:var(--text3);
+}
+.scoreboard-status[data-tone="success"]{color:var(--green2);}
+.scoreboard-status[data-tone="warn"]{color:var(--accent2);}
+.scoreboard-status[data-tone="error"]{color:var(--red2);}
+.scoreboard-toolbar{
+  display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,0.95fr);
+  gap:1rem;align-items:start;margin-bottom:1.25rem;
+}
+.scoreboard-form{
+  display:grid;grid-template-columns:minmax(0,1.1fr) minmax(240px,1fr) auto;
+  gap:0.85rem;align-items:end;
+}
+.scoreboard-field{display:flex;flex-direction:column;gap:0.45rem;}
+.scoreboard-label{
+  font-family:var(--mono);font-size:0.76rem;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--text3);
+}
+.scoreboard-input,
+.scoreboard-select,
+.scoreboard-score{
+  width:100%;
+  border:1px solid var(--border2);
+  border-radius:10px;
+  background:rgba(10,12,16,0.78);
+  color:var(--text);
+  font:inherit;
+  transition:border-color 0.18s ease,box-shadow 0.18s ease,background-color 0.18s ease;
+}
+.scoreboard-input,
+.scoreboard-select{padding:0.85rem 0.95rem;}
+.scoreboard-score{
+  padding:0.65rem 0.35rem;
+  text-align:center;
+  font-family:var(--mono);
+  font-size:0.95rem;
+}
+.scoreboard-input:hover,
+.scoreboard-select:hover,
+.scoreboard-score:hover{border-color:rgba(13,148,136,0.35);}
+.scoreboard-input:focus-visible,
+.scoreboard-select:focus-visible,
+.scoreboard-score:focus-visible,
+.scoreboard-btn:focus-visible,
+.scoreboard-icon-btn:focus-visible{
+  outline:none;
+  border-color:var(--teal2);
+  box-shadow:0 0 0 3px rgba(20,184,166,0.14);
+}
+.scoreboard-form-actions{
+  display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;
+}
+.scoreboard-btn,
+.scoreboard-icon-btn{
+  border-radius:999px;
+  border:1px solid rgba(13,148,136,0.34);
+  background:var(--teal-glow);
+  color:var(--teal2);
+  font-family:var(--mono);font-size:0.82rem;
+  letter-spacing:0.06em;text-transform:uppercase;
+  cursor:pointer;
+  transition:transform 0.16s ease,border-color 0.16s ease,background-color 0.16s ease,color 0.16s ease;
+}
+.scoreboard-btn{padding:0.85rem 1.15rem;}
+.scoreboard-icon-btn{padding:0.7rem 0.95rem;}
+.scoreboard-btn:hover,
+.scoreboard-icon-btn:hover{
+  transform:translateY(-1px);
+  border-color:rgba(13,148,136,0.55);
+  background:rgba(13,148,136,0.18);
+}
+.scoreboard-btn.secondary{
+  border-color:var(--border2);
+  background:rgba(255,255,255,0.03);
+  color:var(--text2);
+}
+.scoreboard-btn.secondary:hover{
+  border-color:rgba(220,38,38,0.32);
+  background:rgba(220,38,38,0.1);
+  color:var(--red2);
+}
+.scoreboard-summary{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:0.9rem;margin-bottom:1.15rem;
+}
+.scoreboard-stat{
+  padding:1rem 1.1rem;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,0.025);
+}
+.scoreboard-stat-label{
+  font-family:var(--mono);font-size:0.72rem;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--text3);margin-bottom:0.45rem;
+}
+.scoreboard-stat-value{
+  font-family:var(--display);font-size:1.95rem;font-weight:700;
+  letter-spacing:-0.03em;line-height:1;color:var(--text);
+}
+.scoreboard-stat-note{margin-top:0.4rem;font-size:0.88rem;color:var(--text2);}
+.scoreboard-table-wrap{
+  border-radius:14px;
+  border:1px solid var(--border);
+  background:rgba(10,12,16,0.82);
+  overflow:auto;
+}
+.scoreboard-table{
+  width:100%;min-width:1220px;border-collapse:collapse;
+}
+.scoreboard-table th{
+  padding:0.85rem 0.95rem;
+  background:rgba(24,28,35,0.94);
+  border-bottom:1px solid var(--border);
+  color:var(--text3);
+  font-family:var(--mono);font-size:0.76rem;
+  letter-spacing:0.1em;text-transform:uppercase;text-align:left;
+}
+.scoreboard-table td{
+  padding:0.85rem 0.95rem;
+  border-bottom:1px solid var(--border);
+  color:var(--text2);
+  vertical-align:middle;
+}
+.scoreboard-table tr:hover td{background:rgba(255,255,255,0.02);}
+.scoreboard-rank{
+  font-family:var(--display);font-size:1.15rem;font-weight:700;
+  color:var(--text);white-space:nowrap;
+}
+.scoreboard-name{min-width:200px;}
+.scoreboard-problem-cell{min-width:230px;}
+.scoreboard-total{
+  min-width:110px;
+  font-variant-numeric:tabular-nums;
+}
+.scoreboard-total strong{
+  display:block;
+  font-family:var(--display);font-size:1.4rem;
+  font-weight:700;color:var(--text);line-height:1;
+}
+.scoreboard-total span{
+  display:block;
+  margin-top:0.18rem;
+  font-family:var(--mono);font-size:0.72rem;
+  letter-spacing:0.08em;color:var(--text3);text-transform:uppercase;
+}
+.scoreboard-subtext{
+  margin-top:0.4rem;
+  font-size:0.82rem;color:var(--text3);
+}
+.scoreboard-band{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:130px;padding:0.45rem 0.8rem;
+  border-radius:999px;border:1px solid transparent;
+  font-family:var(--mono);font-size:0.76rem;
+  letter-spacing:0.08em;text-transform:uppercase;
+}
+.scoreboard-band.pending{
+  color:var(--text3);
+  background:rgba(255,255,255,0.05);
+  border-color:rgba(255,255,255,0.08);
+}
+.scoreboard-band.support{
+  color:var(--red2);
+  background:var(--red-glow);
+  border-color:rgba(220,38,38,0.28);
+}
+.scoreboard-band.developing{
+  color:var(--accent2);
+  background:rgba(217,119,6,0.12);
+  border-color:rgba(217,119,6,0.24);
+}
+.scoreboard-band.strong{
+  color:var(--teal2);
+  background:var(--teal-glow);
+  border-color:rgba(13,148,136,0.28);
+}
+.scoreboard-band.excellent{
+  color:var(--green2);
+  background:rgba(22,163,74,0.12);
+  border-color:rgba(22,163,74,0.28);
+}
+.scoreboard-empty td{
+  padding:2rem 1rem;
+  text-align:center;
+  color:var(--text3);
+}
+.scoreboard-help{
+  margin-top:0.8rem;
+  color:var(--text3);
+  font-size:0.9rem;line-height:1.6;
+}
+
 /* ── RULE CARDS ── */
 .rule-card {
   background:var(--surface);border:1px solid var(--border);
@@ -422,6 +642,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:1
 }
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
 @media(max-width:640px){.two-col{grid-template-columns:1fr;}.incident-row{grid-template-columns:1fr;}}
+@media(max-width:1080px){
+  .scoreboard-toolbar{grid-template-columns:1fr;}
+  .scoreboard-form{grid-template-columns:1fr;}
+}
 .mt-1{margin-top:0.5rem;}.mt-2{margin-top:1rem;}.mt-3{margin-top:1.5rem;}
 .text-sm{font-size:0.95rem;color:var(--text2);line-height:1.65;}
 .text-mono{font-family:var(--mono);font-size:0.88rem;}
@@ -1991,6 +2215,72 @@ docs/context/[module].context.md</pre></div>
         </div>
       </div>
 
+      <!-- JUDGE SCOREBOARD -->
+      <div class="card scoreboard-shell" data-judge-scoreboard>
+        <div class="scoreboard-head">
+          <div>
+            <div class="scoreboard-kicker">Interactive Judge Console</div>
+            <h3 class="scoreboard-title">Per-Developer Judge Scoreboard</h3>
+            <p class="scoreboard-copy">Track each presenter against the five judging criteria, tie the final score to their chosen build problem, and keep everything saved locally in this browser with IndexedDB.</p>
+          </div>
+          <div class="scoreboard-meta">
+            <span class="pill tag-teal">IndexedDB</span>
+            <span class="scoreboard-status" data-scoreboard-status data-tone="muted">Loading saved scores…</span>
+          </div>
+        </div>
+
+        <div class="scoreboard-toolbar">
+          <form class="scoreboard-form" data-scoreboard-form>
+            <label class="scoreboard-field">
+              <span class="scoreboard-label">Developer</span>
+              <input class="scoreboard-input" type="text" name="developerName" maxlength="60" placeholder="e.g. Aira Santos" required>
+            </label>
+            <label class="scoreboard-field">
+              <span class="scoreboard-label">Build Problem</span>
+              <select class="scoreboard-select" name="problemId" data-new-problem required></select>
+            </label>
+            <div class="scoreboard-form-actions">
+              <button class="scoreboard-btn" type="submit">Add Developer</button>
+              <button class="scoreboard-btn secondary" type="button" data-reset-scoreboard>Clear Board</button>
+            </div>
+          </form>
+
+          <div class="alert info" style="margin-bottom:0;">
+            <span class="alert-icon" aria-hidden="true">💾</span>
+            <div>Use one row per presenter. Scores save automatically in this browser, totals rerank the board, and the roster stays attached to the 10 build problems already defined above.</div>
+          </div>
+        </div>
+
+        <div class="scoreboard-summary" data-scoreboard-summary></div>
+
+        <div class="scoreboard-table-wrap">
+          <table class="scoreboard-table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Developer</th>
+                <th>Build Problem</th>
+                <th>Prompt</th>
+                <th>Output</th>
+                <th>Creativity</th>
+                <th>Presentation</th>
+                <th>Workflow</th>
+                <th>Total</th>
+                <th>Band</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody data-scoreboard-body>
+              <tr class="scoreboard-empty">
+                <td colspan="11">No developers added yet. Add the demo roster above, then score each presentation on the 5 criteria.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="scoreboard-help">Tip: score fields accept <strong style="color:var(--text)">1–5</strong>. Leave a field blank until judging is finished for that developer; the total and band update as soon as the row is saved.</p>
+      </div>
+
     </div>
 
     <!-- QUICK REF FOR DEVS -->
@@ -2397,6 +2687,588 @@ Set my output style to Concise</pre></div>
 </main>
 
 <script>
+const TeamGuideScoreboard = window.TeamGuideScoreboard = (() => {
+  const BUILD_PROBLEMS = [
+    { id: 'cli-pomodoro-timer', number: '01', title: 'CLI Pomodoro Timer' },
+    { id: 'expense-splitter', number: '02', title: 'Expense Splitter' },
+    { id: 'markdown-resume-builder', number: '03', title: 'Markdown Resume Builder' },
+    { id: 'api-health-monitor', number: '04', title: 'API Health Monitor' },
+    { id: 'code-snippet-manager', number: '05', title: 'Code Snippet Manager' },
+    { id: 'mood-tracker-with-sentiment', number: '06', title: 'Mood Tracker with Sentiment' },
+    { id: 'team-randomizer', number: '07', title: 'Team Randomizer' },
+    { id: 'csv-data-visualizer', number: '08', title: 'CSV Data Visualizer' },
+    { id: 'standup-bot', number: '09', title: 'Standup Bot' },
+    { id: 'git-changelog-generator', number: '10', title: 'Git Changelog Generator' },
+  ];
+
+  const CRITERIA = [
+    { key: 'promptCraft', label: 'Prompt Craft' },
+    { key: 'workingOutput', label: 'Working Output' },
+    { key: 'creativityPolish', label: 'Creativity & Polish' },
+    { key: 'presentationClarity', label: 'Presentation Clarity' },
+    { key: 'workflowDiscipline', label: 'Workflow Discipline' },
+  ];
+
+  const SCORE_BANDS = [
+    { min: 21, label: 'Exceptional', tone: 'excellent' },
+    { min: 16, label: 'Strong', tone: 'strong' },
+    { min: 11, label: 'Developing', tone: 'developing' },
+    { min: 1, label: 'Needs Support', tone: 'support' },
+    { min: 0, label: 'Not scored', tone: 'pending' },
+  ];
+
+  const SCOREBOARD_DB_NAME = 'claude-code-team-guide-scoreboard';
+  const SCOREBOARD_STORE_NAME = 'developer-scores';
+  const SCOREBOARD_DB_VERSION = 1;
+
+  function escapeHtml(value = '') {
+    return String(value)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#39;');
+  }
+
+  function slugify(value = 'developer') {
+    return String(value)
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '') || 'developer';
+  }
+
+  function createEntryId(name = 'developer') {
+    const suffix = Math.random().toString(36).slice(2, 8);
+    return `${slugify(name)}-${suffix}`;
+  }
+
+  function clampScore(value) {
+    if (value === '' || value === null || typeof value === 'undefined') {
+      return '';
+    }
+
+    const parsedValue = Math.trunc(Number(value));
+
+    if (!Number.isFinite(parsedValue)) {
+      return '';
+    }
+
+    return Math.min(5, Math.max(1, parsedValue));
+  }
+
+  function calculateEntryTotal(entry = {}) {
+    return CRITERIA.reduce((sum, criterion) => {
+      const clampedScore = clampScore(entry[criterion.key]);
+      return sum + (Number.isInteger(clampedScore) ? clampedScore : 0);
+    }, 0);
+  }
+
+  function resolveEntryTotal(entry = {}) {
+    const providedTotal = Number(entry.total);
+    return Number.isFinite(providedTotal) ? providedTotal : calculateEntryTotal(entry);
+  }
+
+  function isEntryFullyScored(entry = {}) {
+    return CRITERIA.every((criterion) => Number.isInteger(clampScore(entry[criterion.key])));
+  }
+
+  function getScoreBand(total) {
+    const numericTotal = Math.max(0, Number(total) || 0);
+    return SCORE_BANDS.find((band) => numericTotal >= band.min) || SCORE_BANDS[SCORE_BANDS.length - 1];
+  }
+
+  function normalizeEntry(entry = {}) {
+    const problemId = BUILD_PROBLEMS.some((problem) => problem.id === entry.problemId)
+      ? entry.problemId
+      : BUILD_PROBLEMS[0].id;
+
+    const normalizedEntry = {
+      id: entry.id || createEntryId(entry.developerName),
+      developerName: String(entry.developerName || '').trim(),
+      problemId,
+      updatedAt: entry.updatedAt || new Date().toISOString(),
+    };
+
+    CRITERIA.forEach((criterion) => {
+      normalizedEntry[criterion.key] = clampScore(entry[criterion.key]);
+    });
+
+    return normalizedEntry;
+  }
+
+  function createEmptyEntry(overrides = {}) {
+    return normalizeEntry({
+      problemId: BUILD_PROBLEMS[0].id,
+      ...overrides,
+    });
+  }
+
+  function rankEntries(entries = []) {
+    return [...entries]
+      .map((entry) => {
+        const normalizedEntry = normalizeEntry(entry);
+        const total = resolveEntryTotal(entry);
+        return {
+          ...normalizedEntry,
+          total,
+          isComplete: isEntryFullyScored(normalizedEntry),
+          band: getScoreBand(total),
+        };
+      })
+      .sort((left, right) => {
+        if (right.total !== left.total) {
+          return right.total - left.total;
+        }
+
+        return left.developerName.localeCompare(right.developerName);
+      })
+      .map((entry, index) => ({
+        ...entry,
+        rank: index + 1,
+      }));
+  }
+
+  function calculateSummary(entries = []) {
+    const rankedEntries = rankEntries(entries);
+    const completedEntries = rankedEntries.filter((entry) => entry.isComplete);
+    const leadingEntry = rankedEntries.find((entry) => entry.total > 0) || rankedEntries[0] || null;
+    const aggregateScore = completedEntries.reduce((sum, entry) => sum + entry.total, 0);
+
+    return {
+      developerCount: rankedEntries.length,
+      scoredCount: completedEntries.length,
+      averageScore: completedEntries.length ? aggregateScore / completedEntries.length : 0,
+      topScore: leadingEntry ? leadingEntry.total : 0,
+      leaderName: leadingEntry && leadingEntry.developerName ? leadingEntry.developerName : 'No scores yet',
+    };
+  }
+
+  function getProblem(problemId) {
+    return BUILD_PROBLEMS.find((problem) => problem.id === problemId) || BUILD_PROBLEMS[0];
+  }
+
+  function createProblemOptions(selectedProblemId) {
+    return BUILD_PROBLEMS.map((problem) => `
+      <option value="${problem.id}"${problem.id === selectedProblemId ? ' selected' : ''}>
+        ${problem.number} — ${problem.title}
+      </option>
+    `).join('');
+  }
+
+  function formatTimestamp(value) {
+    if (!value) {
+      return 'Saved locally';
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return 'Saved locally';
+    }
+
+    return `Saved ${date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`;
+  }
+
+  function requestToPromise(request) {
+    return new Promise((resolve, reject) => {
+      request.onsuccess = (event) => resolve(event.target.result);
+      request.onerror = () => reject(request.error || new Error('IndexedDB request failed'));
+    });
+  }
+
+  function openScoreboardDb(indexedDbApi) {
+    return new Promise((resolve, reject) => {
+      if (!indexedDbApi || typeof indexedDbApi.open !== 'function') {
+        reject(new Error('IndexedDB is unavailable in this browser'));
+        return;
+      }
+
+      const request = indexedDbApi.open(SCOREBOARD_DB_NAME, SCOREBOARD_DB_VERSION);
+
+      request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        if (!db.objectStoreNames.contains(SCOREBOARD_STORE_NAME)) {
+          db.createObjectStore(SCOREBOARD_STORE_NAME, { keyPath: 'id' });
+        }
+      };
+
+      request.onsuccess = (event) => resolve(event.target.result);
+      request.onerror = () => reject(request.error || new Error('Failed to open the judge scoreboard database'));
+    });
+  }
+
+  function createScoreboardStore(indexedDbApi = window.indexedDB) {
+    let dbPromise;
+
+    async function getDb() {
+      if (!dbPromise) {
+        dbPromise = openScoreboardDb(indexedDbApi);
+      }
+
+      return dbPromise;
+    }
+
+    return {
+      async getEntries() {
+        const db = await getDb();
+        const store = db.transaction(SCOREBOARD_STORE_NAME, 'readonly').objectStore(SCOREBOARD_STORE_NAME);
+        const records = await requestToPromise(store.getAll());
+        return rankEntries(records);
+      },
+      async saveEntry(entry) {
+        const db = await getDb();
+        const store = db.transaction(SCOREBOARD_STORE_NAME, 'readwrite').objectStore(SCOREBOARD_STORE_NAME);
+        const normalizedEntry = normalizeEntry({
+          ...entry,
+          updatedAt: new Date().toISOString(),
+        });
+
+        await requestToPromise(store.put(normalizedEntry));
+        return normalizedEntry;
+      },
+      async deleteEntry(entryId) {
+        const db = await getDb();
+        const store = db.transaction(SCOREBOARD_STORE_NAME, 'readwrite').objectStore(SCOREBOARD_STORE_NAME);
+        await requestToPromise(store.delete(entryId));
+      },
+      async clearEntries() {
+        const db = await getDb();
+        const store = db.transaction(SCOREBOARD_STORE_NAME, 'readwrite').objectStore(SCOREBOARD_STORE_NAME);
+        await requestToPromise(store.clear());
+      },
+    };
+  }
+
+  function createMemoryStore() {
+    let records = [];
+
+    return {
+      async getEntries() {
+        return rankEntries(records);
+      },
+      async saveEntry(entry) {
+        const normalizedEntry = normalizeEntry({
+          ...entry,
+          updatedAt: new Date().toISOString(),
+        });
+        const existingIndex = records.findIndex((record) => record.id === normalizedEntry.id);
+
+        if (existingIndex >= 0) {
+          records[existingIndex] = normalizedEntry;
+        } else {
+          records.push(normalizedEntry);
+        }
+
+        return normalizedEntry;
+      },
+      async deleteEntry(entryId) {
+        records = records.filter((record) => record.id !== entryId);
+      },
+      async clearEntries() {
+        records = [];
+      },
+    };
+  }
+
+  function renderSummary(summaryEl, entries) {
+    const summary = calculateSummary(entries);
+
+    summaryEl.innerHTML = `
+      <div class="scoreboard-stat">
+        <div class="scoreboard-stat-label">Developers</div>
+        <div class="scoreboard-stat-value">${summary.developerCount}</div>
+        <div class="scoreboard-stat-note">Rostered presenters</div>
+      </div>
+      <div class="scoreboard-stat">
+        <div class="scoreboard-stat-label">Fully Scored</div>
+        <div class="scoreboard-stat-value">${summary.scoredCount}</div>
+        <div class="scoreboard-stat-note">Complete judging sheets</div>
+      </div>
+      <div class="scoreboard-stat">
+        <div class="scoreboard-stat-label">Average</div>
+        <div class="scoreboard-stat-value">${summary.averageScore.toFixed(1)}</div>
+        <div class="scoreboard-stat-note">Across completed rows</div>
+      </div>
+      <div class="scoreboard-stat">
+        <div class="scoreboard-stat-label">Leader</div>
+        <div class="scoreboard-stat-value">${summary.topScore}</div>
+        <div class="scoreboard-stat-note">${escapeHtml(summary.leaderName)}</div>
+      </div>
+    `;
+  }
+
+  function renderEntries(tableBodyEl, entries) {
+    if (!entries.length) {
+      tableBodyEl.innerHTML = `
+        <tr class="scoreboard-empty">
+          <td colspan="11">No developers added yet. Add the demo roster above, then score each presentation on the 5 criteria.</td>
+        </tr>
+      `;
+      return;
+    }
+
+    tableBodyEl.innerHTML = entries.map((entry) => {
+      const problem = getProblem(entry.problemId);
+
+      return `
+        <tr>
+          <td class="scoreboard-rank">#${entry.rank}</td>
+          <td class="scoreboard-name">
+            <input
+              class="scoreboard-input"
+              type="text"
+              data-entry-id="${entry.id}"
+              data-field="developerName"
+              value="${escapeHtml(entry.developerName)}"
+              maxlength="60"
+              placeholder="Developer name"
+            >
+            <div class="scoreboard-subtext">${formatTimestamp(entry.updatedAt)}</div>
+          </td>
+          <td class="scoreboard-problem-cell">
+            <select class="scoreboard-select" data-entry-id="${entry.id}" data-field="problemId">
+              ${createProblemOptions(problem.id)}
+            </select>
+          </td>
+          ${CRITERIA.map((criterion) => `
+            <td>
+              <input
+                class="scoreboard-score"
+                type="number"
+                min="1"
+                max="5"
+                inputmode="numeric"
+                data-entry-id="${entry.id}"
+                data-field="${criterion.key}"
+                value="${entry[criterion.key] === '' ? '' : entry[criterion.key]}"
+                aria-label="${criterion.label} score for ${escapeHtml(entry.developerName || 'developer')}"
+              >
+            </td>
+          `).join('')}
+          <td class="scoreboard-total">
+            <strong>${entry.total}</strong>
+            <span>/ 25</span>
+          </td>
+          <td><span class="scoreboard-band ${entry.band.tone}">${entry.band.label}</span></td>
+          <td>
+            <button class="scoreboard-icon-btn" type="button" data-delete-entry="${entry.id}">Remove</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function initialize(root = document.querySelector('[data-judge-scoreboard]')) {
+    if (!root) {
+      return;
+    }
+
+    const formEl = root.querySelector('[data-scoreboard-form]');
+    const statusEl = root.querySelector('[data-scoreboard-status]');
+    const newProblemEl = root.querySelector('[data-new-problem]');
+    const summaryEl = root.querySelector('[data-scoreboard-summary]');
+    const tableBodyEl = root.querySelector('[data-scoreboard-body]');
+    const resetButton = root.querySelector('[data-reset-scoreboard]');
+
+    if (!formEl || !statusEl || !newProblemEl || !summaryEl || !tableBodyEl || !resetButton) {
+      return;
+    }
+
+    let entries = [];
+    let store = window.indexedDB ? createScoreboardStore(window.indexedDB) : createMemoryStore();
+    let usingMemoryFallback = !window.indexedDB;
+
+    newProblemEl.innerHTML = createProblemOptions(BUILD_PROBLEMS[0].id);
+
+    function setStatus(message, tone = 'muted') {
+      statusEl.textContent = message;
+      statusEl.dataset.tone = tone;
+    }
+
+    function upsertEntry(savedEntry) {
+      const existingIndex = entries.findIndex((entry) => entry.id === savedEntry.id);
+      if (existingIndex >= 0) {
+        entries[existingIndex] = savedEntry;
+      } else {
+        entries.push(savedEntry);
+      }
+    }
+
+    function renderBoard() {
+      const rankedEntries = rankEntries(entries);
+      renderSummary(summaryEl, rankedEntries);
+      renderEntries(tableBodyEl, rankedEntries);
+    }
+
+    async function loadEntries() {
+      try {
+        entries = await store.getEntries();
+        renderBoard();
+
+        if (usingMemoryFallback) {
+          setStatus('IndexedDB unavailable. Scores stay only until this page refreshes.', 'warn');
+        } else {
+          setStatus(
+            entries.length ? 'Loaded saved scores from this browser.' : 'Ready. Add a developer to start scoring.',
+            'success',
+          );
+        }
+      } catch (error) {
+        console.error(error);
+        store = createMemoryStore();
+        usingMemoryFallback = true;
+        entries = [];
+        renderBoard();
+        setStatus('IndexedDB unavailable. Scores stay only until this page refreshes.', 'warn');
+      }
+    }
+
+    async function saveFieldUpdate(entryId, field, rawValue) {
+      const existingEntry = entries.find((entry) => entry.id === entryId);
+
+      if (!existingEntry) {
+        return;
+      }
+
+      let nextValue = rawValue;
+
+      if (field === 'developerName') {
+        nextValue = String(rawValue || '').trim();
+        if (!nextValue) {
+          setStatus('Developer name cannot be empty.', 'error');
+          renderBoard();
+          return;
+        }
+      }
+
+      if (CRITERIA.some((criterion) => criterion.key === field)) {
+        nextValue = clampScore(rawValue);
+      }
+
+      try {
+        const savedEntry = await store.saveEntry({
+          ...existingEntry,
+          [field]: nextValue,
+        });
+        upsertEntry(savedEntry);
+        renderBoard();
+        setStatus(`Saved ${savedEntry.developerName || 'developer'}.`, 'success');
+      } catch (error) {
+        console.error(error);
+        setStatus('Could not save the judge score.', 'error');
+      }
+    }
+
+    formEl.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(formEl);
+      const developerName = String(formData.get('developerName') || '').trim();
+      const problemId = String(formData.get('problemId') || BUILD_PROBLEMS[0].id);
+
+      if (!developerName) {
+        setStatus('Developer name is required.', 'error');
+        return;
+      }
+
+      try {
+        const savedEntry = await store.saveEntry(createEmptyEntry({ developerName, problemId }));
+        upsertEntry(savedEntry);
+        renderBoard();
+        formEl.reset();
+        newProblemEl.innerHTML = createProblemOptions(BUILD_PROBLEMS[0].id);
+        setStatus(`Added ${savedEntry.developerName} to the scoreboard.`, 'success');
+      } catch (error) {
+        console.error(error);
+        setStatus('Could not add the developer to the scoreboard.', 'error');
+      }
+    });
+
+    resetButton.addEventListener('click', async () => {
+      if (!entries.length) {
+        setStatus('The scoreboard is already empty.', 'muted');
+        return;
+      }
+
+      if (!confirm('Clear every saved judge score from this browser?')) {
+        return;
+      }
+
+      try {
+        await store.clearEntries();
+        entries = [];
+        renderBoard();
+        setStatus('Judge scoreboard cleared.', 'success');
+      } catch (error) {
+        console.error(error);
+        setStatus('Could not clear the scoreboard.', 'error');
+      }
+    });
+
+    tableBodyEl.addEventListener('change', (event) => {
+      const target = event.target;
+
+      if (!(target instanceof HTMLElement)) {
+        return;
+      }
+
+      const entryId = target.dataset.entryId;
+      const field = target.dataset.field;
+
+      if (!entryId || !field || !('value' in target)) {
+        return;
+      }
+
+      saveFieldUpdate(entryId, field, target.value);
+    });
+
+    tableBodyEl.addEventListener('click', async (event) => {
+      const button = event.target.closest('[data-delete-entry]');
+
+      if (!button) {
+        return;
+      }
+
+      const entryId = button.getAttribute('data-delete-entry');
+      const existingEntry = entries.find((entry) => entry.id === entryId);
+
+      if (!entryId || !existingEntry) {
+        return;
+      }
+
+      if (!confirm(`Remove ${existingEntry.developerName || 'this developer'} from the scoreboard?`)) {
+        return;
+      }
+
+      try {
+        await store.deleteEntry(entryId);
+        entries = entries.filter((entry) => entry.id !== entryId);
+        renderBoard();
+        setStatus(`Removed ${existingEntry.developerName || 'developer'}.`, 'success');
+      } catch (error) {
+        console.error(error);
+        setStatus('Could not remove the developer.', 'error');
+      }
+    });
+
+    renderBoard();
+    loadEntries();
+  }
+
+  return {
+    BUILD_PROBLEMS,
+    CRITERIA,
+    calculateEntryTotal,
+    getScoreBand,
+    rankEntries,
+    calculateSummary,
+    createEmptyEntry,
+    createScoreboardStore,
+    initialize,
+  };
+})();
+
 function switchTab(id, btn) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => {
@@ -2508,6 +3380,8 @@ document.addEventListener('DOMContentLoaded', function() {
       prev.focus();
     }
   });
+
+  TeamGuideScoreboard.initialize();
 });
 </script>
 </body>
