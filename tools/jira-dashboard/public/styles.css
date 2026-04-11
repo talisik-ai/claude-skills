@@ -1,0 +1,77 @@
+/* ---- Reset + Base ---- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; }
+.hidden { display: none !important; }
+.error-msg { color: #d32f2f; font-size: 0.875rem; }
+
+/* ---- Auth Modal ---- */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.modal-box { background: #fff; padding: 2rem; border-radius: 8px; width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 1rem; }
+.modal-box h2 { font-size: 1.25rem; }
+.modal-box label { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.875rem; font-weight: 600; }
+.modal-box input { padding: 0.5rem 0.75rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
+
+/* ---- Top bar ---- */
+.top-bar { background: #0052CC; color: #fff; padding: 0.75rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+.dashboard-title { font-weight: 700; font-size: 1rem; }
+
+/* ---- Global Banner ---- */
+.global-banner { background: #fff3e0; border-left: 4px solid #f57c00; padding: 0.75rem 1.5rem; font-size: 0.875rem; }
+.global-banner.error { background: #fce4ec; border-color: #d32f2f; }
+
+/* ---- Buttons ---- */
+.btn-primary { background: #0052CC; color: #fff; border: none; padding: 0.5rem 1.25rem; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
+.btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+.btn-link { background: none; border: none; color: #fff; cursor: pointer; text-decoration: underline; font-size: 0.875rem; }
+
+/* ---- Filter bar ---- */
+.filter-bar { display: flex; gap: 1rem; align-items: flex-end; padding: 1rem 1.5rem; background: #fff; border-bottom: 1px solid #e0e0e0; flex-wrap: wrap; }
+.filter-group { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.875rem; font-weight: 600; }
+.filter-group select { min-width: 160px; border: 1px solid #ccc; border-radius: 4px; padding: 0.25rem; }
+.filter-actions { align-self: flex-end; }
+
+/* ---- Panels ---- */
+.panel { background: #fff; margin: 1rem 1.5rem; padding: 1.5rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+.panel h2 { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; color: #333; }
+
+/* ---- Health Tiles ---- */
+.tiles-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+.tile { flex: 1; min-width: 160px; padding: 1.25rem; border-radius: 8px; background: #f0f4ff; }
+.tile .tile-label { font-size: 0.75rem; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.05em; }
+.tile .tile-value { font-size: 2rem; font-weight: 700; color: #0052CC; margin: 0.25rem 0; }
+.tile .tile-value.warn { color: #e65100; }
+.tile .tile-missing { font-size: 0.75rem; color: #888; }
+
+/* ---- Card Traces ---- */
+.card-trace { border: 1px solid #e0e0e0; border-radius: 6px; margin-bottom: 0.75rem; overflow: hidden; }
+.card-trace-header { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; cursor: pointer; background: #fafafa; flex-wrap: wrap; }
+.card-trace-header:hover { background: #f0f0f0; }
+.card-key { font-weight: 700; font-size: 0.85rem; color: #0052CC; }
+.card-assignee { font-size: 0.8rem; color: #666; }
+.card-badges { display: flex; gap: 0.5rem; margin-left: auto; flex-wrap: wrap; }
+.badge { font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 999px; background: #e3f2fd; color: #1565c0; }
+.badge.warn { background: #fff3e0; color: #e65100; }
+.badge.incomplete { background: #fce4ec; color: #c62828; }
+.card-trace-body { padding: 1rem; }
+.timeline { display: flex; align-items: center; overflow-x: auto; padding-bottom: 0.5rem; }
+.timeline-node { display: flex; flex-direction: column; align-items: center; min-width: 80px; }
+.node-label { font-size: 0.7rem; font-weight: 600; color: #333; white-space: nowrap; text-align: center; }
+.node-dot { width: 12px; height: 12px; border-radius: 50%; background: #0052CC; margin: 0.25rem 0; }
+.node-date { font-size: 0.65rem; color: #888; }
+.timeline-connector { display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 60px; }
+.connector-line { width: 100%; height: 2px; background: #ccc; }
+.connector-label { font-size: 0.65rem; color: #888; white-space: nowrap; margin-top: 0.2rem; }
+
+/* ---- AI Metrics Table ---- */
+table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+th { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 2px solid #e0e0e0; color: #555; font-weight: 600; }
+td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #f0f0f0; }
+tr:hover td { background: #fafafa; }
+.rate-warn { color: #e65100; font-weight: 600; }
+
+/* ---- Flagged Cards ---- */
+.flagged-list { list-style: none; }
+.flagged-item { display: flex; align-items: center; gap: 1rem; padding: 0.6rem 0; border-bottom: 1px solid #f0f0f0; font-size: 0.875rem; flex-wrap: wrap; }
+.flagged-item:last-child { border-bottom: none; }
+.flagged-key { font-weight: 700; color: #0052CC; min-width: 80px; }
+.empty-state { color: #888; font-size: 0.875rem; padding: 1rem 0; }

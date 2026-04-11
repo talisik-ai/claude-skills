@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jira Sprint Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Auth Modal -->
+  <div id="auth-modal" class="modal-overlay">
+    <div class="modal-box">
+      <h2>Connect to Jira</h2>
+      <p>Enter your Jira email and API token. These are stored in your browser session only.</p>
+      <label>Email
+        <input id="auth-email" type="email" placeholder="you@company.com" autocomplete="username">
+      </label>
+      <label>API Token
+        <input id="auth-token" type="password" placeholder="Your Jira API token" autocomplete="current-password">
+      </label>
+      <p id="auth-error" class="error-msg hidden"></p>
+      <button id="auth-submit" class="btn-primary">Connect</button>
+    </div>
+  </div>
+
+  <!-- Top bar -->
+  <header class="top-bar">
+    <span class="dashboard-title">Jira Sprint Dashboard</span>
+    <button id="disconnect-btn" class="btn-link">Disconnect</button>
+  </header>
+
+  <!-- Global banner -->
+  <div id="global-banner" class="global-banner hidden"></div>
+
+  <!-- Filter bar -->
+  <section class="filter-bar">
+    <div class="filter-group">
+      <label>Projects</label>
+      <select id="filter-projects" multiple size="4"></select>
+    </div>
+    <div class="filter-group">
+      <label>Developers</label>
+      <select id="filter-developers" multiple size="4"></select>
+    </div>
+    <div class="filter-group">
+      <label>Sprints</label>
+      <select id="filter-sprints" multiple size="4"></select>
+    </div>
+    <div class="filter-actions">
+      <button id="load-btn" class="btn-primary" disabled>Load Data</button>
+    </div>
+  </section>
+
+  <!-- Main content -->
+  <main id="main-content" class="hidden">
+    <section id="health-tiles" class="panel tiles-row"></section>
+
+    <section class="panel">
+      <h2>Card Lifecycle Traces</h2>
+      <div id="trace-panel"></div>
+    </section>
+
+    <section class="panel">
+      <h2>AI Metrics by Developer</h2>
+      <div id="ai-table"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Flagged Cards</h2>
+      <div id="flagged-panel"></div>
+    </section>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
